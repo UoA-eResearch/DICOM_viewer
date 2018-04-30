@@ -5,6 +5,7 @@ using Dicom.Imaging;
 using System.IO;
 using Dicom.Media;
 using Dicom;
+using System.Linq;
 using System;
 
 public class LoadDICOM : MonoBehaviour {
@@ -19,24 +20,44 @@ public class LoadDICOM : MonoBehaviour {
 			{
 				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag)field.GetValue(null))));
 			}
-			catch (Exception)
+			catch (System.Exception)
 			{
 			}
 		}
+	}
+
+	ushort[] ConvertByteArray(byte[] bytes)
+	{
+		var size = bytes.Length / sizeof(ushort);
+		var ints = new ushort[size];
+		for (var index = 0; index < size; index++)
+		{
+			ints[index] = System.BitConverter.ToUInt16(bytes, index * sizeof(ushort));
+		}
+		return ints;
 	}
 
 	Texture2D DicomToTex2D(DicomImage image)
 	{
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
-		var tex = new Texture2D(pixels.Height, pixels.Width);
-		for (int i = 0; i < bytes.Length; i++)
+		var ushorts = ConvertByteArray(bytes);
+		Debug.Log(pixels.Height + "," + pixels.Width);
+		Debug.Log(ushorts.Length);
+		var tex = new Texture2D(pixels.Width, pixels.Height);
+		var maxIntensity = ushorts.Max();
+		for (int y = 0; y < pixels.Height; y++)
 		{
-			int intensity = bytes[i];
-			var x = i % image.Width;
-			var y = i / image.Width;
-			tex.SetPixel(x, y, new Color(intensity / 255f, intensity / 255f, intensity / 255f));
+			for (int x = 0; x < pixels.Width; x++)
+			{
+				ushort intensity = ushorts[y * pixels.Width + x];
+				var rescaledIntensity = intensity / maxIntensity * 255;
+				//Debug.Log("intensity at " + x + "," + y + "=" + intensity);
+				var color = image.GrayscaleColorMap[rescaledIntensity];
+				tex.SetPixel(x, y, new Color(color.R, color.G, color.B));
+			}
 		}
+		tex.Apply();
 
 		return tex;
 	}
@@ -50,6 +71,7 @@ public class LoadDICOM : MonoBehaviour {
 		var path = Path.Combine(root, "DICOM");
 		foreach (var directory in Directory.GetDirectories(path))
 		{
+			var offset = 0;
 			Debug.Log("--DIRECTORY--" + directory);
 			var dd = DicomDirectory.Open(directory + "/DICOMDIR");
 			foreach (var patientRecord in dd.RootDirectoryRecordCollection)
@@ -65,19 +87,21 @@ public class LoadDICOM : MonoBehaviour {
 						Debug.Log("--SERIES--");
 						Debug.Log(seriesRecord.Get<string>(DicomTag.Modality, "no modality"));
 						Debug.Log(seriesRecord.Get<string>(DicomTag.SeriesDescription, "no modality"));
-						foreach (var imageRecord in seriesRecord.LowerLevelDirectoryRecordCollection)
-						{
-							var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
-							var absoluteFilename = Path.Combine(directory, filename);
-							var img = new DicomImage(absoluteFilename);
-							var tex = DicomToTex2D(img);
-							var quad = Instantiate(quadPrefab, transform);
-							quad.GetComponent<Renderer>().material.mainTexture = tex;
-							return;
-						}
+						//foreach (var imageRecord in seriesRecord.LowerLevelDirectoryRecordCollection) {
+						var imageRecord = studyRecord.LowerLevelDirectoryRecordCollection.First();
+						var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
+						var absoluteFilename = Path.Combine(directory, filename);
+						var img = new DicomImage(absoluteFilename);
+						var tex = DicomToTex2D(img);
+						var quad = Instantiate(quadPrefab, transform);
+						quad.GetComponent<Renderer>().material.mainTexture = tex;
+						quad.transform.Translate(offset, 0, 0);
+						offset += 1;
 					}
+					return;
 				}
 			}
+			return;
 		}
 	}
 	
