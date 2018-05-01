@@ -74,8 +74,7 @@ public class LoadDICOM : MonoBehaviour {
 						Debug.Log("--SERIES--");
 						Debug.Log(seriesRecord.Get<string>(DicomTag.Modality, "no modality"));
 						Debug.Log(seriesRecord.Get<string>(DicomTag.SeriesDescription, "no modality"));
-						//foreach (var imageRecord in seriesRecord.LowerLevelDirectoryRecordCollection) {
-						var imageRecord = studyRecord.LowerLevelDirectoryRecordCollection.First();
+						var imageRecord = seriesRecord.LowerLevelDirectoryRecordCollection.ToArray().First();
 						var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
 						var absoluteFilename = Path.Combine(directory, filename);
 						var img = new DicomImage(absoluteFilename);
