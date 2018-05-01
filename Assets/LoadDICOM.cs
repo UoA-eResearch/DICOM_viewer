@@ -4,40 +4,49 @@ using System.IO;
 using Dicom.Media;
 using Dicom;
 using System.Linq;
+using Dicom.Imaging.LUT;
+using System.Collections.Generic;
 
 public class LoadDICOM : MonoBehaviour {
 
 	public GameObject quadPrefab;
 
-	ushort[] ConvertByteArray(byte[] bytes)
+	short[] ConvertByteArray(byte[] bytes)
 	{
-		var size = bytes.Length / sizeof(ushort);
-		var ints = new ushort[size];
+		var size = bytes.Length / sizeof(short);
+		var shorts = new short[size];
 		for (var index = 0; index < size; index++)
 		{
-			ints[index] = System.BitConverter.ToUInt16(bytes, index * sizeof(ushort));
+			shorts[index] = System.BitConverter.ToInt16(bytes, index * sizeof(short));
 		}
-		return ints;
+		return shorts;
 	}
 
 	Texture2D DicomToTex2D(DicomImage image)
 	{
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
-		var ushorts = ConvertByteArray(bytes);
+		var shorts = ConvertByteArray(bytes);
 		Debug.Log(pixels.Height + "," + pixels.Width);
-		Debug.Log(ushorts.Length);
+		Debug.Log(shorts.Length);
+		Debug.Log(shorts.Min() + "-" + shorts.Average(x => (int)x) + "-" + shorts.Max());
+		Debug.Log(image.WindowCenter + "," + image.WindowWidth + "," + image.Scale);
+		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept);
+		var rescaleSlope = image.Dataset.Get<float>(DicomTag.RescaleSlope);
+		Debug.Log(rescale + "," + rescaleSlope);
 		var tex = new Texture2D(pixels.Width, pixels.Height);
-		var maxIntensity = ushorts.Max();
 		for (int y = 0; y < pixels.Height; y++)
 		{
 			for (int x = 0; x < pixels.Width; x++)
 			{
-				ushort intensity = ushorts[y * pixels.Width + x];
-				var rescaledIntensity = intensity / maxIntensity * 255;
+				double intensity = shorts[y * pixels.Width + x];
+				intensity += rescale;
+				intensity -= image.WindowCenter - image.WindowWidth;
+				intensity = intensity / (image.WindowCenter + image.WindowWidth) * 255;
+				intensity = Mathf.Clamp((int)intensity, 0, 255);
+				var color = image.GrayscaleColorMap[(int)intensity];
 				//Debug.Log("intensity at " + x + "," + y + "=" + intensity);
-				var color = image.GrayscaleColorMap[rescaledIntensity];
-				tex.SetPixel(x, y, new Color(color.R, color.G, color.B));
+				tex.SetPixel(x, y, new Color(color.R / 255f, color.G / 255f, color.B / 255f));
 			}
 		}
 		tex.Apply();
@@ -78,11 +87,14 @@ public class LoadDICOM : MonoBehaviour {
 						var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
 						var absoluteFilename = Path.Combine(directory, filename);
 						var img = new DicomImage(absoluteFilename);
+						var tmp = Time.realtimeSinceStartup;
 						var tex = DicomToTex2D(img);
+						Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - tmp, 2) + "s");
 						var quad = Instantiate(quadPrefab, transform);
 						quad.GetComponent<Renderer>().material.mainTexture = tex;
 						quad.transform.Translate(offset, 0, 0);
 						offset += 1;
+						return;
 					}
 					return;
 				}
