@@ -27,28 +27,28 @@ public class LoadDICOM : MonoBehaviour {
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
 		var shorts = ConvertByteArray(bytes);
+		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept);
+		/*
 		Debug.Log(pixels.Height + "," + pixels.Width);
 		Debug.Log(shorts.Length);
 		Debug.Log(shorts.Min() + "-" + shorts.Average(x => (int)x) + "-" + shorts.Max());
 		Debug.Log(image.WindowCenter + "," + image.WindowWidth + "," + image.Scale);
-		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept);
-		var rescaleSlope = image.Dataset.Get<float>(DicomTag.RescaleSlope);
 		Debug.Log(rescale + "," + rescaleSlope);
+		*/
 		var tex = new Texture2D(pixels.Width, pixels.Height);
-		for (int y = 0; y < pixels.Height; y++)
+		var colors = new UnityEngine.Color32[shorts.Length];
+		for (int i = 0; i < shorts.Length; i++)
 		{
-			for (int x = 0; x < pixels.Width; x++)
-			{
-				double intensity = shorts[y * pixels.Width + x];
-				intensity += rescale;
-				intensity -= image.WindowCenter - image.WindowWidth;
-				intensity = intensity / (image.WindowCenter + image.WindowWidth) * 255;
-				intensity = Mathf.Clamp((int)intensity, 0, 255);
-				var color = image.GrayscaleColorMap[(int)intensity];
-				//Debug.Log("intensity at " + x + "," + y + "=" + intensity);
-				tex.SetPixel(x, y, new Color(color.R / 255f, color.G / 255f, color.B / 255f));
-			}
+			double intensity = shorts[i];
+			intensity += rescale;
+			intensity -= image.WindowCenter - image.WindowWidth;
+			intensity = intensity / (image.WindowCenter + image.WindowWidth) * 255;
+			intensity = Mathf.Clamp((int)intensity, 0, 255);
+			var color = image.GrayscaleColorMap[(int)intensity];
+			//Debug.Log("intensity at " + x + "," + y + "=" + intensity);
+			colors[i] = new UnityEngine.Color32(color.R, color.G, color.B, color.A);
 		}
+		tex.SetPixels32(colors);
 		tex.Apply();
 
 		return tex;
