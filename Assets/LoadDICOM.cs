@@ -1,30 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Dicom.Imaging;
 using System.IO;
 using Dicom.Media;
 using Dicom;
 using System.Linq;
-using System;
 
 public class LoadDICOM : MonoBehaviour {
 
 	public GameObject quadPrefab;
-
-	void PrintTagsForRecord(DicomDirectoryRecord record)
-	{
-		foreach (var field in typeof(DicomTag).GetFields())
-		{
-			try
-			{
-				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag)field.GetValue(null))));
-			}
-			catch (System.Exception)
-			{
-			}
-		}
-	}
 
 	ushort[] ConvertByteArray(byte[] bytes)
 	{
@@ -67,7 +50,11 @@ public class LoadDICOM : MonoBehaviour {
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
+		#if !UNITY_EDITOR && UNITY_METRO
+		var root = Windows.Storage.ApplicationData.Current.RoamingFolder.Path;
+		#else
 		var root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+		#endif
 		var path = Path.Combine(root, "DICOM");
 		foreach (var directory in Directory.GetDirectories(path))
 		{
