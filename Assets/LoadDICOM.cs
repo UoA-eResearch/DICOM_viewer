@@ -7,12 +7,14 @@ using System.Linq;
 using Dicom.Imaging.LUT;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.XR.WSA.Input;
 
 public class LoadDICOM : MonoBehaviour {
 
 	public GameObject quadPrefab;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
+	private GestureRecognizer recognizer;
 
 	void PrintTagsForRecord(DicomDirectoryRecord record)
 	{
@@ -123,11 +125,24 @@ public class LoadDICOM : MonoBehaviour {
 			var tex = GetImageForRecord(dd.RootDirectoryRecord);
 			var quad = Instantiate(quadPrefab, transform);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
-			quad.transform.Translate(offset, 0, 0);
+			quad.transform.localPosition += new Vector3(offset, 0, 0);
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = "Directory: " + directoryName;
 			quad.name = directory;
 			directoryMap[quad] = dd.RootDirectoryRecord;
 			offset += 1;
+		}
+		recognizer = new GestureRecognizer();
+		recognizer.TappedEvent += Recognizer_TappedEvent;
+		recognizer.StartCapturingGestures();
+	}
+
+	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
+	{
+		RaycastHit hit;
+		if (Physics.Raycast(headRay, out hit))
+		{
+			Debug.Log("tap " + hit.collider.name);
+			OpenDirectory(hit.collider.gameObject);
 		}
 	}
 
@@ -156,7 +171,7 @@ public class LoadDICOM : MonoBehaviour {
 			var tex = GetImageForRecord(subRecord);
 			var quad = Instantiate(quadPrefab, go.transform);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
-			quad.transform.Translate(offset, -2, 0);
+			quad.transform.localPosition += new Vector3(offset, -2, 0);
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
 			quad.name = desc;
 			directoryMap[quad] = subRecord;
