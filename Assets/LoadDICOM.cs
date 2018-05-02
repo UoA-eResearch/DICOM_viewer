@@ -6,6 +6,7 @@ using Dicom;
 using System.Linq;
 using Dicom.Imaging.LUT;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class LoadDICOM : MonoBehaviour {
 
@@ -41,7 +42,9 @@ public class LoadDICOM : MonoBehaviour {
 		{
 			double intensity = shorts[i];
 			intensity += rescale;
+			// Threshold based on WindowCenter and WindowWidth
 			intensity -= image.WindowCenter - image.WindowWidth;
+			// Remap to 0-255 range and clamp
 			intensity = intensity / (image.WindowCenter + image.WindowWidth) * 255;
 			intensity = Mathf.Clamp((int)intensity, 0, 255);
 			var color = image.GrayscaleColorMap[(int)intensity];
@@ -76,23 +79,26 @@ public class LoadDICOM : MonoBehaviour {
 				foreach (var studyRecord in patientRecord.LowerLevelDirectoryRecordCollection)
 				{
 					Debug.Log("--STUDY--");
-					Debug.Log(studyRecord.Get<string>(DicomTag.StudyDate, "no study date"));
-					Debug.Log(studyRecord.Get<string>(DicomTag.StudyDescription, "no desc"));
+					var studyDate = studyRecord.Get<string>(DicomTag.StudyDate, "no study date");
+					var studyDesc = studyRecord.Get<string>(DicomTag.StudyDescription, "no desc");
 					foreach (var seriesRecord in studyRecord.LowerLevelDirectoryRecordCollection)
 					{
 						Debug.Log("--SERIES--");
-						Debug.Log(seriesRecord.Get<string>(DicomTag.Modality, "no modality"));
-						Debug.Log(seriesRecord.Get<string>(DicomTag.SeriesDescription, "no modality"));
+						var modality = seriesRecord.Get<string>(DicomTag.Modality, "no modality");
+						var seriesDesc = seriesRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
+						var desc = studyDate + "\n" + studyDesc + "\n" + modality + "\n" + seriesDesc;
+						// Get the first image in the series as a thumbnail
 						var imageRecord = seriesRecord.LowerLevelDirectoryRecordCollection.ToArray().First();
 						var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
 						var absoluteFilename = Path.Combine(directory, filename);
 						var img = new DicomImage(absoluteFilename);
-						var tmp = Time.realtimeSinceStartup;
+						var startTime = Time.realtimeSinceStartup;
 						var tex = DicomToTex2D(img);
-						Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - tmp, 2) + "s");
+						Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - startTime, 2) + "s");
 						var quad = Instantiate(quadPrefab, transform);
 						quad.GetComponent<Renderer>().material.mainTexture = tex;
 						quad.transform.Translate(offset, 0, 0);
+						quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
 						offset += 1;
 						return;
 					}
