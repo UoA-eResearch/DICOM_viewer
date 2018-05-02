@@ -28,7 +28,7 @@ public class LoadDICOM : MonoBehaviour {
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
 		var shorts = ConvertByteArray(bytes);
-		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept);
+		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept, -1024f);
 		/*
 		Debug.Log(pixels.Height + "," + pixels.Width);
 		Debug.Log(shorts.Length);
@@ -68,45 +68,26 @@ public class LoadDICOM : MonoBehaviour {
 		var root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
 		#endif
 		var path = Path.Combine(root, "DICOM");
+		var offset = 0;
 		foreach (var directory in Directory.GetDirectories(path))
 		{
-			var offset = 0;
-			Debug.Log("--DIRECTORY--" + directory);
+			var directoryName = Path.GetFileName(directory);
+			Debug.Log("--DIRECTORY--" + directoryName);
 			var dd = DicomDirectory.Open(directory + "/DICOMDIR");
-			foreach (var patientRecord in dd.RootDirectoryRecordCollection)
-			{
-				Debug.Log("--PATIENT--");
-				foreach (var studyRecord in patientRecord.LowerLevelDirectoryRecordCollection)
-				{
-					Debug.Log("--STUDY--");
-					var studyDate = studyRecord.Get<string>(DicomTag.StudyDate, "no study date");
-					var studyDesc = studyRecord.Get<string>(DicomTag.StudyDescription, "no desc");
-					foreach (var seriesRecord in studyRecord.LowerLevelDirectoryRecordCollection)
-					{
-						Debug.Log("--SERIES--");
-						var modality = seriesRecord.Get<string>(DicomTag.Modality, "no modality");
-						var seriesDesc = seriesRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
-						var desc = studyDate + "\n" + studyDesc + "\n" + modality + "\n" + seriesDesc;
-						// Get the first image in the series as a thumbnail
-						var imageRecord = seriesRecord.LowerLevelDirectoryRecordCollection.ToArray().First();
-						var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
-						var absoluteFilename = Path.Combine(directory, filename);
-						var img = new DicomImage(absoluteFilename);
-						var startTime = Time.realtimeSinceStartup;
-						var tex = DicomToTex2D(img);
-						Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - startTime, 2) + "s");
-						var quad = Instantiate(quadPrefab, transform);
-						quad.GetComponent<Renderer>().material.mainTexture = tex;
-						quad.transform.Translate(offset, 0, 0);
-						quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
-						quad.name = filename;
-						offset += 1;
-						return;
-					}
-					return;
-				}
-			}
-			return;
+			var firstSeries = dd.RootDirectoryRecordCollection.First().LowerLevelDirectoryRecordCollection.First().LowerLevelDirectoryRecordCollection.First();
+			var imageRecord = firstSeries.LowerLevelDirectoryRecordCollection.OrderBy(x => x.Get<string>(DicomTag.ReferencedFileID, 3)).First();
+			var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
+			var absoluteFilename = Path.Combine(directory, filename);
+			var img = new DicomImage(absoluteFilename);
+			var startTime = Time.realtimeSinceStartup;
+			var tex = DicomToTex2D(img);
+			Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - startTime, 2) + "s");
+			var quad = Instantiate(quadPrefab, transform);
+			quad.GetComponent<Renderer>().material.mainTexture = tex;
+			quad.transform.Translate(offset, 0, 0);
+			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = "Directory: " + directoryName;
+			quad.name = directoryName;
+			offset += 1;
 		}
 	}
 	
