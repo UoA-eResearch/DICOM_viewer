@@ -99,6 +99,7 @@ public class LoadDICOM : MonoBehaviour {
 						quad.GetComponent<Renderer>().material.mainTexture = tex;
 						quad.transform.Translate(offset, 0, 0);
 						quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
+						quad.name = filename;
 						offset += 1;
 						return;
 					}
