@@ -11,6 +11,24 @@ using UnityEngine.UI;
 public class LoadDICOM : MonoBehaviour {
 
 	public GameObject quadPrefab;
+	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
+	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
+
+	void PrintTagsForRecord(DicomDirectoryRecord record)
+	{
+		#if UNITY_EDITOR
+		foreach (var field in typeof(DicomTag).GetFields())
+		{
+			try
+			{
+				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag) field.GetValue(null))));
+			}
+			catch (System.Exception)
+			{
+			}
+		}
+		#endif
+	}
 
 	short[] ConvertByteArray(byte[] bytes)
 	{
@@ -57,42 +75,106 @@ public class LoadDICOM : MonoBehaviour {
 		return tex;
 	}
 
+	DicomDirectoryRecord GetRepresentativeImageRecord(DicomDirectoryRecord record)
+	{
+		if (record.DirectoryRecordType == "IMAGE")
+		{
+			return record;
+		}
+		while (record.DirectoryRecordType != "SERIES")
+		{
+			record = record.LowerLevelDirectoryRecord;
+		}
+		return record.LowerLevelDirectoryRecordCollection.OrderBy(x => x.Get<string>(DicomTag.ReferencedFileID, 3)).First();
+	}
+
+	Texture2D GetImageForRecord(DicomDirectoryRecord record)
+	{
+		var directory = rootDirectoryMap[record];
+		record = GetRepresentativeImageRecord(record);
+		var filename = Path.Combine(record.Get<string[]>(DicomTag.ReferencedFileID));
+		var absoluteFilename = Path.Combine(directory, filename);
+		Debug.Log("load image " + absoluteFilename);
+		var img = new DicomImage(absoluteFilename);
+		var tex = DicomToTex2D(img);
+		return tex;
+	}
+
 	// Use this for initialization
 	void Start () {
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
-		#if !UNITY_EDITOR && UNITY_METRO
+#if !UNITY_EDITOR && UNITY_METRO
 		var root = Windows.Storage.ApplicationData.Current.RoamingFolder.Path;
-		#else
+#else
 		var root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-		#endif
+#endif
 		var path = Path.Combine(root, "DICOM");
 		var offset = 0;
+		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
+		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
 		foreach (var directory in Directory.GetDirectories(path))
 		{
 			var directoryName = Path.GetFileName(directory);
 			Debug.Log("--DIRECTORY--" + directoryName);
-			var dd = DicomDirectory.Open(directory + "/DICOMDIR");
-			var firstSeries = dd.RootDirectoryRecordCollection.First().LowerLevelDirectoryRecordCollection.First().LowerLevelDirectoryRecordCollection.First();
-			var imageRecord = firstSeries.LowerLevelDirectoryRecordCollection.OrderBy(x => x.Get<string>(DicomTag.ReferencedFileID, 3)).First();
-			var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
-			var absoluteFilename = Path.Combine(directory, filename);
-			var img = new DicomImage(absoluteFilename);
-			var startTime = Time.realtimeSinceStartup;
-			var tex = DicomToTex2D(img);
-			Debug.Log("imgtotex2D took " + System.Math.Round(Time.realtimeSinceStartup - startTime, 2) + "s");
+			var dd = DicomDirectory.Open(Path.Combine(directory, "DICOMDIR"));
+			rootDirectoryMap[dd.RootDirectoryRecord] = directory;
+			var tex = GetImageForRecord(dd.RootDirectoryRecord);
 			var quad = Instantiate(quadPrefab, transform);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
 			quad.transform.Translate(offset, 0, 0);
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = "Directory: " + directoryName;
-			quad.name = directoryName;
+			quad.name = directory;
+			directoryMap[quad] = dd.RootDirectoryRecord;
+			offset += 1;
+		}
+	}
+
+	void OpenDirectory(GameObject go)
+	{
+		var record = directoryMap[go];
+		var rootDirectory = rootDirectoryMap[record];
+		var offset = 0;
+		foreach (var subRecord in record.LowerLevelDirectoryRecordCollection)
+		{
+			rootDirectoryMap[subRecord] = rootDirectory;
+			var desc = "";
+			if (subRecord.DirectoryRecordType == "STUDY")
+			{
+				var studyDate = subRecord.Get<string>(DicomTag.StudyDate, "no study date");
+				var studyDesc = subRecord.Get<string>(DicomTag.StudyDescription, "no desc");
+				desc = "Study: " + studyDate + "\n" + studyDesc;
+			} else if (subRecord.DirectoryRecordType == "SERIES")
+			{
+				var modality = subRecord.Get<string>(DicomTag.Modality, "no modality");
+				var seriesDesc = subRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
+				desc = "Series: " + modality + "\n" + seriesDesc;
+			} else if (subRecord.DirectoryRecordType == "IMAGE") {
+				desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
+			}
+			var tex = GetImageForRecord(subRecord);
+			var quad = Instantiate(quadPrefab, go.transform);
+			quad.GetComponent<Renderer>().material.mainTexture = tex;
+			quad.transform.Translate(offset, -2, 0);
+			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
+			quad.name = desc;
+			directoryMap[quad] = subRecord;
 			offset += 1;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetMouseButtonDown(0))
+		{
+			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit))
+			{
+				Debug.Log("click " + hit.collider.name);
+				OpenDirectory(hit.collider.gameObject);
+			}
+		}
 	}
 }
