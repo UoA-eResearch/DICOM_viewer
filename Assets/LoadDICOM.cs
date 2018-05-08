@@ -17,6 +17,7 @@ public class LoadDICOM : MonoBehaviour
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
 	private Vector3 offset = Vector3.zero;
+	private Dictionary<GameObject, bool> openedItems;
 
 	void PrintTagsForRecord(DicomDirectoryRecord record)
 	{
@@ -99,9 +100,18 @@ public class LoadDICOM : MonoBehaviour
 		var filename = Path.Combine(record.Get<string[]>(DicomTag.ReferencedFileID));
 		var absoluteFilename = Path.Combine(directory, filename);
 		Debug.Log("load image " + absoluteFilename);
-		var img = new DicomImage(absoluteFilename);
-		var tex = DicomToTex2D(img);
-		return tex;
+		try
+		{
+			var img = new DicomImage(absoluteFilename);
+			var tex = DicomToTex2D(img);
+			return tex;
+		}
+		catch (System.Exception)
+		{
+			Debug.LogError("Failed to load " + absoluteFilename);
+			var tex = new Texture2D(1, 1);
+			return tex;
+		}
 	}
 
 	// Use this for initialization
@@ -133,6 +143,7 @@ public class LoadDICOM : MonoBehaviour
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
+		openedItems = new Dictionary<GameObject, bool>();
 		foreach (var directory in Directory.GetDirectories(path))
 		{
 			var directoryName = Path.GetFileName(directory);
@@ -146,6 +157,8 @@ public class LoadDICOM : MonoBehaviour
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = "Directory: " + directoryName;
 			quad.name = directory;
 			directoryMap[quad] = dd.RootDirectoryRecord;
+			openedItems[quad] = false;
+			quad.tag = "directory";
 			offset += 1;
 		}
 		recognizer = new GestureRecognizer();
@@ -173,44 +186,71 @@ public class LoadDICOM : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(headRay, out hit))
 		{
-			Debug.Log("tap " + hit.collider.name);
-			OpenDirectory(hit.collider.gameObject);
+			ClickObject(hit.collider.gameObject);
 		}
 	}
 
-	void OpenDirectory(GameObject go)
+	void Close(GameObject go)
 	{
-		var record = directoryMap[go];
-		var rootDirectory = rootDirectoryMap[record];
-		var offset = 0;
-		foreach (var subRecord in record.LowerLevelDirectoryRecordCollection)
+		foreach (Transform child in go.transform)
 		{
-			rootDirectoryMap[subRecord] = rootDirectory;
-			var desc = "";
-			if (subRecord.DirectoryRecordType == "STUDY")
+			if (child.name != "Canvas")
 			{
-				var studyDate = subRecord.Get<string>(DicomTag.StudyDate, "no study date");
-				var studyDesc = subRecord.Get<string>(DicomTag.StudyDescription, "no desc");
-				desc = "Study: " + studyDate + "\n" + studyDesc;
+				Destroy(child.gameObject);
 			}
-			else if (subRecord.DirectoryRecordType == "SERIES")
+		}
+		openedItems[go] = false;
+	}
+
+	void ClickObject(GameObject go)
+	{
+		if (openedItems[go])
+		{
+			Close(go);
+		}
+		else
+		{
+			foreach (var otherGo in GameObject.FindGameObjectsWithTag(go.tag))
 			{
-				var modality = subRecord.Get<string>(DicomTag.Modality, "no modality");
-				var seriesDesc = subRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
-				desc = "Series: " + modality + "\n" + seriesDesc;
+				if (openedItems[otherGo])
+				{
+					Close(otherGo);
+				}
 			}
-			else if (subRecord.DirectoryRecordType == "IMAGE")
+			openedItems[go] = true;
+			var record = directoryMap[go];
+			var rootDirectory = rootDirectoryMap[record];
+			var offset = 0;
+			foreach (var subRecord in record.LowerLevelDirectoryRecordCollection)
 			{
-				desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
+				rootDirectoryMap[subRecord] = rootDirectory;
+				var desc = "";
+				var quad = Instantiate(quadPrefab, go.transform);
+				if (subRecord.DirectoryRecordType == "STUDY")
+				{
+					var studyDate = subRecord.Get<string>(DicomTag.StudyDate, "no study date");
+					var studyDesc = subRecord.Get<string>(DicomTag.StudyDescription, "no desc");
+					desc = "Study: " + studyDate + "\n" + studyDesc;
+				}
+				else if (subRecord.DirectoryRecordType == "SERIES")
+				{
+					var modality = subRecord.Get<string>(DicomTag.Modality, "no modality");
+					var seriesDesc = subRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
+					desc = "Series: " + modality + "\n" + seriesDesc;
+				}
+				else if (subRecord.DirectoryRecordType == "IMAGE")
+				{
+					desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
+				}
+				var tex = GetImageForRecord(subRecord);
+				quad.GetComponent<Renderer>().material.mainTexture = tex;
+				quad.transform.localPosition += new Vector3(offset, -2, 0);
+				quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
+				quad.name = desc;
+				directoryMap[quad] = subRecord;
+				openedItems[quad] = false;
+				offset += 1;
 			}
-			var tex = GetImageForRecord(subRecord);
-			var quad = Instantiate(quadPrefab, go.transform);
-			quad.GetComponent<Renderer>().material.mainTexture = tex;
-			quad.transform.localPosition += new Vector3(offset, -2, 0);
-			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
-			quad.name = desc;
-			directoryMap[quad] = subRecord;
-			offset += 1;
 		}
 	}
 
@@ -223,8 +263,7 @@ public class LoadDICOM : MonoBehaviour
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit))
 			{
-				Debug.Log("click " + hit.collider.name);
-				OpenDirectory(hit.collider.gameObject);
+				ClickObject(hit.collider.gameObject);
 			}
 			float distance_to_screen = Camera.main.WorldToScreenPoint(transform.position).z;
 			offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance_to_screen));
