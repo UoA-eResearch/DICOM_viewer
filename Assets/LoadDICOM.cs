@@ -179,7 +179,12 @@ public class LoadDICOM : MonoBehaviour
 	{
 		var moveVector = obj.cumulativeDelta - offset;
 		offset = obj.cumulativeDelta;
-		transform.localPosition += moveVector;
+		var t = transform;
+		if (selectedObject)
+		{
+			t = selectedObject.transform;
+		}
+		t.localPosition += moveVector;
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
