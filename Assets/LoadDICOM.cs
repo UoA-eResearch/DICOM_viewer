@@ -9,28 +9,29 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.XR.WSA.Input;
 
-public class LoadDICOM : MonoBehaviour {
+public class LoadDICOM : MonoBehaviour
+{
 
 	public GameObject quadPrefab;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
-	private Vector3 offset;
+	private Vector3 offset = Vector3.zero;
 
 	void PrintTagsForRecord(DicomDirectoryRecord record)
 	{
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		foreach (var field in typeof(DicomTag).GetFields())
 		{
 			try
 			{
-				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag) field.GetValue(null))));
+				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag)field.GetValue(null))));
 			}
 			catch (System.Exception)
 			{
 			}
 		}
-		#endif
+#endif
 	}
 
 	short[] ConvertByteArray(byte[] bytes)
@@ -104,7 +105,8 @@ public class LoadDICOM : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		Debug.Log("Loading DICOM DICT");
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
@@ -147,8 +149,23 @@ public class LoadDICOM : MonoBehaviour {
 			offset += 1;
 		}
 		recognizer = new GestureRecognizer();
+		recognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.ManipulationTranslate);
 		recognizer.TappedEvent += Recognizer_TappedEvent;
+		recognizer.ManipulationUpdated += Recognizer_ManipulationUpdated;
+		recognizer.ManipulationCompleted += Recognizer_ManipulationCompleted;
 		recognizer.StartCapturingGestures();
+	}
+
+	private void Recognizer_ManipulationCompleted(ManipulationCompletedEventArgs obj)
+	{
+		offset = Vector3.zero;
+	}
+
+	private void Recognizer_ManipulationUpdated(ManipulationUpdatedEventArgs obj)
+	{
+		var moveVector = obj.cumulativeDelta - offset;
+		offset = obj.cumulativeDelta;
+		transform.localPosition += moveVector;
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -175,12 +192,15 @@ public class LoadDICOM : MonoBehaviour {
 				var studyDate = subRecord.Get<string>(DicomTag.StudyDate, "no study date");
 				var studyDesc = subRecord.Get<string>(DicomTag.StudyDescription, "no desc");
 				desc = "Study: " + studyDate + "\n" + studyDesc;
-			} else if (subRecord.DirectoryRecordType == "SERIES")
+			}
+			else if (subRecord.DirectoryRecordType == "SERIES")
 			{
 				var modality = subRecord.Get<string>(DicomTag.Modality, "no modality");
 				var seriesDesc = subRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
 				desc = "Series: " + modality + "\n" + seriesDesc;
-			} else if (subRecord.DirectoryRecordType == "IMAGE") {
+			}
+			else if (subRecord.DirectoryRecordType == "IMAGE")
+			{
 				desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
 			}
 			var tex = GetImageForRecord(subRecord);
@@ -193,9 +213,10 @@ public class LoadDICOM : MonoBehaviour {
 			offset += 1;
 		}
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		if (Input.GetMouseButtonDown(0))
 		{
 			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
