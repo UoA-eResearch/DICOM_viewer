@@ -161,7 +161,13 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.TappedEvent += Recognizer_TappedEvent;
 		recognizer.ManipulationUpdated += Recognizer_ManipulationUpdated;
 		recognizer.ManipulationCompleted += Recognizer_ManipulationCompleted;
+		recognizer.ManipulationCanceled += Recognizer_ManipulationCanceled;
 		recognizer.StartCapturingGestures();
+	}
+
+	private void Recognizer_ManipulationCanceled(ManipulationCanceledEventArgs obj)
+	{
+		offset = Vector3.zero;
 	}
 
 	private void Recognizer_ManipulationCompleted(ManipulationCompletedEventArgs obj)

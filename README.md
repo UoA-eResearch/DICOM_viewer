@@ -52,7 +52,8 @@ var pathLinkData = jQuery(".pathLink:last-child").data(),
 })(jQuery);
 ```
  - this is mostly based on doublerebel's stack overflow snippet, I just added a progress indicator  
-6. Run the application and it will unzip your zip file  
+6. Also upload a pin.txt containing your desired PIN via the same method  
+7. Run the application and it will unzip your zip file  
 
 ## Troubleshooting
 
