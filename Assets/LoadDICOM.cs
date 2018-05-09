@@ -217,6 +217,7 @@ public class LoadDICOM : MonoBehaviour
 			var clone = Instantiate(go);
 			clone.transform.localScale = go.transform.lossyScale;
 			clone.transform.position = go.transform.position;
+			clone.transform.Translate(0, 0, -.5f, Space.Self);
 			selectedObject = clone;
 			directoryMap[clone] = record;
 			clone.tag = "opened_series";
