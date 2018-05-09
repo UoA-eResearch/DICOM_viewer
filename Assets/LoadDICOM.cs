@@ -123,22 +123,16 @@ public class LoadDICOM : MonoBehaviour
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
 #if !UNITY_EDITOR && UNITY_METRO
-		var zipLocation = Windows.Storage.KnownFolders.DocumentsLibrary.Path;
-		var unzipLocation = Application.persistentDataPath;
+		var root = Application.persistentDataPath;
 #else
-		var zipLocation = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-		var unzipLocation = zipLocation;
+		var root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
 #endif
-		Debug.Log(zipLocation);
-		Debug.Log(unzipLocation);
-		var zip = Path.Combine(zipLocation, "DICOM.zip");
-		var path = Path.Combine(unzipLocation, "DICOM");
-		Debug.Log("check dir " + path);
-		Debug.Log("exists=" + Directory.Exists(path));
+		var zip = Path.Combine(root, "DICOM.zip");
+		var path = Path.Combine(root, "DICOM");
 		if (File.Exists(zip) && !Directory.Exists(path))
 		{
 			Debug.Log("unzipping..");
-			System.IO.Compression.ZipFile.ExtractToDirectory(zip, unzipLocation);
+			System.IO.Compression.ZipFile.ExtractToDirectory(zip, path);
 			Debug.Log("unzip done!");
 		}
 		var offset = 0;

@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - directory
+  - series
+  - study
+  - image
+  - opened_series
   layers:
   - Default
   - TransparentFX
