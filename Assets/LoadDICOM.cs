@@ -59,7 +59,8 @@ public class LoadDICOM : MonoBehaviour
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
 		var shorts = ConvertByteArray(bytes);
-		var rescale = image.Dataset.Get<float>(DicomTag.RescaleIntercept, -1024f);
+		var rescaleIntercept = image.Dataset.Get<float>(DicomTag.RescaleIntercept, -1024f);
+		var rescaleSlope = image.Dataset.Get<float>(DicomTag.RescaleSlope, 1f);
 		/*
 		Debug.Log(pixels.Height + "," + pixels.Width);
 		Debug.Log(shorts.Length);
@@ -72,7 +73,7 @@ public class LoadDICOM : MonoBehaviour
 		for (int i = 0; i < shorts.Length; i++)
 		{
 			double intensity = shorts[i];
-			intensity += rescale;
+			intensity = intensity * rescaleSlope + rescaleIntercept;
 			// Threshold based on WindowCenter and WindowWidth
 			intensity -= image.WindowCenter - image.WindowWidth;
 			// Remap to 0-255 range and clamp
@@ -255,7 +256,7 @@ public class LoadDICOM : MonoBehaviour
 			{
 				var modality = GetDicomTag(subRecord, DicomTag.Modality);
 				var seriesDesc = GetDicomTag(subRecord, DicomTag.SeriesDescription);
-				desc = "Series: " + modality + "\n" + seriesDesc + "\n" + imageComments;
+				desc = "Series: " + modality + "\n" + seriesDesc;
 				quad.tag = "series";
 			}
 			else if (subRecord.DirectoryRecordType == "IMAGE")
