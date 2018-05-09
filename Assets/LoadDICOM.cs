@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.XR.WSA.Input;
 using HoloToolkit.Unity.InputModule.Utilities.Interactions;
+using HoloToolkit.Examples.InteractiveElements;
 
 public class LoadDICOM : MonoBehaviour
 {
@@ -235,6 +236,10 @@ public class LoadDICOM : MonoBehaviour
 			directoryMap[clone] = record;
 			clone.tag = "opened_series";
 			clone.GetComponent<TwoHandManipulatable>().enabled = true;
+			var slider = clone.transform.Find("Slider");
+			slider.gameObject.SetActive(true);
+			var sliderComponent = slider.GetComponent<SliderGestureControl>();
+			sliderComponent.SetSpan(0, record.LowerLevelDirectoryRecordCollection.Count());
 			return;
 		}
 		var rootDirectory = rootDirectoryMap[record];
