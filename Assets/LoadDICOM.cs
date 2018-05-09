@@ -22,6 +22,11 @@ public class LoadDICOM : MonoBehaviour
 	private Dictionary<GameObject, bool> openedItems;
 	private GameObject selectedObject = null;
 
+	string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
+	{
+		return string.Join(",", record.Get<string[]>(tag, new string[] { "" }));
+	}
+
 	void PrintTagsForRecord(DicomDirectoryRecord record)
 	{
 #if UNITY_EDITOR
@@ -240,19 +245,23 @@ public class LoadDICOM : MonoBehaviour
 			var quad = Instantiate(quadPrefab, go.transform);
 			if (subRecord.DirectoryRecordType == "STUDY")
 			{
-				var studyDate = subRecord.Get<string>(DicomTag.StudyDate, "no study date");
-				var studyDesc = subRecord.Get<string>(DicomTag.StudyDescription, "no desc");
-				desc = "Study: " + studyDate + "\n" + studyDesc;
+				var studyDate = GetDicomTag(subRecord, DicomTag.StudyDate);
+				var studyDesc = GetDicomTag(subRecord, DicomTag.StudyDescription);
+				var studyComments = GetDicomTag(subRecord, DicomTag.StudyCommentsRETIRED);
+				desc = "Study: " + studyDate + "\n" + studyDesc + "\n" + studyComments;
+				quad.tag = "study";
 			}
 			else if (subRecord.DirectoryRecordType == "SERIES")
 			{
-				var modality = subRecord.Get<string>(DicomTag.Modality, "no modality");
-				var seriesDesc = subRecord.Get<string>(DicomTag.SeriesDescription, "no modality");
-				desc = "Series: " + modality + "\n" + seriesDesc;
+				var modality = GetDicomTag(subRecord, DicomTag.Modality);
+				var seriesDesc = GetDicomTag(subRecord, DicomTag.SeriesDescription);
+				desc = "Series: " + modality + "\n" + seriesDesc + "\n" + imageComments;
+				quad.tag = "series";
 			}
 			else if (subRecord.DirectoryRecordType == "IMAGE")
 			{
 				desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
+				quad.tag = "image";
 			}
 			var tex = GetImageForRecord(subRecord);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
