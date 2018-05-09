@@ -8,6 +8,7 @@ using Dicom.Imaging.LUT;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.XR.WSA.Input;
+using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 
 public class LoadDICOM : MonoBehaviour
 {
@@ -157,34 +158,8 @@ public class LoadDICOM : MonoBehaviour
 			offset += 1;
 		}
 		recognizer = new GestureRecognizer();
-		recognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.ManipulationTranslate);
 		recognizer.TappedEvent += Recognizer_TappedEvent;
-		recognizer.ManipulationUpdated += Recognizer_ManipulationUpdated;
-		recognizer.ManipulationCompleted += Recognizer_ManipulationCompleted;
-		recognizer.ManipulationCanceled += Recognizer_ManipulationCanceled;
 		recognizer.StartCapturingGestures();
-	}
-
-	private void Recognizer_ManipulationCanceled(ManipulationCanceledEventArgs obj)
-	{
-		offset = Vector3.zero;
-	}
-
-	private void Recognizer_ManipulationCompleted(ManipulationCompletedEventArgs obj)
-	{
-		offset = Vector3.zero;
-	}
-
-	private void Recognizer_ManipulationUpdated(ManipulationUpdatedEventArgs obj)
-	{
-		var moveVector = obj.cumulativeDelta - offset;
-		offset = obj.cumulativeDelta;
-		var t = transform;
-		if (selectedObject)
-		{
-			t = selectedObject.transform;
-		}
-		t.localPosition += moveVector;
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -245,6 +220,7 @@ public class LoadDICOM : MonoBehaviour
 			selectedObject = clone;
 			directoryMap[clone] = record;
 			clone.tag = "opened_series";
+			clone.GetComponent<TwoHandManipulatable>().enabled = true;
 			return;
 		}
 		var rootDirectory = rootDirectoryMap[record];

@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 223106655830747906}
   - component: {fileID: 114061679570465044}
   - component: {fileID: 114044556264317666}
+  - component: {fileID: 114269492545234586}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -57,6 +58,7 @@ GameObject:
   - component: {fileID: 33172242095473556}
   - component: {fileID: 64968146569169934}
   - component: {fileID: 23922409403593620}
+  - component: {fileID: 114795269582789440}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -203,6 +205,34 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 3
+--- !u!114 &114269492545234586
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1792471670734942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aebab3047f2113489ca3eb8423228b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Canvas: {fileID: 223106655830747906}
+--- !u!114 &114795269582789440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907468084222676}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb034688bcf84b4bb52b3a3310868c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HostTransform: {fileID: 0}
+  boundingBoxPrefab: {fileID: 0}
+  ManipulationMode: 4
+  ConstraintOnRotation: 0
+  OneHandMovement: 1
 --- !u!222 &222934618925039380
 CanvasRenderer:
   m_ObjectHideFlags: 1
