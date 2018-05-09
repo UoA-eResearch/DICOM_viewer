@@ -14,6 +14,7 @@ public class LoadDICOM : MonoBehaviour
 {
 
 	public GameObject quadPrefab;
+	public GameObject annotationPrefab;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
@@ -185,6 +186,13 @@ public class LoadDICOM : MonoBehaviour
 
 	void ClickObject(GameObject go)
 	{
+		if (go.tag == "opened_series")
+		{
+			selectedObject = go;
+			var annotation = Instantiate(annotationPrefab, go.transform);
+			annotation.transform.position = go.transform.position;
+			return;
+		}
 		if (go == selectedObject) // object is already selected
 		{
 			return;
@@ -193,9 +201,8 @@ public class LoadDICOM : MonoBehaviour
 		{
 			selectedObject = null;
 		}
-		if (go.tag == "opened_series")
+		if (!directoryMap.ContainsKey(go))
 		{
-			selectedObject = go;
 			return;
 		}
 		if (openedItems.ContainsKey(go) && openedItems[go]) // clicking on an open directory or study - close it
