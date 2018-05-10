@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b765c8424a6869b4ba791c82aadd4dc7, type: 3}
   m_Name: VolumeInformation
   m_EditorClassIdentifier: 
-  ImageSourceFolder: /OfflineAssets/BrainSlices
+  ImageSourceFolder: \HoloToolkit-Examples\Medical\BrainSlices
   BakedTexture: {fileID: 11700000, guid: 8c8faf72fc9f4964b8fc6688161b236a, type: 2}
   InferAlpha: 1
   AutoSizeOnBake: 1

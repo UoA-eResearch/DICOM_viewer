@@ -33,7 +33,7 @@ namespace HoloToolkit.Unity
                 throw new NullReferenceException();
             }
 
-            var colors = new Color32[volumeSizePow2.sqrMagnitude];
+            var colors = new Color32[volumeSizePow2.x * volumeSizePow2.y * volumeSizePow2.z];
 
             Int3 n;
 

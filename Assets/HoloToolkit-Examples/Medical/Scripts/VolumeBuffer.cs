@@ -29,7 +29,7 @@ namespace HoloToolkit.Unity
         public VolumeBuffer(Int3 size)
         {
             this.Size = size;
-            this.DataArray = new T[this.Size.sqrMagnitude];
+            this.DataArray = new T[this.Size.x * this.Size.y * this.Size.z];
         }
 
         public VolumeBuffer(Int3 size, T[] ar)
