@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.WSA.Input;
 using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using HoloToolkit.Examples.InteractiveElements;
+using System;
 
 public class LoadDICOM : MonoBehaviour
 {
@@ -90,7 +91,7 @@ public class LoadDICOM : MonoBehaviour
 		return tex;
 	}
 
-	DicomDirectoryRecord GetRepresentativeImageRecord(DicomDirectoryRecord record)
+	DicomDirectoryRecord GetSeries(DicomDirectoryRecord record)
 	{
 		if (record.DirectoryRecordType == "IMAGE")
 		{
@@ -100,28 +101,38 @@ public class LoadDICOM : MonoBehaviour
 		{
 			record = record.LowerLevelDirectoryRecord;
 		}
-		return record.LowerLevelDirectoryRecordCollection.OrderBy(x => x.Get<string>(DicomTag.ReferencedFileID, 3)).First();
+		return record;
 	}
 
-	Texture2D GetImageForRecord(DicomDirectoryRecord record)
+	public Texture2D GetImageForRecord(DicomDirectoryRecord record, int frame = 0)
 	{
 		var directory = rootDirectoryMap[record];
-		record = GetRepresentativeImageRecord(record);
-		var filename = Path.Combine(record.Get<string[]>(DicomTag.ReferencedFileID));
-		var absoluteFilename = Path.Combine(directory, filename);
-		Debug.Log("load image " + absoluteFilename);
+		var series = GetSeries(record);
+		var tex = new Texture2D(1, 1);
+		var absoluteFilename = "";
+		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber));
+		if (frame == 0 && !instanceNumbers.Contains(frame)) // some images are zero indexed, some 1 indexed
+		{
+			frame = 1;
+		}
 		try
 		{
+			var imageRecord = series.LowerLevelDirectoryRecordCollection.First(x => x.Get<int>(DicomTag.InstanceNumber) == frame);
+			var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
+			absoluteFilename = Path.Combine(directory, filename);
+			Debug.Log("load image " + absoluteFilename);
 			var img = new DicomImage(absoluteFilename);
-			var tex = DicomToTex2D(img);
-			return tex;
+			tex = DicomToTex2D(img);
+		}
+		catch (InvalidOperationException)
+		{
+			Debug.LogError("series does not contain an image of InstanceNumber=" + frame + "- valid instance numbers = " + string.Join(",", instanceNumbers));
 		}
 		catch (System.Exception)
 		{
 			Debug.LogError("Failed to load " + absoluteFilename);
-			var tex = new Texture2D(1, 1);
-			return tex;
 		}
+		return tex;
 	}
 
 	// Use this for initialization
@@ -240,6 +251,9 @@ public class LoadDICOM : MonoBehaviour
 			slider.gameObject.SetActive(true);
 			var sliderComponent = slider.GetComponent<SliderGestureControl>();
 			sliderComponent.SetSpan(0, record.LowerLevelDirectoryRecordCollection.Count());
+			var openSeriesHandler = clone.GetComponent<OpenSeriesHandler>();
+			openSeriesHandler.record = record;
+			openSeriesHandler.loadDicomInstance = this;
 			return;
 		}
 		var rootDirectory = rootDirectoryMap[record];
