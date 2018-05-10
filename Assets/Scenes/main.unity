@@ -503,16 +503,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[1].OnTappedEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4946519858470338, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -545,79 +535,24 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1907468084222676, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
+      propertyPath: m_Name
+      value: test_quad
+      objectReference: {fileID: 0}
     - target: {fileID: 114923661995744426, guid: e35d0cfff153a45478afcebb72fb2d1e,
         type: 2}
       propertyPath: loadDicomInstance
       value: 
       objectReference: {fileID: 100800427}
-    - target: {fileID: 1907468084222676, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
-      propertyPath: m_Name
-      value: test_quad
-      objectReference: {fileID: 0}
     - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
         type: 2}
-      propertyPath: buttons.Array.data[1].Name
-      value: Remove
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[1].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: boundingBox
       value: 
-      objectReference: {fileID: 1765458905}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
+      objectReference: {fileID: 114030465538688920, guid: 865a8ded6c47efd4285f04f3aebe99e9,
         type: 2}
-      propertyPath: buttons.Array.data[1].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[1].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[1].OnTappedEvent.m_TypeName
-      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1765458908}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ButtonPush
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].OnTappedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: 3D
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[1].Type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114434469670020660, guid: e35d0cfff153a45478afcebb72fb2d1e,
-        type: 2}
-      propertyPath: buttons.Array.data[0].Text
-      value: 3D
-      objectReference: {fileID: 0}
     - target: {fileID: 1907468084222676, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
-      propertyPath: m_TagString
-      value: opened_series
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
@@ -627,12 +562,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1907468084222676, guid: e35d0cfff153a45478afcebb72fb2d1e,
     type: 2}
   m_PrefabInternal: {fileID: 1765458904}
---- !u!114 &1765458908 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114923661995744426, guid: e35d0cfff153a45478afcebb72fb2d1e,
-    type: 2}
-  m_PrefabInternal: {fileID: 1765458904}
-  m_Script: {fileID: 11500000, guid: 97fe5dbafd953fd4caf2b86368d1cc7b, type: 3}
 --- !u!114 &2014856681 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114611684728110934, guid: a611e772ef8ddf64d8106a9cbb70f31c,

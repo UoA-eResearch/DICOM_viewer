@@ -12,6 +12,7 @@ using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using HoloToolkit.Examples.InteractiveElements;
 using System;
 using HoloToolkit.Unity.UX;
+using UnityEngine.SceneManagement;
 
 public class LoadDICOM : MonoBehaviour
 {
@@ -197,40 +198,40 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.StartCapturingGestures();
 		status.text = "";
 
-		if (testQuad.activeInHierarchy)
+#if UNITY_EDITOR
+		testQuad.SetActive(true);
+		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
+		// worst case series - most images
+		int largest = 0;
+		DicomDirectoryRecord largestSeries = firstStudy.LowerLevelDirectoryRecord;
+		foreach (var series in firstStudy.LowerLevelDirectoryRecordCollection)
 		{
-			var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
-			// worst case series - most images
-			int largest = 0;
-			DicomDirectoryRecord largestSeries = firstStudy.LowerLevelDirectoryRecord;
-			foreach (var series in firstStudy.LowerLevelDirectoryRecordCollection)
+			var n_images = series.LowerLevelDirectoryRecordCollection.Count();
+			if (n_images > largest)
 			{
-				var n_images = series.LowerLevelDirectoryRecordCollection.Count();
-				if (n_images > largest)
-				{
-					largest = n_images;
-					largestSeries = series;
-				}
+				largest = n_images;
+				largestSeries = series;
 			}
-			var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
-			seriesHandler.record = largestSeries;
-
-			var modality = GetDicomTag(largestSeries, DicomTag.Modality);
-			var seriesDesc = GetDicomTag(largestSeries, DicomTag.SeriesDescription);
-			testQuad.name = "Series: " + modality + "\n" + seriesDesc;
-			directoryMap[testQuad] = largestSeries;
-			rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
-
-			testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
-			testQuad.transform.Find("AppBar").gameObject.SetActive(true);
-			var slider = testQuad.transform.Find("Slider");
-			slider.gameObject.SetActive(true);
-			var sliderComponent = slider.GetComponent<SliderGestureControl>();
-			sliderComponent.SetSpan(0, largest);
-			sliderComponent.SetSliderValue(largest / 2f);
-			var tex = GetImageForRecord(largestSeries);
-			testQuad.GetComponent<Renderer>().material.mainTexture = tex;
 		}
+		var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
+		seriesHandler.record = largestSeries;
+
+		var modality = GetDicomTag(largestSeries, DicomTag.Modality);
+		var seriesDesc = GetDicomTag(largestSeries, DicomTag.SeriesDescription);
+		testQuad.name = "Series: " + modality + "\n" + seriesDesc;
+		directoryMap[testQuad] = largestSeries;
+		rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
+
+		testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
+		testQuad.transform.Find("AppBar").gameObject.SetActive(true);
+		Debug.Log(testQuad.transform.Find("AppBar").name);
+		var slider = testQuad.transform.Find("Slider");
+		slider.gameObject.SetActive(true);
+		var sliderComponent = slider.GetComponent<SliderGestureControl>();
+		sliderComponent.SetSpan(0, largest);
+		sliderComponent.SetSliderValue(largest / 2f);
+		testQuad.GetComponent<Renderer>().material.mainTexture = GetImageForRecord(largestSeries);
+#endif
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -377,6 +378,14 @@ public class LoadDICOM : MonoBehaviour
 			{
 				ClickObject(hit.collider.gameObject);
 			}
+		}
+	}
+
+	private void OnApplicationFocus(bool focus)
+	{
+		if (!focus)
+		{
+			SceneManager.LoadScene("PIN");
 		}
 	}
 }
