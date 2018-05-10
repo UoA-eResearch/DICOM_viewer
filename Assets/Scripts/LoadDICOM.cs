@@ -11,12 +11,14 @@ using UnityEngine.XR.WSA.Input;
 using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using HoloToolkit.Examples.InteractiveElements;
 using System;
+using HoloToolkit.Unity.UX;
 
 public class LoadDICOM : MonoBehaviour
 {
 
 	public GameObject quadPrefab;
 	public GameObject annotationPrefab;
+	public GameObject testQuad;
 	public TextMesh status;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
@@ -46,7 +48,7 @@ public class LoadDICOM : MonoBehaviour
 #endif
 	}
 
-	short[] ConvertByteArray(byte[] bytes)
+	static short[] ConvertByteArray(byte[] bytes)
 	{
 		var size = bytes.Length / sizeof(short);
 		var shorts = new short[size];
@@ -57,7 +59,7 @@ public class LoadDICOM : MonoBehaviour
 		return shorts;
 	}
 
-	Texture2D DicomToTex2D(DicomImage image)
+	static Texture2D DicomToTex2D(DicomImage image)
 	{
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
@@ -92,7 +94,7 @@ public class LoadDICOM : MonoBehaviour
 		return tex;
 	}
 
-	DicomDirectoryRecord GetSeries(DicomDirectoryRecord record)
+	static DicomDirectoryRecord GetSeries(DicomDirectoryRecord record)
 	{
 		if (record.DirectoryRecordType == "IMAGE")
 		{
@@ -105,16 +107,16 @@ public class LoadDICOM : MonoBehaviour
 		return record;
 	}
 
-	public Texture2D GetImageForRecord(DicomDirectoryRecord record, int frame = 0)
+	public Texture2D GetImageForRecord(DicomDirectoryRecord record, int frame = -1)
 	{
 		var directory = rootDirectoryMap[record];
 		var series = GetSeries(record);
 		var tex = new Texture2D(1, 1);
 		var absoluteFilename = "";
-		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber));
-		if (frame == 0 && !instanceNumbers.Contains(frame)) // some images are zero indexed, some 1 indexed
+		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber)).OrderBy(x => x).ToArray();
+		if (frame == -1) // get thumbnail - get midpoint image
 		{
-			frame = 1;
+			frame = instanceNumbers[instanceNumbers.Length / 2];
 		}
 		try
 		{
@@ -194,6 +196,41 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.TappedEvent += Recognizer_TappedEvent;
 		recognizer.StartCapturingGestures();
 		status.text = "";
+
+		if (testQuad.activeInHierarchy)
+		{
+			var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
+			// worst case series - most images
+			int largest = 0;
+			DicomDirectoryRecord largestSeries = firstStudy.LowerLevelDirectoryRecord;
+			foreach (var series in firstStudy.LowerLevelDirectoryRecordCollection)
+			{
+				var n_images = series.LowerLevelDirectoryRecordCollection.Count();
+				if (n_images > largest)
+				{
+					largest = n_images;
+					largestSeries = series;
+				}
+			}
+			var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
+			seriesHandler.record = largestSeries;
+
+			var modality = GetDicomTag(largestSeries, DicomTag.Modality);
+			var seriesDesc = GetDicomTag(largestSeries, DicomTag.SeriesDescription);
+			testQuad.name = "Series: " + modality + "\n" + seriesDesc;
+
+			testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
+			testQuad.transform.Find("AppBar").gameObject.SetActive(true);
+			var slider = testQuad.transform.Find("Slider");
+			slider.gameObject.SetActive(true);
+			var sliderComponent = slider.GetComponent<SliderGestureControl>();
+			sliderComponent.SetSpan(0, largest);
+			sliderComponent.SetSliderValue(largest / 2f);
+			var tex = GetImageForRecord(largestSeries);
+			testQuad.GetComponent<Renderer>().material.mainTexture = tex;
+			directoryMap[testQuad] = largestSeries;
+			rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
+		}
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -262,10 +299,13 @@ public class LoadDICOM : MonoBehaviour
 			directoryMap[clone] = record;
 			clone.tag = "opened_series";
 			clone.GetComponent<TwoHandManipulatable>().enabled = true;
+			clone.transform.Find("AppBar").gameObject.SetActive(true);
 			var slider = clone.transform.Find("Slider");
 			slider.gameObject.SetActive(true);
 			var sliderComponent = slider.GetComponent<SliderGestureControl>();
-			sliderComponent.SetSpan(0, record.LowerLevelDirectoryRecordCollection.Count());
+			var n_images = record.LowerLevelDirectoryRecordCollection.Count();
+			sliderComponent.SetSpan(0, n_images);
+			sliderComponent.SetSliderValue(n_images / 2f);
 			var openSeriesHandler = clone.GetComponent<OpenSeriesHandler>();
 			openSeriesHandler.record = record;
 			openSeriesHandler.loadDicomInstance = this;

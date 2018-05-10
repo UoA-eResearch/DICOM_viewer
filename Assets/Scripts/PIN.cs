@@ -13,7 +13,14 @@ public class PIN : MonoBehaviour {
 
 	private void Start()
 	{
-		correctPin = File.ReadAllText(Path.Combine(Application.persistentDataPath, "pin.txt"));
+		try
+		{
+			correctPin = File.ReadAllText(Path.Combine(Application.persistentDataPath, "pin.txt"));
+		}
+		catch
+		{
+			feedback.text = "pin.txt missing!";
+		}
 	}
 
 	public void OnClick(string digit)
@@ -24,14 +31,30 @@ public class PIN : MonoBehaviour {
 		{
 			if (currentEntered == correctPin)
 			{
-				feedback.text += " Correct!";
-				SceneManager.LoadScene("main");
+				feedback.text += " Correct! - Loading";
+				StartCoroutine(LoadSceneAsync());
 			}
 			else
 			{
 				feedback.text += " Incorrect";
 				currentEntered = "";
 			}
+		}
+	}
+
+	IEnumerator LoadSceneAsync()
+	{
+		// The Application loads the Scene in the background as the current Scene runs.
+		// This is particularly good for creating loading screens.
+		// You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
+		// a sceneBuildIndex of 1 as shown in Build Settings.
+
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("main");
+
+		// Wait until the asynchronous scene fully loads
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
 		}
 	}
 }
