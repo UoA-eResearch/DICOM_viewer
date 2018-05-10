@@ -8,6 +8,7 @@ public class OpenSeriesHandler : MonoBehaviour {
 	public DicomDirectoryRecord record;
 	public LoadDICOM loadDicomInstance;
 	private Renderer renderer;
+	private int previousValue;
 
 	// Use this for initialization
 	void Start () {
@@ -21,7 +22,12 @@ public class OpenSeriesHandler : MonoBehaviour {
 
 	public void SliderChange(float newValue)
 	{
-		var tex = loadDicomInstance.GetImageForRecord(record, (int)newValue);
-		renderer.material.mainTexture = tex;
+		int newValueInt = (int)newValue;
+		if (newValueInt != previousValue)
+		{
+			var tex = loadDicomInstance.GetImageForRecord(record, newValueInt);
+			renderer.material.mainTexture = tex;
+			previousValue = newValueInt;
+		}
 	}
 }

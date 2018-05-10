@@ -17,6 +17,7 @@ public class LoadDICOM : MonoBehaviour
 
 	public GameObject quadPrefab;
 	public GameObject annotationPrefab;
+	public TextMesh status;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
@@ -149,9 +150,15 @@ public class LoadDICOM : MonoBehaviour
 #endif
 		var zip = Path.Combine(root, "DICOM.zip");
 		var path = Path.Combine(root, "DICOM");
+		if (!File.Exists(zip) && !Directory.Exists(path))
+		{
+			status.text = "ERROR: No zip file found!";
+			return;
+		}
 		if (File.Exists(zip) && !Directory.Exists(path))
 		{
 			Debug.Log("unzipping..");
+			status.text = "unzipping...";
 			System.IO.Compression.ZipFile.ExtractToDirectory(zip, path);
 			Debug.Log("unzip done!");
 		}
@@ -159,6 +166,13 @@ public class LoadDICOM : MonoBehaviour
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
 		openedItems = new Dictionary<GameObject, bool>();
+		var directories = Directory.GetDirectories(path);
+		if (directories.Length == 0)
+		{
+			status.text = "ERROR: No directories found!";
+			return;
+		}
+		status.text = "Loading...";
 		foreach (var directory in Directory.GetDirectories(path))
 		{
 			var directoryName = Path.GetFileName(directory);
@@ -179,6 +193,7 @@ public class LoadDICOM : MonoBehaviour
 		recognizer = new GestureRecognizer();
 		recognizer.TappedEvent += Recognizer_TappedEvent;
 		recognizer.StartCapturingGestures();
+		status.text = "";
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
@@ -258,6 +273,7 @@ public class LoadDICOM : MonoBehaviour
 		}
 		var rootDirectory = rootDirectoryMap[record];
 		var offset = 0;
+		status.text = "Loading...";
 		foreach (var subRecord in record.LowerLevelDirectoryRecordCollection)
 		{
 			rootDirectoryMap[subRecord] = rootDirectory;
@@ -292,6 +308,7 @@ public class LoadDICOM : MonoBehaviour
 			openedItems[quad] = false;
 			offset += 1;
 		}
+		status.text = "";
 	}
 
 	// Update is called once per frame
