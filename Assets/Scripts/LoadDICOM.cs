@@ -218,6 +218,8 @@ public class LoadDICOM : MonoBehaviour
 			var modality = GetDicomTag(largestSeries, DicomTag.Modality);
 			var seriesDesc = GetDicomTag(largestSeries, DicomTag.SeriesDescription);
 			testQuad.name = "Series: " + modality + "\n" + seriesDesc;
+			directoryMap[testQuad] = largestSeries;
+			rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
 
 			testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
 			testQuad.transform.Find("AppBar").gameObject.SetActive(true);
@@ -228,8 +230,6 @@ public class LoadDICOM : MonoBehaviour
 			sliderComponent.SetSliderValue(largest / 2f);
 			var tex = GetImageForRecord(largestSeries);
 			testQuad.GetComponent<Renderer>().material.mainTexture = tex;
-			directoryMap[testQuad] = largestSeries;
-			rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
 		}
 	}
 
