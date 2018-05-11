@@ -366,18 +366,6 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4844360948544574, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4844360948544574, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4844360948544574, guid: e35d0cfff153a45478afcebb72fb2d1e, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 114923661995744426, guid: e35d0cfff153a45478afcebb72fb2d1e,
         type: 2}
       propertyPath: loadDicomInstance

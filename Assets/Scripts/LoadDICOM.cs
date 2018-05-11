@@ -33,7 +33,7 @@ public class LoadDICOM : MonoBehaviour
 		return string.Join(",", record.Get<string[]>(tag, new string[] { "" }));
 	}
 
-	void PrintTagsForRecord(DicomDirectoryRecord record)
+	public static void PrintTagsForRecord(DicomDirectoryRecord record)
 	{
 #if UNITY_EDITOR
 		foreach (var field in typeof(DicomTag).GetFields())
@@ -108,11 +108,25 @@ public class LoadDICOM : MonoBehaviour
 		return record;
 	}
 
-	public Texture2D GetImageForRecord(DicomDirectoryRecord record, int frame = -1)
+	public Texture2D GetTexture2DForRecord(DicomDirectoryRecord record, int frame = -1)
+	{
+		var tex = new Texture2D(1, 1);
+		try
+		{
+			var img = GetImageForRecord(record, frame);
+			tex = DicomToTex2D(img);
+		}
+		catch
+		{
+		}
+		return tex;
+	}
+
+	public DicomImage GetImageForRecord(DicomDirectoryRecord record, int frame = -1)
 	{
 		var directory = rootDirectoryMap[record];
 		var series = GetSeries(record);
-		var tex = new Texture2D(1, 1);
+		var tex = new Texture2D(2, 2);
 		var absoluteFilename = "";
 		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber)).OrderBy(x => x).ToArray();
 		if (frame == -1) // get thumbnail - get midpoint image
@@ -126,17 +140,18 @@ public class LoadDICOM : MonoBehaviour
 			absoluteFilename = Path.Combine(directory, filename);
 			Debug.Log("load image " + absoluteFilename);
 			var img = new DicomImage(absoluteFilename);
-			tex = DicomToTex2D(img);
+			return img;
 		}
 		catch (InvalidOperationException)
 		{
 			Debug.LogError("series does not contain an image of InstanceNumber=" + frame + "- valid instance numbers = " + string.Join(",", instanceNumbers));
+			return null;
 		}
 		catch (System.Exception)
 		{
 			Debug.LogError("Failed to load " + absoluteFilename);
+			return null;
 		}
-		return tex;
 	}
 
 	// Use this for initialization
@@ -182,7 +197,7 @@ public class LoadDICOM : MonoBehaviour
 			Debug.Log("--DIRECTORY--" + directoryName);
 			var dd = DicomDirectory.Open(Path.Combine(directory, "DICOMDIR"));
 			rootDirectoryMap[dd.RootDirectoryRecord] = directory;
-			var tex = GetImageForRecord(dd.RootDirectoryRecord);
+			var tex = GetTexture2DForRecord(dd.RootDirectoryRecord);
 			var quad = Instantiate(quadPrefab, transform);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
 			quad.transform.localPosition += new Vector3(offset, 0, 0);
@@ -225,12 +240,14 @@ public class LoadDICOM : MonoBehaviour
 
 		testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
 		testQuad.transform.Find("3D_toggle").gameObject.SetActive(true);
+		testQuad.transform.Find("3D_toggle").GetComponent<InteractiveToggle>().SetSelection(true);
+		seriesHandler.ButtonPush("3D");
 		var slider = testQuad.transform.Find("Slider");
 		slider.gameObject.SetActive(true);
 		var sliderComponent = slider.GetComponent<SliderGestureControl>();
 		sliderComponent.SetSpan(0, largest);
 		sliderComponent.SetSliderValue(largest / 2f);
-		testQuad.GetComponent<Renderer>().material.mainTexture = GetImageForRecord(largestSeries);
+		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(largestSeries);
 #else
 		testQuad.SetActive(false);
 #endif
@@ -297,6 +314,7 @@ public class LoadDICOM : MonoBehaviour
 			var clone = Instantiate(go);
 			clone.transform.localScale = go.transform.lossyScale;
 			clone.transform.position = go.transform.position;
+			clone.transform.rotation = go.transform.rotation;
 			clone.transform.Translate(0, 0, -.5f, Space.Self);
 			selectedObject = clone;
 			directoryMap[clone] = record;
@@ -342,7 +360,7 @@ public class LoadDICOM : MonoBehaviour
 				desc = "Image: " + subRecord.Get<string>(DicomTag.InstanceNumber);
 				quad.tag = "image";
 			}
-			var tex = GetImageForRecord(subRecord);
+			var tex = GetTexture2DForRecord(subRecord);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
 			quad.transform.localPosition += new Vector3(offset, -2, 0);
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = desc;
