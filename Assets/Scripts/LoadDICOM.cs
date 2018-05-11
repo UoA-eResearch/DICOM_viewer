@@ -385,7 +385,9 @@ public class LoadDICOM : MonoBehaviour
 	{
 		if (!focus)
 		{
+#if !UNITY_EDITOR
 			SceneManager.LoadScene("PIN");
+#endif
 		}
 	}
 }
