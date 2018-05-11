@@ -224,8 +224,7 @@ public class LoadDICOM : MonoBehaviour
 		rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
 
 		testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
-		testQuad.transform.Find("AppBar").gameObject.SetActive(true);
-		Debug.Log(testQuad.transform.Find("AppBar").name);
+		testQuad.transform.Find("3D_toggle").gameObject.SetActive(true);
 		var slider = testQuad.transform.Find("Slider");
 		slider.gameObject.SetActive(true);
 		var sliderComponent = slider.GetComponent<SliderGestureControl>();
@@ -303,7 +302,7 @@ public class LoadDICOM : MonoBehaviour
 			directoryMap[clone] = record;
 			clone.tag = "opened_series";
 			clone.GetComponent<TwoHandManipulatable>().enabled = true;
-			clone.transform.Find("AppBar").gameObject.SetActive(true);
+			clone.transform.Find("3D_toggle").gameObject.SetActive(true);
 			var slider = clone.transform.Find("Slider");
 			slider.gameObject.SetActive(true);
 			var sliderComponent = slider.GetComponent<SliderGestureControl>();
