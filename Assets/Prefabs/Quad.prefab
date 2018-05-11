@@ -487,9 +487,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1907468084222676}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224338949587565726}
   - {fileID: 4491267004067946}
@@ -1171,7 +1171,8 @@ MonoBehaviour:
   buttonParent: {fileID: 4491374894871866}
   baseRenderer: {fileID: 1440593571363400}
   backgroundBar: {fileID: 1099925887437520}
-  boundingBox: {fileID: 0}
+  boundingBox: {fileID: 114030465538688920, guid: 865a8ded6c47efd4285f04f3aebe99e9,
+    type: 2}
 --- !u!114 &114455364878441730
 MonoBehaviour:
   m_ObjectHideFlags: 1

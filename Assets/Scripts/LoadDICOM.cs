@@ -200,6 +200,7 @@ public class LoadDICOM : MonoBehaviour
 
 #if UNITY_EDITOR
 		testQuad.SetActive(true);
+		testQuad.transform.position = new Vector3(0, 0, 2);
 		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
 		// worst case series - most images
 		int largest = 0;
@@ -231,6 +232,8 @@ public class LoadDICOM : MonoBehaviour
 		sliderComponent.SetSpan(0, largest);
 		sliderComponent.SetSliderValue(largest / 2f);
 		testQuad.GetComponent<Renderer>().material.mainTexture = GetImageForRecord(largestSeries);
+#else
+		testQuad.SetActive(false);
 #endif
 	}
 
