@@ -12,14 +12,14 @@ using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using HoloToolkit.Examples.InteractiveElements;
 using System;
 using HoloToolkit.Unity.UX;
-using UnityEngine.SceneManagement;
 
 public class LoadDICOM : MonoBehaviour
 {
-
+	public Transform filebrowser;
 	public GameObject quadPrefab;
 	public GameObject annotationPrefab;
 	public GameObject testQuad;
+	public GameObject pin;
 	public TextMesh status;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
@@ -198,7 +198,7 @@ public class LoadDICOM : MonoBehaviour
 			var dd = DicomDirectory.Open(Path.Combine(directory, "DICOMDIR"));
 			rootDirectoryMap[dd.RootDirectoryRecord] = directory;
 			var tex = GetTexture2DForRecord(dd.RootDirectoryRecord);
-			var quad = Instantiate(quadPrefab, transform);
+			var quad = Instantiate(quadPrefab, filebrowser);
 			quad.GetComponent<Renderer>().material.mainTexture = tex;
 			quad.transform.localPosition += new Vector3(offset, 0, 0);
 			quad.transform.Find("Canvas").Find("title").GetComponent<Text>().text = "Directory: " + directoryName;
@@ -311,7 +311,7 @@ public class LoadDICOM : MonoBehaviour
 		var record = directoryMap[go];
 		if (record.DirectoryRecordType == "SERIES") // opening a series - bring it out of the tree
 		{
-			var clone = Instantiate(go);
+			var clone = Instantiate(go, transform);
 			clone.transform.localScale = go.transform.lossyScale;
 			clone.transform.position = go.transform.position;
 			clone.transform.rotation = go.transform.rotation;
@@ -405,9 +405,8 @@ public class LoadDICOM : MonoBehaviour
 	{
 		if (!focus)
 		{
-#if !UNITY_EDITOR
-			SceneManager.LoadScene("PIN");
-#endif
+			gameObject.SetActive(false);
+			pin.SetActive(true);
 		}
 	}
 }

@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PIN : MonoBehaviour {
@@ -10,6 +7,7 @@ public class PIN : MonoBehaviour {
 	public Text feedback;
 	private string currentEntered = "";
 	private string correctPin;
+	public GameObject root;
 
 	private void Start()
 	{
@@ -31,30 +29,16 @@ public class PIN : MonoBehaviour {
 		{
 			if (currentEntered == correctPin)
 			{
-				feedback.text += " Correct! - Loading";
-				StartCoroutine(LoadSceneAsync());
+				feedback.text = "Entered: ";
+				currentEntered = "";
+				root.SetActive(true);
+				gameObject.SetActive(false);
 			}
 			else
 			{
 				feedback.text += " Incorrect";
 				currentEntered = "";
 			}
-		}
-	}
-
-	IEnumerator LoadSceneAsync()
-	{
-		// The Application loads the Scene in the background as the current Scene runs.
-		// This is particularly good for creating loading screens.
-		// You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
-		// a sceneBuildIndex of 1 as shown in Build Settings.
-
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("main");
-
-		// Wait until the asynchronous scene fully loads
-		while (!asyncLoad.isDone)
-		{
-			yield return null;
 		}
 	}
 }
