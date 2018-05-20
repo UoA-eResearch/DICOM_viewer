@@ -19,6 +19,10 @@ public class PIN : MonoBehaviour {
 		{
 			feedback.text = "pin.txt missing!";
 		}
+#if UNITY_EDITOR
+		root.SetActive(true);
+		gameObject.SetActive(false);
+#endif
 	}
 
 	public void OnClick(string digit)
