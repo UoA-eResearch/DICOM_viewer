@@ -147,9 +147,9 @@ public class LoadDICOM : MonoBehaviour
 			Debug.LogError("series does not contain an image of InstanceNumber=" + frame + "- valid instance numbers = " + string.Join(",", instanceNumbers));
 			return null;
 		}
-		catch (System.Exception)
+		catch (System.Exception e)
 		{
-			Debug.LogError("Failed to load " + absoluteFilename);
+			Debug.LogError("Failed to load " + absoluteFilename + ":" + e);
 			return null;
 		}
 	}
@@ -267,16 +267,22 @@ public class LoadDICOM : MonoBehaviour
 				foreach (var series in study.LowerLevelDirectoryRecordCollection)
 				{
 					var id = series.Get<string>(DicomTag.SeriesInstanceUID);
-					var path = Path.Combine(Application.persistentDataPath, "Volumes", id);
-					if (!File.Exists(path))
+					try
 					{
-						rootDirectoryMap[series] = rootDirectoryMap[directory.Value];
-						var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
-						seriesHandler.record = series;
-						Int3 size;
-						var vol = seriesHandler.DICOMSeriesToVolume(series, out size);
-						File.WriteAllBytes(path, vol);
-						Debug.Log((Time.realtimeSinceStartup - startTime) + ": wrote " + path);
+						var path = Path.Combine(Application.persistentDataPath, "Volumes", id);
+						if (!File.Exists(path))
+						{
+							rootDirectoryMap[series] = rootDirectoryMap[directory.Value];
+							var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
+							seriesHandler.record = series;
+							Int3 size;
+							var vol = seriesHandler.DICOMSeriesToVolume(series, out size);
+							File.WriteAllBytes(path, vol);
+							Debug.Log((Time.realtimeSinceStartup - startTime) + ": wrote " + path);
+						}
+					}
+					catch {
+						Debug.LogError("unable to create volume for " + id);
 					}
 				}
 			}
