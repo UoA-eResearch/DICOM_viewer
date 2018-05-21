@@ -22,6 +22,9 @@ public class PIN : MonoBehaviour {
 #if UNITY_EDITOR
 		root.SetActive(true);
 		gameObject.SetActive(false);
+#else
+		root.SetActive(false);
+		gameObject.SetActive(true);
 #endif
 	}
 

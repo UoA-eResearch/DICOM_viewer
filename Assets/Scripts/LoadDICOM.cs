@@ -405,7 +405,7 @@ public class LoadDICOM : MonoBehaviour
 	{
 		if (!focus)
 		{
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
 			gameObject.SetActive(false);
 			pin.SetActive(true);
 #endif
