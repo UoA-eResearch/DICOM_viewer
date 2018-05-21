@@ -12,6 +12,7 @@ using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using HoloToolkit.Examples.InteractiveElements;
 using System;
 using HoloToolkit.Unity.UX;
+using HoloToolkit.Unity;
 
 public class LoadDICOM : MonoBehaviour
 {
@@ -137,7 +138,7 @@ public class LoadDICOM : MonoBehaviour
 			var imageRecord = series.LowerLevelDirectoryRecordCollection.First(x => x.Get<int>(DicomTag.InstanceNumber) == frame);
 			var filename = Path.Combine(imageRecord.Get<string[]>(DicomTag.ReferencedFileID));
 			absoluteFilename = Path.Combine(directory, filename);
-			Debug.Log("load image " + absoluteFilename);
+			//Debug.Log("load image " + absoluteFilename);
 			var img = new DicomImage(absoluteFilename);
 			return img;
 		}
@@ -249,9 +250,37 @@ public class LoadDICOM : MonoBehaviour
 		sliderComponent.SetSpan(0, largest);
 		sliderComponent.SetSliderValue(largest / 2f);
 		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(largestSeries);
+		WarmVolumeCache();
 #else
 		testQuad.SetActive(false);
 #endif
+	}
+
+	void WarmVolumeCache()
+	{
+		var startTime = Time.realtimeSinceStartup;
+		foreach (var directory in directoryMap)
+		{
+			foreach (var study in directory.Value.LowerLevelDirectoryRecordCollection)
+			{
+				Debug.Log("warming cache for " + study.Get<string>(DicomTag.StudyDescription, ""));
+				foreach (var series in study.LowerLevelDirectoryRecordCollection)
+				{
+					var id = series.Get<string>(DicomTag.SeriesInstanceUID);
+					var path = Path.Combine(Application.persistentDataPath, "Volumes", id);
+					if (!File.Exists(path))
+					{
+						rootDirectoryMap[series] = rootDirectoryMap[directory.Value];
+						var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
+						seriesHandler.record = series;
+						Int3 size;
+						var vol = seriesHandler.DICOMSeriesToVolume(series, out size);
+						File.WriteAllBytes(path, vol);
+						Debug.Log((Time.realtimeSinceStartup - startTime) + ": wrote " + path);
+					}
+				}
+			}
+		}
 	}
 
 	private void Recognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)

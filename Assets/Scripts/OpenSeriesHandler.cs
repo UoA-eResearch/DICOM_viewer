@@ -17,7 +17,7 @@ public class OpenSeriesHandler : MonoBehaviour {
 	private int resolution = 2;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		renderer = gameObject.GetComponent<Renderer>();
 	}
 	
