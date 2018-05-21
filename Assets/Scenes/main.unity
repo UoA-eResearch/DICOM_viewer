@@ -1013,6 +1013,10 @@ Prefab:
       propertyPath: m_Name
       value: test_quad
       objectReference: {fileID: 0}
+    - target: {fileID: 1484858884311492, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
   m_IsPrefabParent: 0

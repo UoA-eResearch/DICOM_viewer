@@ -25,38 +25,41 @@ public class OpenSeriesHandler : MonoBehaviour {
 	{
 		if (button == "3D")
 		{
-			var id = record.Get<string>(DicomTag.SeriesInstanceUID);
-			var path = Path.Combine(Application.persistentDataPath, "Volumes", id);
-			byte[] vol;
-			Int3 size;
-
-			var startTime = Time.realtimeSinceStartup;
-
-			if (File.Exists(path) && useCache) // a cached volume for this series exists
-			{
-				vol = File.ReadAllBytes(path);
-				size = GetSizeForRecord(record);
-			}
-			else
-			{
-				vol = DICOMSeriesToVolume(record, out size);
-				File.WriteAllBytes(path, vol);
-			}
-
-
-			var volumeSizePow2 = MathExtensions.PowerOfTwoGreaterThanOrEqualTo(size);
-			var tex3D = VolumeTextureUtils.BuildTexture(vol, size, volumeSizePow2);
-
-			Debug.Log("created volume in " + (Time.realtimeSinceStartup - startTime) + "s");
-
 			var vc = transform.Find("Volume Cube");
 			vc.gameObject.SetActive(true);
-			vc.GetComponent<Renderer>().material.SetTexture("_Volume", tex3D);
-			GetComponent<MeshRenderer>().enabled = false;
+
+			if (vc.GetComponent<Renderer>().material.GetTexture("_Volume") == null)
+			{
+				var id = record.Get<string>(DicomTag.SeriesInstanceUID);
+				var path = Path.Combine(Application.persistentDataPath, "Volumes", id);
+				byte[] vol;
+				Int3 size;
+
+				var startTime = Time.realtimeSinceStartup;
+
+				if (File.Exists(path) && useCache) // a cached volume for this series exists
+				{
+					vol = File.ReadAllBytes(path);
+					size = GetSizeForRecord(record);
+				}
+				else
+				{
+					vol = DICOMSeriesToVolume(record, out size);
+					File.WriteAllBytes(path, vol);
+				}
+
+
+				var volumeSizePow2 = MathExtensions.PowerOfTwoGreaterThanOrEqualTo(size);
+				var tex3D = VolumeTextureUtils.BuildTexture(vol, size, volumeSizePow2);
+
+				Debug.Log("created volume in " + (Time.realtimeSinceStartup - startTime) + "s");
+				vc.GetComponent<Renderer>().material.SetTexture("_Volume", tex3D);
+			}
+			renderer.enabled = false;
 		}
 		else if (button == "2D")
 		{
-			GetComponent<MeshRenderer>().enabled = true;
+			renderer.enabled = true;
 			transform.Find("Volume Cube").gameObject.SetActive(false);
 		}
 	}
