@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: VolumetricData
+  m_Shader: {fileID: 4800000, guid: 99a3304483f4db64b8f397d5d5bc25af, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Data:
+        m_Texture: {fileID: 11700000, guid: a4313a4fe86a7334997911c55b2ecf81, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Volume:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DataMax: 1
+    - _DataMin: 0
+    - _Intensity: 1.2
+    - _NormPerRay: 2
+    - _NormPerStep: 74
+    - _Normalization: 2
+    - _SliceAxis1Max: 1
+    - _SliceAxis1Min: 0
+    - _SliceAxis2Max: 1
+    - _SliceAxis2Min: 0
+    - _SliceAxis3Max: 1
+    - _SliceAxis3Min: 0
+    - _Steps: 256
+    - _StretchPower: 1.5
+    - _Threshold: 0.95
+    m_Colors:
+    - _Axis: {r: 1, g: 3, b: 2, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DataChannel: {r: 1, g: 0, b: 0, a: 0}
+    - _SliceMax: {r: 1, g: 1, b: 1, a: -1}
+    - _SliceMin: {r: 0, g: 0, b: 0, a: -1}
+    - _TexFilling: {r: 1, g: 1, b: 1, a: 1}

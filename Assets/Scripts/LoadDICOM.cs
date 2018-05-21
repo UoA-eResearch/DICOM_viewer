@@ -126,7 +126,6 @@ public class LoadDICOM : MonoBehaviour
 	{
 		var directory = rootDirectoryMap[record];
 		var series = GetSeries(record);
-		var tex = new Texture2D(2, 2);
 		var absoluteFilename = "";
 		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber)).OrderBy(x => x).ToArray();
 		if (frame == -1) // get thumbnail - get midpoint image
@@ -154,6 +153,25 @@ public class LoadDICOM : MonoBehaviour
 		}
 	}
 
+	string Unzip(string prefix, bool overwrite = false)
+	{
+		var root = Application.persistentDataPath;
+		var zip = Path.Combine(root, prefix + ".zip");
+		var path = Path.Combine(root, prefix);
+		if (!File.Exists(zip) && !Directory.Exists(path))
+		{
+			status.text = "ERROR: No zip file found!";
+		}
+		if (File.Exists(zip) && (overwrite || !Directory.Exists(path)))
+		{
+			Debug.Log("unzipping..");
+			status.text = "unzipping...";
+			System.IO.Compression.ZipFile.ExtractToDirectory(zip, path);
+			Debug.Log("unzip done!");
+		}
+		return path;
+	}
+
 	// Use this for initialization
 	void Start()
 	{
@@ -161,25 +179,8 @@ public class LoadDICOM : MonoBehaviour
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
-#if !UNITY_EDITOR && UNITY_METRO
-		var root = Application.persistentDataPath;
-#else
-		var root = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-#endif
-		var zip = Path.Combine(root, "DICOM.zip");
-		var path = Path.Combine(root, "DICOM");
-		if (!File.Exists(zip) && !Directory.Exists(path))
-		{
-			status.text = "ERROR: No zip file found!";
-			return;
-		}
-		if (File.Exists(zip) && !Directory.Exists(path))
-		{
-			Debug.Log("unzipping..");
-			status.text = "unzipping...";
-			System.IO.Compression.ZipFile.ExtractToDirectory(zip, path);
-			Debug.Log("unzip done!");
-		}
+		var path = Unzip("DICOM");
+		Unzip("Volumes", true);
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
@@ -213,7 +214,7 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.StartCapturingGestures();
 		status.text = "";
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_METRO
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
 		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
