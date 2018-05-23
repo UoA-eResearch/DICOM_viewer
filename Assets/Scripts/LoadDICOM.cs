@@ -181,7 +181,7 @@ public class LoadDICOM : MonoBehaviour
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
 		var path = Unzip("DICOM");
-		Unzip("Volumes", true);
+		Unzip("Volumes", false);
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
@@ -411,6 +411,7 @@ public class LoadDICOM : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		/*
 		var t = transform;
 		if (selectedObject)
 		{
@@ -435,6 +436,7 @@ public class LoadDICOM : MonoBehaviour
 				ClickObject(hit.collider.gameObject);
 			}
 		}
+		*/
 	}
 
 	private void OnApplicationFocus(bool focus)
