@@ -215,7 +215,9 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.StartCapturingGestures();
 		status.text = "";
 
-#if UNITY_EDITOR || UNITY_METRO
+		testQuad.SetActive(false);
+#if UNITY_EDITOR
+		return;
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
 		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
@@ -244,15 +246,13 @@ public class LoadDICOM : MonoBehaviour
 		testQuad.transform.Find("3D_toggle").gameObject.SetActive(true);
 		testQuad.transform.Find("3D_toggle").GetComponent<InteractiveToggle>().SetSelection(true);
 		seriesHandler.ButtonPush("3D");
-		var slider = testQuad.transform.Find("Slider");
+		var slider = testQuad.transform.Find("zstack slider");
 		slider.gameObject.SetActive(true);
 		var sliderComponent = slider.GetComponent<SliderGestureControl>();
 		sliderComponent.SetSpan(0, largest);
 		sliderComponent.SetSliderValue(largest / 2f);
 		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(largestSeries);
-		WarmVolumeCache();
-#else
-		testQuad.SetActive(false);
+		//WarmVolumeCache();
 #endif
 	}
 
@@ -357,7 +357,7 @@ public class LoadDICOM : MonoBehaviour
 			clone.tag = "opened_series";
 			clone.GetComponent<TwoHandManipulatable>().enabled = true;
 			clone.transform.Find("3D_toggle").gameObject.SetActive(true);
-			var slider = clone.transform.Find("Slider");
+			var slider = clone.transform.Find("zstack slider");
 			slider.gameObject.SetActive(true);
 			var sliderComponent = slider.GetComponent<SliderGestureControl>();
 			var n_images = record.LowerLevelDirectoryRecordCollection.Count();

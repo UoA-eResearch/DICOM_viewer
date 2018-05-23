@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class OpenSeriesHandler : MonoBehaviour {
 
@@ -13,18 +14,24 @@ public class OpenSeriesHandler : MonoBehaviour {
 	public LoadDICOM loadDicomInstance;
 	public bool useCache = true;
 	private Renderer renderer;
+	private Renderer vcRenderer;
 	private int previousValue;
 	private int resolution = 2;
+
+	private Vector3 min = Vector3.zero;
+	private Vector3 max = Vector3.one;
 
 	// Use this for initialization
 	void Awake () {
 		renderer = gameObject.GetComponent<Renderer>();
+		vcRenderer = transform.Find("Volume Cube").GetComponent<Renderer>();
 	}
 	
 	public void ButtonPush(string button)
 	{
 		if (button == "3D")
 		{
+			transform.Find("zstack slider").gameObject.SetActive(false);
 			var vc = transform.Find("Volume Cube");
 			vc.gameObject.SetActive(true);
 
@@ -53,26 +60,61 @@ public class OpenSeriesHandler : MonoBehaviour {
 				var tex3D = VolumeTextureUtils.BuildTexture(vol, size, volumeSizePow2);
 
 				Debug.Log("created volume in " + (Time.realtimeSinceStartup - startTime) + "s");
-				vc.GetComponent<Renderer>().material.SetTexture("_Volume", tex3D);
+				vcRenderer.material.SetTexture("_Volume", tex3D);
 			}
 			renderer.enabled = false;
 		}
 		else if (button == "2D")
 		{
 			renderer.enabled = true;
+			transform.Find("zstack slider").gameObject.SetActive(true);
 			transform.Find("Volume Cube").gameObject.SetActive(false);
 		}
 	}
 
 	public void SliderChange(float newValue)
 	{
-		int newValueInt = (int)newValue;
-		if (newValueInt != previousValue)
+		var slider = EventSystem.current.currentSelectedGameObject.name;
+		switch (slider)
 		{
-			var tex = loadDicomInstance.GetTexture2DForRecord(record, newValueInt);
-			renderer.material.mainTexture = tex;
-			previousValue = newValueInt;
+			case "zstack slider": // 2D slice change
+				int newValueInt = (int)newValue;
+				if (newValueInt != previousValue)
+				{
+					var tex = loadDicomInstance.GetTexture2DForRecord(record, newValueInt);
+					renderer.material.mainTexture = tex;
+					previousValue = newValueInt;
+				}
+				return;
+			// 3D volume settings
+			case "intensity":
+				vcRenderer.material.SetFloat("_Intensity", newValue);
+				return;
+			case "threshold":
+				vcRenderer.material.SetFloat("_Threshold", newValue);
+				return;
+			case "xmin":
+				min.x = newValue;
+				break;
+			case "xmax":
+				max.x = newValue;
+				break;
+			case "ymin":
+				min.y = newValue;
+				break;
+			case "ymax":
+				max.y = newValue;
+				break;
+			case "zmin":
+				min.z = newValue;
+				break;
+			case "zmax":
+				max.z = newValue;
+				break;
 		}
+		vcRenderer.material.SetVector("_SliceMin", min);
+		vcRenderer.material.SetVector("_SliceMax", max);
+		Debug.Log("slicing to " + min + "-" + max);
 	}
 
 	public Int3 GetSizeForRecord(DicomDirectoryRecord series)
