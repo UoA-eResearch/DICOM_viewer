@@ -181,7 +181,7 @@ public class LoadDICOM : MonoBehaviour
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
 		var path = Unzip("DICOM");
-		Unzip("Volumes", false);
+		Unzip("Volumes", true);
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
