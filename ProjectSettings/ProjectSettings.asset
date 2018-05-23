@@ -604,7 +604,7 @@ PlayerSettings:
       InternetClient: False
       InternetClientServer: False
       Location: False
-      Microphone: False
+      Microphone: True
       MusicLibrary: False
       Objects3D: False
       PhoneCall: False
