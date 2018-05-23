@@ -411,7 +411,7 @@ public class LoadDICOM : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		/*
+#if UNITY_EDITOR
 		var t = transform;
 		if (selectedObject)
 		{
@@ -436,7 +436,7 @@ public class LoadDICOM : MonoBehaviour
 				ClickObject(hit.collider.gameObject);
 			}
 		}
-		*/
+#endif
 	}
 
 	private void OnApplicationFocus(bool focus)
