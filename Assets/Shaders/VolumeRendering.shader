@@ -50,8 +50,8 @@
 		return (p + 0.5);
 	}
 
-	float sample_volume(float3 uv) {
-		float v = tex3D(_Volume, uv).r * _Intensity;
+	float4 sample_volume(float3 uv) {
+		float4 v = tex3D(_Volume, uv) * _Intensity;
 		float min = step(_SliceMin.x, uv.x) * step(_SliceMin.y, uv.y) * step(_SliceMin.z, uv.z);
 		float max = step(uv.x, _SliceMax.x) * step(uv.y, _SliceMax.y) * step(uv.z, _SliceMax.z);
 		return v * min * max;
@@ -136,8 +136,8 @@
 				[unroll]
 				for (int iter = 0; iter < COUNT; iter++) {
 					float3 uv = get_uv(p);
-					float v = sample_volume(uv);
-					float4 src = float4(v, v, v, v);
+					float4 src = sample_volume(uv);
+					src.a = src.r + src.g + src.b;
 					src.a *= 0.5;
 					src.rgb *= src.a;
 
