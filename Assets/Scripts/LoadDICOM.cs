@@ -28,6 +28,14 @@ public class LoadDICOM : MonoBehaviour
 	private Vector3 offset = Vector3.zero;
 	private Dictionary<GameObject, bool> openedItems;
 	private GameObject selectedObject = null;
+	private static Dictionary<short, Color> huToColor = new Dictionary<short, Color>{
+		{ -1000, Color.black }, // air
+		{ -500, new Color(194/255f, 105/255f, 82/255f) }, // lung
+		{ -80, new Color(194/255f, 166/255f, 115/255f) }, // fat
+		{ 40, new Color(102/255f, 0, 0) }, // soft tissue
+		{ 80, new Color(153/255f, 0, 0) }, // soft tissue
+		{ 400, Color.white } // bone
+	};
 
 	string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
 	{
@@ -61,7 +69,33 @@ public class LoadDICOM : MonoBehaviour
 		return shorts;
 	}
 
-	static Texture2D DicomToTex2D(DicomImage image)
+	static Color HounsfieldUnitsToColor(float intensity)
+	{
+		if (huToColor.First().Key > intensity)
+		{
+			return huToColor.First().Value;
+		}
+		else if (huToColor.Last().Key < intensity)
+		{
+			return huToColor.Last().Value;
+		}
+		for (short i = 0; i < huToColor.Count - 1; i++ )
+		{
+			var low = huToColor.Keys.ElementAt(i);
+			var high = huToColor.Keys.ElementAt(i + 1);
+			if (intensity == low) return huToColor[low];
+			if (intensity == high) return huToColor[high];
+			if (intensity > low && intensity < high)
+			{
+				var t = (intensity - low) / (high - low);
+				return Color.Lerp(huToColor[low], huToColor[high], t);
+			}
+		}
+		Debug.LogError("unable to place " + intensity);
+		return Color.black;
+	}
+
+	public Texture2D DicomToTex2D(DicomImage image)
 	{
 		var pixels = image.PixelData;
 		var bytes = pixels.GetFrame(0).Data;
@@ -76,21 +110,15 @@ public class LoadDICOM : MonoBehaviour
 		Debug.Log(rescale + "," + rescaleSlope);
 		*/
 		var tex = new Texture2D(pixels.Width, pixels.Height);
-		var colors = new UnityEngine.Color32[shorts.Length];
+		var colors = new Color[shorts.Length];
 		for (int i = 0; i < shorts.Length; i++)
 		{
-			double intensity = shorts[i];
+			float intensity = shorts[i];
 			intensity = intensity * rescaleSlope + rescaleIntercept;
-			// Threshold based on WindowCenter and WindowWidth
-			intensity -= image.WindowCenter - image.WindowWidth;
-			// Remap to 0-255 range and clamp
-			intensity = intensity / (image.WindowCenter + image.WindowWidth) * 255;
-			intensity = Mathf.Clamp((int)intensity, 0, 255);
-			var color = image.GrayscaleColorMap[(int)intensity];
-			//Debug.Log("intensity at " + x + "," + y + "=" + intensity);
-			colors[i] = new UnityEngine.Color32(color.R, color.G, color.B, color.A);
+			var color = HounsfieldUnitsToColor(intensity);
+			colors[i] = color;
 		}
-		tex.SetPixels32(colors);
+		tex.SetPixels(colors);
 		tex.Apply();
 
 		return tex;
@@ -115,7 +143,9 @@ public class LoadDICOM : MonoBehaviour
 		try
 		{
 			var img = GetImageForRecord(record, frame);
+			//var s = Time.realtimeSinceStartup;
 			tex = DicomToTex2D(img);
+			//Debug.Log("DicomToText2D took " + (Time.realtimeSinceStartup - s));
 		}
 		catch
 		{
