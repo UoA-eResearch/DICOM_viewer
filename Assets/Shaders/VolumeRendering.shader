@@ -137,7 +137,7 @@
 				for (int iter = 0; iter < COUNT; iter++) {
 					float3 uv = get_uv(p);
 					float4 src = sample_volume(uv);
-					src.a = src.r + src.g + src.b;
+					src.a = src.rgb;
 					src.a *= 0.5;
 					src.rgb *= src.a;
 
