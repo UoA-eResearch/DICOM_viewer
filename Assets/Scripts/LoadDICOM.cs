@@ -36,6 +36,8 @@ public class LoadDICOM : MonoBehaviour
 		{ 80, new Color(153/255f, 0, 0) }, // soft tissue
 		{ 400, Color.white } // bone
 	};
+	private AnnotationCollection annotations = new AnnotationCollection();
+	private string annotationPath;
 
 	string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
 	{
@@ -210,6 +212,7 @@ public class LoadDICOM : MonoBehaviour
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
+		annotationPath = Path.Combine(Application.persistentDataPath, "annotations.json");
 		var path = Unzip("DICOM");
 		Unzip("Volumes", false);
 		var offset = 0;
@@ -247,7 +250,6 @@ public class LoadDICOM : MonoBehaviour
 
 		testQuad.SetActive(false);
 #if UNITY_EDITOR
-		return;
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
 		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
@@ -347,6 +349,10 @@ public class LoadDICOM : MonoBehaviour
 			selectedObject = go;
 			var annotation = Instantiate(annotationPrefab, go.transform);
 			annotation.transform.position = go.transform.position;
+			var ah = annotation.GetComponent<AnnotationHandler>();
+			var seriesId = directoryMap[go].Get<string>(DicomTag.SeriesInstanceUID, "no series id");
+			ah.annotation = new Annotation(seriesId);
+			annotations.Add(ah.annotation);
 			return;
 		}
 		if (go == selectedObject) // object is already selected
@@ -478,5 +484,11 @@ public class LoadDICOM : MonoBehaviour
 			pin.SetActive(true);
 #endif
 		}
+	}
+
+	public void SaveAnnotations()
+	{
+		var json = JsonUtility.ToJson(annotations, true);
+		File.WriteAllText(annotationPath, json);
 	}
 }

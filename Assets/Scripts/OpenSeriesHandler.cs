@@ -15,8 +15,9 @@ public class OpenSeriesHandler : MonoBehaviour {
 	public bool useCache = true;
 	private Renderer renderer;
 	private Renderer vcRenderer;
-	private int previousValue;
+	public int frame;
 	private int resolution = 2;
+	public bool is3D = false;
 
 	private Vector3 min = Vector3.zero;
 	private Vector3 max = Vector3.one;
@@ -63,12 +64,14 @@ public class OpenSeriesHandler : MonoBehaviour {
 				vcRenderer.material.SetTexture("_Volume", tex3D);
 			}
 			renderer.enabled = false;
+			is3D = true;
 		}
 		else if (button == "2D")
 		{
 			renderer.enabled = true;
 			transform.Find("zstack slider").gameObject.SetActive(true);
 			transform.Find("Volume Cube").gameObject.SetActive(false);
+			is3D = false;
 		}
 	}
 
@@ -79,11 +82,11 @@ public class OpenSeriesHandler : MonoBehaviour {
 		{
 			case "zstack slider": // 2D slice change
 				int newValueInt = (int)newValue;
-				if (newValueInt != previousValue)
+				if (newValueInt != frame)
 				{
 					var tex = loadDicomInstance.GetTexture2DForRecord(record, newValueInt);
 					renderer.material.mainTexture = tex;
-					previousValue = newValueInt;
+					frame = newValueInt;
 				}
 				return;
 			// 3D volume settings

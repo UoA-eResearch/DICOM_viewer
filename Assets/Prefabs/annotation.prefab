@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114762768116613286}
   - component: {fileID: 114079601244684816}
   - component: {fileID: 65003856440125130}
+  - component: {fileID: 114459801238284810}
   m_Layer: 0
   m_Name: annotation
   m_TagString: Untagged
@@ -114,6 +115,17 @@ MonoBehaviour:
   ManipulationMode: 4
   ConstraintOnRotation: 0
   OneHandMovement: 1
+--- !u!114 &114459801238284810
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1404760646159994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32dda64c44096d469548ea746b80c75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114762768116613286
 MonoBehaviour:
   m_ObjectHideFlags: 1
