@@ -342,6 +342,16 @@ public class LoadDICOM : MonoBehaviour
 		openedItems[go] = false;
 	}
 
+	Vector3 DeserializeVector(string v, Vector3 ifError)
+	{
+		if (v.Length == 0)
+		{
+			return ifError;
+		}
+		var bits = Array.ConvertAll(v.Trim("()".ToCharArray()).Split(','), float.Parse);
+		return new Vector3(bits[0], bits[1], bits[2]);
+	}
+
 	void ClickObject(GameObject go)
 	{
 		if (go.tag == "opened_series")
@@ -402,6 +412,17 @@ public class LoadDICOM : MonoBehaviour
 			var openSeriesHandler = clone.GetComponent<OpenSeriesHandler>();
 			openSeriesHandler.record = record;
 			openSeriesHandler.loadDicomInstance = this;
+			var seriesId = record.Get<string>(DicomTag.SeriesInstanceUID, "no series id");
+			foreach (var a in annotations.annotations)
+			{
+				if (a.series == seriesId)
+				{
+					var annotation = Instantiate(annotationPrefab, clone.transform);
+					annotation.transform.localPosition = DeserializeVector(a.position, Vector3.zero);
+					annotation.transform.localRotation = Quaternion.Euler(DeserializeVector(a.rotation, Vector3.zero));
+					annotation.transform.localScale = DeserializeVector(a.scale, Vector3.one);
+				}
+			}
 			return;
 		}
 		var rootDirectory = rootDirectoryMap[record];
