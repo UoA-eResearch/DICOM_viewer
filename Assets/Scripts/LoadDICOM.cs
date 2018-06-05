@@ -348,7 +348,8 @@ public class LoadDICOM : MonoBehaviour
 		{
 			return ifError;
 		}
-		var bits = Array.ConvertAll(v.Trim("()".ToCharArray()).Split(','), float.Parse);
+		v = v.Trim("()".ToCharArray()).Replace(" ", "");
+		var bits = Array.ConvertAll(v.Split(','), float.Parse);
 		return new Vector3(bits[0], bits[1], bits[2]);
 	}
 
@@ -362,6 +363,7 @@ public class LoadDICOM : MonoBehaviour
 			var ah = annotation.GetComponent<AnnotationHandler>();
 			var seriesId = directoryMap[go].Get<string>(DicomTag.SeriesInstanceUID, "no series id");
 			ah.annotation = new Annotation(seriesId);
+			ah.annotation.SetFromTransform(annotation.transform);
 			annotations.Add(ah.annotation);
 			return;
 		}

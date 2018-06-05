@@ -21,10 +21,7 @@ public class AnnotationHandler : MonoBehaviour, IInputHandler
 	public void OnInputUp(InputEventData eventData)
 	{
 		Debug.Log("annotation moved!");
-		annotation.position = transform.localPosition.ToString("R");
-		annotation.rotation = transform.localRotation.eulerAngles.ToString("R");
-		annotation.scale = transform.localScale.ToString("R");
-		annotation.modified = DateTime.Now.ToString();
+		annotation.SetFromTransform(transform);
 		if (openSeries.is3D)
 		{
 			annotation.frame = null;

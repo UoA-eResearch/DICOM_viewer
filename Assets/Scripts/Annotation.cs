@@ -22,6 +22,14 @@ public class Annotation
 		modified = created;
 		this.series = series;
 	}
+
+	public void SetFromTransform(Transform transform)
+	{
+		position = transform.localPosition.ToString("R");
+		rotation = transform.localRotation.eulerAngles.ToString("R");
+		scale = transform.localScale.ToString("R");
+		modified = DateTime.Now.ToString();
+	}
 }
 
 [Serializable]
