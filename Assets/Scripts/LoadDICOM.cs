@@ -22,6 +22,8 @@ public class LoadDICOM : MonoBehaviour
 	public GameObject testQuad;
 	public GameObject pin;
 	public TextMesh status;
+	public GameObject annotationsList;
+	public GameObject annotationsListElementPrefab;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
 	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
@@ -139,6 +141,28 @@ public class LoadDICOM : MonoBehaviour
 		return record;
 	}
 
+	DicomDirectoryRecord GetSeriesById(string id)
+	{
+		foreach (var record in rootDirectoryMap.Keys)
+		{
+			if (record.DirectoryRecordType == "PATIENT")
+			{
+				foreach (var study in record.LowerLevelDirectoryRecordCollection)
+				{
+					foreach (var series in study.LowerLevelDirectoryRecordCollection)
+					{
+						var seriesId = series.Get<string>(DicomTag.SeriesInstanceUID);
+						if (seriesId == id)
+						{
+							return series;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public Texture2D GetTexture2DForRecord(DicomDirectoryRecord record, int frame = -1)
 	{
 		var tex = new Texture2D(1, 1);
@@ -205,6 +229,25 @@ public class LoadDICOM : MonoBehaviour
 		return path;
 	}
 
+	void UpdateAnnotationsList()
+	{
+		foreach (Transform child in annotationsList.transform)
+		{
+			Destroy(child.gameObject);
+		}
+		var sorted = annotations.annotations.OrderBy(x => x.modified).Take(10);
+		var offset = 0;
+		foreach (var a in sorted)
+		{
+			var listElement = Instantiate(annotationsListElementPrefab, annotationsList.transform);
+			listElement.transform.localPosition = new Vector3(0, offset, 0);
+			var record = GetSeriesById(a.series);
+			var desc = GetDicomTag(record, DicomTag.SeriesDescription);
+			listElement.GetComponent<Text>().text = a.modified + ":" + desc;
+			offset -= 200;
+		}
+	}
+
 	// Use this for initialization
 	void Start()
 	{
@@ -252,6 +295,7 @@ public class LoadDICOM : MonoBehaviour
 		recognizer.TappedEvent += Recognizer_TappedEvent;
 		recognizer.StartCapturingGestures();
 		status.text = "";
+		UpdateAnnotationsList();
 
 		testQuad.SetActive(false);
 #if UNITY_EDITOR
@@ -530,5 +574,6 @@ public class LoadDICOM : MonoBehaviour
 	{
 		var json = JsonUtility.ToJson(annotations, true);
 		File.WriteAllText(annotationPath, json);
+		UpdateAnnotationsList();
 	}
 }
