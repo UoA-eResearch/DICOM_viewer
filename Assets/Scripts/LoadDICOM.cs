@@ -213,6 +213,11 @@ public class LoadDICOM : MonoBehaviour
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);
 		DicomDictionary.Default = dict;
 		annotationPath = Path.Combine(Application.persistentDataPath, "annotations.json");
+		if (File.Exists(annotationPath))
+		{
+			annotations = JsonUtility.FromJson<AnnotationCollection>(File.ReadAllText(annotationPath));
+			Debug.Log("Loaded " + annotations.annotations.Count + " annotations");
+		}
 		var path = Unzip("DICOM");
 		Unzip("Volumes", false);
 		var offset = 0;
@@ -284,6 +289,18 @@ public class LoadDICOM : MonoBehaviour
 		sliderComponent.SetSpan(0, largest);
 		sliderComponent.SetSliderValue(largest / 2f);
 		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(largestSeries);
+
+		var seriesId = largestSeries.Get<string>(DicomTag.SeriesInstanceUID, "no series id");
+		foreach (var a in annotations.annotations)
+		{
+			if (a.series == seriesId)
+			{
+				var annotation = Instantiate(annotationPrefab, testQuad.transform);
+				annotation.transform.localPosition = DeserializeVector(a.position, Vector3.zero);
+				annotation.transform.localRotation = Quaternion.Euler(DeserializeVector(a.rotation, Vector3.zero));
+				annotation.transform.localScale = DeserializeVector(a.scale, Vector3.one);
+			}
+		}
 		//WarmVolumeCache();
 #endif
 	}
