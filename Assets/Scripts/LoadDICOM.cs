@@ -410,8 +410,8 @@ public class LoadDICOM : MonoBehaviour
 			return ifError;
 		}
 		v = v.Trim("()".ToCharArray()).Replace(" ", "");
-		var bits = Array.ConvertAll(v.Split(','), float.Parse);
-		return new Vector3(bits[0], bits[1], bits[2]);
+		var bits = v.Split(',');
+		return new Vector3(float.Parse(bits[0]), float.Parse(bits[1]), float.Parse(bits[2]));
 	}
 
 	void ClickObject(GameObject go)
