@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 224223156988255118}
   - component: {fileID: 222565153097025932}
   - component: {fileID: 114735265421212174}
+  - component: {fileID: 65297190039320796}
   m_Layer: 5
   m_Name: annotationListEntry
   m_TagString: Untagged
@@ -63,6 +64,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &65297190039320796
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1882537903707370}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1000, y: 200, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114676122596219618
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -249,7 +262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -178, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224531277669723854
