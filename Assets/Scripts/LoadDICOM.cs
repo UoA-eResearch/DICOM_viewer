@@ -25,7 +25,7 @@ public class LoadDICOM : MonoBehaviour
 	public GameObject annotationsList;
 	public GameObject annotationsListElementPrefab;
 	private Dictionary<GameObject, DicomDirectoryRecord> directoryMap;
-	private Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
+	public Dictionary<DicomDirectoryRecord, string> rootDirectoryMap;
 	private GestureRecognizer recognizer;
 	private Vector3 offset = Vector3.zero;
 	private Dictionary<GameObject, bool> openedItems;
@@ -40,6 +40,7 @@ public class LoadDICOM : MonoBehaviour
 	};
 	private AnnotationCollection annotations = new AnnotationCollection();
 	private string annotationPath;
+	public string[] meshMarkers;
 
 	string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
 	{
@@ -261,6 +262,10 @@ public class LoadDICOM : MonoBehaviour
 			annotations = JsonUtility.FromJson<AnnotationCollection>(File.ReadAllText(annotationPath));
 			Debug.Log("Loaded " + annotations.annotations.Count + " annotations");
 		}
+		var meshMarkerPath = Path.Combine(Application.persistentDataPath, "MeshMarkers");
+		if (Directory.Exists(meshMarkerPath)) {
+			meshMarkers = Directory.GetFiles(meshMarkerPath);
+		}
 		var path = Unzip("DICOM");
 		Unzip("Volumes", false);
 		var offset = 0;
@@ -301,27 +306,16 @@ public class LoadDICOM : MonoBehaviour
 #if UNITY_EDITOR
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
-		var firstStudy = directoryMap.First().Value.LowerLevelDirectoryRecord;
-		// worst case series - most images
-		int largest = 0;
-		DicomDirectoryRecord largestSeries = firstStudy.LowerLevelDirectoryRecord;
-		foreach (var series in firstStudy.LowerLevelDirectoryRecordCollection)
-		{
-			var n_images = series.LowerLevelDirectoryRecordCollection.Count();
-			if (n_images > largest)
-			{
-				largest = n_images;
-				largestSeries = series;
-			}
-		}
+		var series = GetSeriesById("1.3.12.2.1107.5.1.4.50714.30000015042720390167100012486");
 		var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
-		seriesHandler.record = largestSeries;
+		seriesHandler.record = series;
 
-		var modality = GetDicomTag(largestSeries, DicomTag.Modality);
-		var seriesDesc = GetDicomTag(largestSeries, DicomTag.SeriesDescription);
+		var modality = GetDicomTag(series, DicomTag.Modality);
+		var seriesDesc = GetDicomTag(series, DicomTag.SeriesDescription);
 		testQuad.name = "Series: " + modality + "\n" + seriesDesc;
-		directoryMap[testQuad] = largestSeries;
-		rootDirectoryMap[largestSeries] = rootDirectoryMap[directoryMap.First().Value];
+		Debug.Log(seriesDesc);
+		directoryMap[testQuad] = series;
+		rootDirectoryMap[series] = rootDirectoryMap[directoryMap.ElementAt(1).Value];
 
 		testQuad.GetComponent<TwoHandManipulatable>().enabled = true;
 		testQuad.transform.Find("3D_toggle").gameObject.SetActive(true);
@@ -330,11 +324,12 @@ public class LoadDICOM : MonoBehaviour
 		var slider = testQuad.transform.Find("zstack slider");
 		slider.gameObject.SetActive(true);
 		var sliderComponent = slider.GetComponent<SliderGestureControl>();
-		sliderComponent.SetSpan(0, largest);
-		sliderComponent.SetSliderValue(largest / 2f);
-		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(largestSeries);
+		var n_images = series.LowerLevelDirectoryRecordCollection.Count();
+		sliderComponent.SetSpan(0, n_images);
+		sliderComponent.SetSliderValue(n_images / 2f);
+		testQuad.GetComponent<Renderer>().material.mainTexture = GetTexture2DForRecord(series);
 
-		var seriesId = largestSeries.Get<string>(DicomTag.SeriesInstanceUID, "no series id");
+		var seriesId = series.Get<string>(DicomTag.SeriesInstanceUID, "no series id");
 		foreach (var a in annotations.annotations)
 		{
 			if (a.series == seriesId)

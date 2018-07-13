@@ -842,6 +842,7 @@ MonoBehaviour:
   annotationsList: {fileID: 256976571}
   annotationsListElementPrefab: {fileID: 1882537903707370, guid: 9b2faf56e50961c4db631ff98ef7f43b,
     type: 2}
+  meshMarkers: []
 --- !u!1 &432366990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,15 +1030,33 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1205324525830080, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
-      propertyPath: m_Name
-      value: test_quad
-      objectReference: {fileID: 0}
     - target: {fileID: 114395169378444582, guid: 142a7e0ea7bfabd4694d6d3a475879f2,
         type: 2}
       propertyPath: loadDicomInstance
       value: 
       objectReference: {fileID: 342791268}
+    - target: {fileID: 1205324525830080, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
+      propertyPath: m_Name
+      value: test_quad
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786384761165088, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786384761165088, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4786384761165088, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 114395169378444582, guid: 142a7e0ea7bfabd4694d6d3a475879f2,
+        type: 2}
+      propertyPath: meshMarkerPrefab
+      value: 
+      objectReference: {fileID: 1373103609002654, guid: ea9ef2b374dabab49a712ba99a06f61f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
   m_IsPrefabParent: 0

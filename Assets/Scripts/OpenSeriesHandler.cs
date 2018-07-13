@@ -18,6 +18,8 @@ public class OpenSeriesHandler : MonoBehaviour {
 	public int frame;
 	private int resolution = 2;
 	public bool is3D = false;
+	private GameObject meshMarkers;
+	public GameObject meshMarkerPrefab;
 
 	private Vector3 min = Vector3.zero;
 	private Vector3 max = Vector3.one;
@@ -26,6 +28,7 @@ public class OpenSeriesHandler : MonoBehaviour {
 	void Awake () {
 		renderer = gameObject.GetComponent<Renderer>();
 		vcRenderer = transform.Find("Volume Cube").GetComponent<Renderer>();
+		meshMarkers = transform.Find("MeshMarkers").gameObject;
 	}
 	
 	public void ButtonPush(string button)
@@ -65,6 +68,28 @@ public class OpenSeriesHandler : MonoBehaviour {
 			}
 			renderer.enabled = false;
 			is3D = true;
+
+			var rootDir = loadDicomInstance.rootDirectoryMap[record];
+			if (rootDir.Contains("ChestSeries"))
+			{
+				rootDir = "ChestSeries";
+			}
+			else if (rootDir.Contains("HeadNeckChestBody"))
+			{
+				rootDir = "HeadNeckChestBody";
+			}
+			var studyFID = record.LowerLevelDirectoryRecord.Get<string>(DicomTag.ReferencedFileID, 1);
+			var seriesFID = record.LowerLevelDirectoryRecord.Get<string>(DicomTag.ReferencedFileID, 2);
+			foreach (var s in loadDicomInstance.meshMarkers) {
+				if (s.Contains(rootDir) && s.Contains(studyFID) && s.Contains(seriesFID))
+				{
+					Debug.Log(s + " seems to be a mesh marker for " + gameObject.name);
+					var meshes = Parabox.STL.pb_Stl_Importer.Import(s);
+					var marker = Instantiate(meshMarkerPrefab, meshMarkers.transform);
+					var meshFilter = marker.GetComponent<MeshFilter>();
+					meshFilter.mesh = meshes[0];
+				}
+			}
 		}
 		else if (button == "2D")
 		{

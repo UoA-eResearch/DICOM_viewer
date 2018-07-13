@@ -1304,6 +1304,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1614934770240190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4786384761165088}
+  m_Layer: 0
+  m_Name: MeshMarkers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1620697484648734
 GameObject:
   m_ObjectHideFlags: 1
@@ -2360,6 +2375,7 @@ Transform:
   - {fileID: 4086786134770872}
   - {fileID: 4152770215815102}
   - {fileID: 4253853847271416}
+  - {fileID: 4786384761165088}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3226,6 +3242,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4414977700657060}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4786384761165088
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1614934770240190}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4226002990195018}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4788495759959350
 Transform:
@@ -7529,6 +7558,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadDicomInstance: {fileID: 0}
   useCache: 1
+  frame: 0
+  is3D: 0
 --- !u!114 &114395569829346308
 MonoBehaviour:
   m_ObjectHideFlags: 1
