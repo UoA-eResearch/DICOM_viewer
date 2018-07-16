@@ -31,43 +31,7 @@ namespace Parabox.STL
 		 */
 		public static Mesh[] Import(string path)
 		{
-			if( IsBinary(path) )
-			{
-				try
-				{
-					return ImportBinary(path);
-				}
-				catch(System.Exception e)
-				{
-					UnityEngine.Debug.LogWarning(string.Format("Failed importing mesh at path {0}.\n{1}", path, e.ToString()));
-					return null;
-				}
-			}
-			else
-			{
-				return ImportAscii(path);
-			}
-		}
-
-		private static Mesh[] ImportBinary(string path)
-		{
-			Facet[] facets;
-
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                using (BinaryReader br = new BinaryReader(fs, new ASCIIEncoding()))
-                {
-                    // read header
-                    byte[] header = br.ReadBytes(80);
-                    uint facetCount = br.ReadUInt32();
-                    facets = new Facet[facetCount];
-
-                    for(uint i = 0; i < facetCount; i++)
-                        facets[i] = br.GetFacet();
-                }
-            }
-
-			return CreateMeshWithFacets(facets);
+			return ImportAscii(path);
 		}
 
         private static Facet GetFacet(this BinaryReader binaryReader)
@@ -129,7 +93,7 @@ namespace Parabox.STL
 		{
 			List<Facet> facets = new List<Facet>();
 
-			using(StreamReader sr = new StreamReader(path))
+			using(StreamReader sr = new StreamReader(new FileStream(path, FileMode.Open)))
 			{
 				string line;
 				int state = EMPTY, vertex = 0;
@@ -196,58 +160,6 @@ namespace Parabox.STL
 			float.TryParse(split[2], out v.z);
 
             return v.UnityCoordTrafo(); 
-		}
-
-		/**
-		 * Read the first 80 bytes of a file and if they are all 0x0 it's likely
-		 * that this file is binary.
-		 */
-		private static bool IsBinary(string path)
-		{
-			// http://stackoverflow.com/questions/968935/compare-binary-files-in-c-sharp
-			FileInfo file = new FileInfo(path);
-
-			if(file.Length < 130)
-				return false;
-
-			var isBinary = false;
-
-			using(FileStream f0 = file.OpenRead())
-			{
-				using(BufferedStream bs0 = new BufferedStream(f0))
-				{
-					for(long i = 0; i < 80; i++)
-					{
-					    var readByte = bs0.ReadByte();
-					    if (readByte == 0x0)
-					    {
-					        isBinary = true;
-					        break;
-					    }
-					}
-				}
-			}
-
-            if (!isBinary)
-            {
-                using (FileStream f0 = file.OpenRead())
-                {
-                    using (BufferedStream bs0 = new BufferedStream(f0))
-                    {
-                        var byteArray = new byte[6];
-
-                        for (var i = 0; i < 6; i++)
-                        {
-                            byteArray[i] = (byte)bs0.ReadByte();
-                        }
-
-                        var text = Encoding.UTF8.GetString(byteArray);
-                        isBinary = text != "solid ";
-                    }
-                }
-            }
-
-			return isBinary;
 		}
 
 		/**

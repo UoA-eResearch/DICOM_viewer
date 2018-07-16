@@ -2,7 +2,6 @@
 {
 	Properties
 	{
-		_Color ("Color", Color) = (1, 1, 1, 1)
 		_Volume ("Volume", 3D) = "" {}
 		_Intensity ("Intensity", Range(1.0, 5.0)) = 1.2
 		_Threshold ("Threshold", Range(0.0, 1.0)) = 0.95
@@ -12,7 +11,6 @@
 
 	CGINCLUDE
 
-	half4 _Color;
 	sampler3D _Volume;
 	half _Intensity, _Threshold;
 	half3 _SliceMin, _SliceMax;
@@ -93,6 +91,7 @@
 
 	SubShader {
 		Cull Back
+		Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
 		Blend SrcAlpha OneMinusSrcAlpha
 		// ZTest Always
 
@@ -150,7 +149,7 @@
 					}
 				}
 
-				return saturate(dst) * _Color;
+				return saturate(dst);
 			}
 
 			ENDCG

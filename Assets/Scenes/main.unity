@@ -1057,6 +1057,11 @@ Prefab:
       value: 
       objectReference: {fileID: 1373103609002654, guid: ea9ef2b374dabab49a712ba99a06f61f,
         type: 2}
+    - target: {fileID: 114395169378444582, guid: 142a7e0ea7bfabd4694d6d3a475879f2,
+        type: 2}
+      propertyPath: useCache
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 142a7e0ea7bfabd4694d6d3a475879f2, type: 2}
   m_IsPrefabParent: 0
