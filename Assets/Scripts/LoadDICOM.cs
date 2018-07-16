@@ -42,12 +42,12 @@ public class LoadDICOM : MonoBehaviour
 	private string annotationPath;
 	public string[] meshMarkers;
 
-	string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
+	public string GetDicomTag(DicomDirectoryRecord record, DicomTag tag)
 	{
 		return string.Join(",", record.Get<string[]>(tag, new string[] { "" }));
 	}
 
-	public static void PrintTagsForRecord(DicomDirectoryRecord record)
+	public static void PrintTagsForRecord(dynamic record)
 	{
 #if UNITY_EDITOR
 		foreach (var field in typeof(DicomTag).GetFields())
@@ -56,7 +56,7 @@ public class LoadDICOM : MonoBehaviour
 			{
 				Debug.Log(field.Name + ":" + string.Join(",", record.Get<string[]>((DicomTag)field.GetValue(null))));
 			}
-			catch (System.Exception)
+			catch (System.Exception e)
 			{
 			}
 		}
@@ -164,6 +164,28 @@ public class LoadDICOM : MonoBehaviour
 		return null;
 	}
 
+	DicomDirectoryRecord GetStudyForSeries(string id)
+	{
+		foreach (var record in rootDirectoryMap.Keys)
+		{
+			if (record.DirectoryRecordType == "PATIENT")
+			{
+				foreach (var study in record.LowerLevelDirectoryRecordCollection)
+				{
+					foreach (var series in study.LowerLevelDirectoryRecordCollection)
+					{
+						var seriesId = series.Get<string>(DicomTag.SeriesInstanceUID);
+						if (seriesId == id)
+						{
+							return study;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public Texture2D GetTexture2DForRecord(DicomDirectoryRecord record, int frame = -1)
 	{
 		var tex = new Texture2D(1, 1);
@@ -186,9 +208,17 @@ public class LoadDICOM : MonoBehaviour
 		var series = GetSeries(record);
 		var absoluteFilename = "";
 		var instanceNumbers = series.LowerLevelDirectoryRecordCollection.Select(x => x.Get<int>(DicomTag.InstanceNumber)).OrderBy(x => x).ToArray();
+		if (frame == 0)
+		{
+			frame = instanceNumbers[0];
+		}
 		if (frame == -1) // get thumbnail - get midpoint image
 		{
 			frame = instanceNumbers[instanceNumbers.Length / 2];
+		}
+		if (frame == -2) // get last
+		{
+			frame = instanceNumbers[instanceNumbers.Length - 1];
 		}
 		try
 		{

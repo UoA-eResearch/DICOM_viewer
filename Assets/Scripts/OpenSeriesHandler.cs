@@ -17,6 +17,7 @@ public class OpenSeriesHandler : MonoBehaviour {
 	private Renderer vcRenderer;
 	public int frame;
 	private int resolution = 2;
+	private int realWorldScale = 600;
 	public bool is3D = false;
 	private GameObject meshMarkers;
 	public GameObject meshMarkerPrefab;
@@ -65,6 +66,18 @@ public class OpenSeriesHandler : MonoBehaviour {
 
 				Debug.Log("created volume in " + (Time.realtimeSinceStartup - startTime) + "s");
 				vcRenderer.material.SetTexture("_Volume", tex3D);
+
+				var first = loadDicomInstance.GetImageForRecord(record, 0);
+				var last = loadDicomInstance.GetImageForRecord(record, -2);
+				var sliceLocFirst = first.Dataset.Get<float>(DicomTag.SliceLocation);
+				var sliceLocLast = last.Dataset.Get<float>(DicomTag.SliceLocation);
+				var pos = first.Dataset.Get<string[]>(DicomTag.ImagePositionPatient);
+				var spacing = first.Dataset.Get<float[]>(DicomTag.PixelSpacing);
+				var zDepth = sliceLocLast - sliceLocFirst;
+				var xWidth = spacing[0] * first.Dataset.Get<int>(DicomTag.Rows);
+				var yHeight = spacing[1] * first.Dataset.Get<int>(DicomTag.Columns);
+				Debug.Log("volume is " + xWidth + "mm x " + yHeight + "mm x " + zDepth + "mm, and located at " + pos[0] + "," + pos[1]);
+				vc.transform.localScale = new Vector3(xWidth / realWorldScale, yHeight / realWorldScale, zDepth / realWorldScale);
 			}
 			renderer.enabled = false;
 			is3D = true;
@@ -169,7 +182,7 @@ public class OpenSeriesHandler : MonoBehaviour {
 			{
 				for (var x = 0; x < size.x; x++)
 				{
-					var from = fromPixels[x * resolution + ((size.y - 1 - y) * size.x) * resolution];
+					var from = fromPixels[x * resolution + ((size.y - 1 - y) * size.x) * resolution * 2];
 					voxels.SetVoxel(new Int3(x, y, z), from);
 				}
 			}
