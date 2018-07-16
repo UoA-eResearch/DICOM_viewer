@@ -4,7 +4,7 @@
 	{
 		_Volume ("Volume", 3D) = "" {}
 		_Intensity ("Intensity", Range(1.0, 5.0)) = 1.2
-		_Threshold ("Threshold", Range(0.0, 1.0)) = 0.95
+		_Threshold ("Threshold", Range(0.0, 1.0)) = 0.75
 		_SliceMin ("Slice min", Vector) = (0.0, 0.0, 0.0, -1.0)
 		_SliceMax ("Slice max", Vector) = (1.0, 1.0, 1.0, -1.0)
 	}
@@ -136,15 +136,18 @@
 				for (int iter = 0; iter < COUNT; iter++) {
 					float3 uv = get_uv(p);
 					float4 src = sample_volume(uv);
-					src.a = src.rgb;
-					src.a *= 0.5;
-					src.rgb *= src.a;
+					float col = src.rgb;
+					if (col > _Threshold) {
+						src.a = src.rgb;
+						src.a *= 0.5;
+						src.rgb *= src.a;
 
-					// blend
-					dst = (1.0 - dst.a) * src + dst;
+						// blend
+						dst = (1.0 - dst.a) * src + dst;
+					}
 					p += ds;
 
-					if (dst.a > _Threshold) {
+					if (dst.a > .95) {
 						break;
 					}
 				}
