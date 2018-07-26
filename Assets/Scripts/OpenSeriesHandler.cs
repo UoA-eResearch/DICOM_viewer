@@ -101,6 +101,11 @@ public class OpenSeriesHandler : MonoBehaviour {
 					var marker = Instantiate(meshMarkerPrefab, meshMarkers.transform);
 					var meshFilter = marker.GetComponent<MeshFilter>();
 					meshFilter.mesh = meshes[0];
+					marker.name = s;
+					if (s.Contains("Sampling Site"))
+					{
+						marker.GetComponent<Renderer>().material.color = Color.green;
+					}
 				}
 			}
 		}

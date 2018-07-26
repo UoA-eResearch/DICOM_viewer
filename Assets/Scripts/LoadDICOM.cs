@@ -294,7 +294,7 @@ public class LoadDICOM : MonoBehaviour
 		}
 		var meshMarkerPath = Path.Combine(Application.persistentDataPath, "MeshMarkers");
 		if (Directory.Exists(meshMarkerPath)) {
-			meshMarkers = Directory.GetFiles(meshMarkerPath);
+			meshMarkers = Directory.GetFiles(meshMarkerPath, "*.*", SearchOption.AllDirectories);
 		}
 		var path = Unzip("DICOM");
 		Unzip("Volumes", false);
@@ -336,7 +336,7 @@ public class LoadDICOM : MonoBehaviour
 #if UNITY_EDITOR
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
-		var series = GetSeriesById("1.3.12.2.1107.5.1.4.50714.30000015042720390167100012486");
+		var series = GetSeriesById("1.3.12.2.1107.5.1.4.50714.30000016083120205201500011155");
 		var seriesHandler = testQuad.GetComponent<OpenSeriesHandler>();
 		seriesHandler.record = series;
 
