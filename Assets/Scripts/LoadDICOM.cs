@@ -84,7 +84,7 @@ public class LoadDICOM : MonoBehaviour
 		{
 			return huToColor.Last().Value;
 		}
-		for (short i = 0; i < huToColor.Count - 1; i++ )
+		for (short i = 0; i < huToColor.Count - 1; i++)
 		{
 			var low = huToColor.Keys.ElementAt(i);
 			var high = huToColor.Keys.ElementAt(i + 1);
@@ -293,11 +293,12 @@ public class LoadDICOM : MonoBehaviour
 			Debug.Log("Loaded " + annotations.annotations.Count + " annotations");
 		}
 		var meshMarkerPath = Path.Combine(Application.persistentDataPath, "MeshMarkers");
-		if (Directory.Exists(meshMarkerPath)) {
+		if (Directory.Exists(meshMarkerPath))
+		{
 			meshMarkers = Directory.GetFiles(meshMarkerPath, "*.*", SearchOption.AllDirectories);
 		}
 		var path = Unzip("DICOM");
-		Unzip("Volumes", false);
+		//Unzip("Volumes", false);
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
@@ -399,7 +400,8 @@ public class LoadDICOM : MonoBehaviour
 							Debug.Log((Time.realtimeSinceStartup - startTime) + ": wrote " + path);
 						}
 					}
-					catch {
+					catch
+					{
 						Debug.LogError("unable to create volume for " + id);
 					}
 				}

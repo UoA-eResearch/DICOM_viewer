@@ -5,7 +5,10 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - loadDicomInstance: {instanceID: 0}
+  - meshMarkerPrefab: {fileID: 1373103609002654, guid: ea9ef2b374dabab49a712ba99a06f61f,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

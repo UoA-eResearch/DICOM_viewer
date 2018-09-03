@@ -100,6 +100,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma target 4.0
 
 			#define COUNT 20
 

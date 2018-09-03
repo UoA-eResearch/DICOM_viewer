@@ -16,11 +16,12 @@ public class OpenSeriesHandler : MonoBehaviour {
 	private Renderer renderer;
 	private Renderer vcRenderer;
 	public int frame;
-	private int resolution = 2;
+    private int resolution = 2;
 	private int realWorldScale = 600;
-	public bool is3D = false;
+    public bool is3D = false;
 	private GameObject meshMarkers;
 	public GameObject meshMarkerPrefab;
+    private GameObject skeletonMeshMarkers;
 
 	private Vector3 min = Vector3.zero;
 	private Vector3 max = Vector3.one;
@@ -30,7 +31,8 @@ public class OpenSeriesHandler : MonoBehaviour {
 		renderer = gameObject.GetComponent<Renderer>();
 		vcRenderer = transform.Find("Volume Cube").GetComponent<Renderer>();
 		meshMarkers = transform.Find("MeshMarkers").gameObject;
-	}
+        skeletonMeshMarkers = GameObject.Find("SkeletonMeshMarker");
+    }
 	
 	public void ButtonPush(string button)
 	{
@@ -98,8 +100,8 @@ public class OpenSeriesHandler : MonoBehaviour {
 				{
 					Debug.Log(s + " seems to be a mesh marker for " + gameObject.name);
 					var meshes = Parabox.STL.pb_Stl_Importer.Import(s);
-					var marker = Instantiate(meshMarkerPrefab, meshMarkers.transform);
-					var meshFilter = marker.GetComponent<MeshFilter>();
+                    var marker = Instantiate(meshMarkerPrefab, meshMarkers.transform);
+                    var meshFilter = marker.GetComponent<MeshFilter>();
 					meshFilter.mesh = meshes[0];
 					marker.name = s;
 					if (s.Contains("Sampling Site"))

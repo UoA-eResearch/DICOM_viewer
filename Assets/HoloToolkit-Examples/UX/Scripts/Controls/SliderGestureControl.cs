@@ -283,7 +283,7 @@ namespace HoloToolkit.Examples.InteractiveElements
                 if (LabelFormat.IndexOf('.') > -1)
                 {
                     Label.text = displayValue.ToString(LabelFormat);
-
+                    
                 }
                 else
                 {
