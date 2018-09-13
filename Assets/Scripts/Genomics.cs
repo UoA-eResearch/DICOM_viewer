@@ -86,7 +86,7 @@ public class Genomics : MonoBehaviour {
 		SetColor(4, true);
 		SetColor(5, true);
 
-		toggleLabels(true);
+		//toggleLabels(true);
 	}
 
 
@@ -153,7 +153,7 @@ public class Genomics : MonoBehaviour {
 		foreach (var lesion in lesionsNamed) {
 			
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
-			Debug.Log(lesion.Value.GetComponent<RectTransform>().pivot);
+			
 			//textLabel.transform.localPosition = new Vector3(0, 0, 0);
 			//textLabel.transform.GetChild(0).GetComponent<Text>().text = lesion.Key.Split('_')[0];
 			//lesion.Value.transform.GetChild(0).gameObject.AddComponent<Text>().text = lesion.Key.Split('_')[0];
