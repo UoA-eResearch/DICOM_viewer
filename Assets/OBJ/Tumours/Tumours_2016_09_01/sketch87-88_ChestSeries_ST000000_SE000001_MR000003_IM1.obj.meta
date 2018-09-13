@@ -1,26 +1,19 @@
 fileFormatVersion: 2
-guid: 59b5087c5e27d4546b26ba57716df2d8
-timeCreated: 1533766365
+guid: 2831e4c3b2f6a2c4b980f02e8c71a1d5
+timeCreated: 1536783373
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: grp1
     100002: //RootNode
-    100004: sketch87-88_ChestSeries_ST000000_SE000001_MR000003_IM1_root
     400000: grp1
     400002: //RootNode
-    400004: sketch87-88_ChestSeries_ST000000_SE000001_MR000003_IM1_root
     2100000: grp1Mat
     2300000: grp1
     3300000: grp1
     4300000: grp1
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: grp1Mat
-    second: {fileID: 2100000, guid: 97e70118420a0004bbb801d5528b9ec8, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -53,10 +46,10 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1

@@ -282,6 +282,7 @@ public class LoadDICOM : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		Unzip("Genomics", false);
 		Debug.Log("Loading DICOM DICT");
 		var dict = new DicomDictionary();
 		dict.Load(Application.dataPath + "/StreamingAssets/Dictionaries/DICOM Dictionary.xml", DicomDictionaryFormat.XML);

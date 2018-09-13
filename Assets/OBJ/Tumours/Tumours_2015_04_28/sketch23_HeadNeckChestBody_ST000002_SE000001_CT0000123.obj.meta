@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c7a3231465d7dfd4fa4f54796dc12ada
-timeCreated: 1533850466
+guid: ad7bcbcd948800c4e9acbd084e568fb1
+timeCreated: 1536783392
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -13,12 +13,7 @@ ModelImporter:
     2300000: grp1
     3300000: grp1
     4300000: grp1
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: grp1Mat
-    second: {fileID: 2100000, guid: 08a28740155c72f4e80cd41c926599d7, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
