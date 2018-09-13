@@ -80,7 +80,7 @@ public class Genomics : MonoBehaviour {
 		SetColor(4, true);
 		SetColor(5, true);
 
-		toggleLabels(true);
+		//toggleLabels(true);
 	}
 
 
