@@ -69,7 +69,13 @@ public class Genomics : MonoBehaviour {
 				if (res == true && group >= 1)
 				{
 					SortGroups(colIndex, group);
-					
+
+					Text groupText = groupLabels[group - 1].GetComponent<Text>();
+					var mutationName = csv[rowIndex][1].ToString();
+					if (!groupText.text.Contains(mutationName))
+					{
+						groupText.text = groupText.text + " " + mutationName;
+					}
 				}
 				
 			}
@@ -80,18 +86,13 @@ public class Genomics : MonoBehaviour {
 		SetColor(4, true);
 		SetColor(5, true);
 
-		//toggleLabels(true);
+		toggleLabels(true);
 	}
 
 
 	private void SortGroups(int colIndex, int group) {
 
 		var lesionName = csv[1][colIndex].ToString();
-		
-		Text groupText = groupLabels[group - 1].GetComponent<Text>();
-		if (!groupText.text.Contains(lesionName)){
-			groupText.text = groupText.text + " " + lesionName;
-		}
 
 		foreach (var lesion in lesionsNamed)
 		{
@@ -150,10 +151,11 @@ public class Genomics : MonoBehaviour {
 	public void toggleLabels(bool toggle)
 	{
 		foreach (var lesion in lesionsNamed) {
-
+			
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
-			textLabel.transform.localPosition = new Vector3(0, 0, 0);
-			textLabel.transform.GetChild(0).GetComponent<Text>().text = lesion.Key.Split('_')[0];
+			Debug.Log(lesion.Value.GetComponent<RectTransform>().pivot);
+			//textLabel.transform.localPosition = new Vector3(0, 0, 0);
+			//textLabel.transform.GetChild(0).GetComponent<Text>().text = lesion.Key.Split('_')[0];
 			//lesion.Value.transform.GetChild(0).gameObject.AddComponent<Text>().text = lesion.Key.Split('_')[0];
 			
 		}
