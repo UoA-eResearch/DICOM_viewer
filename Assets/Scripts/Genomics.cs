@@ -32,6 +32,8 @@ public class Genomics : MonoBehaviour {
 
 	private Material material;
 
+	private List<GameObject> textLabels;
+
 
 	// Use this for initialization
 	void Start()
@@ -54,6 +56,7 @@ public class Genomics : MonoBehaviour {
 			}
 		}
 
+		textLabels = CreateLabels();
 		
 		csv = readCSV();
 		
@@ -86,7 +89,7 @@ public class Genomics : MonoBehaviour {
 		SetColor(4, true);
 		SetColor(5, true);
 
-		//toggleLabels(true);
+		ToggleLabels(true);
 	}
 
 
@@ -124,41 +127,60 @@ public class Genomics : MonoBehaviour {
 		}
 	}
 
-	public void toggleGenomicsGroup1(bool toggle) {
+	public void ToggleGenomicsGroup1(bool toggle) {
 		SetColor(1, toggle);
 	}
 
-	public void toggleGenomicsGroup2(bool toggle)
+	public void ToggleGenomicsGroup2(bool toggle)
 	{
 		SetColor(2, toggle);
 	}
 
-	public void toggleGenomicsGroup3(bool toggle)
+	public void ToggleGenomicsGroup3(bool toggle)
 	{
 		SetColor(3, toggle);
 	}
 
-	public void toggleGenomicsGroup4(bool toggle)
+	public void ToggleGenomicsGroup4(bool toggle)
 	{
 		SetColor(4, toggle);
 	}
 
-	public void toggleGenomicsGroup5(bool toggle)
+	public void ToggleGenomicsGroup5(bool toggle)
 	{
 		SetColor(5, toggle);
 	}
 
-	public void toggleLabels(bool toggle)
+	public void ToggleLabels(bool toggle) {
+		if (toggle)
+		{
+			foreach (var label in textLabels)
+			{
+				label.SetActive(true);
+			}
+		}
+		else {
+			foreach (var label in textLabels)
+			{
+				label.SetActive(false);
+			}
+		}
+
+	}
+
+	public List<GameObject> CreateLabels()
 	{
+		List<GameObject> tl = new List<GameObject>();
+
 		foreach (var lesion in lesionsNamed) {
-			
+			Vector3 center = lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.center;
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
 			
-			//textLabel.transform.localPosition = new Vector3(0, 0, 0);
-			//textLabel.transform.GetChild(0).GetComponent<Text>().text = lesion.Key.Split('_')[0];
-			//lesion.Value.transform.GetChild(0).gameObject.AddComponent<Text>().text = lesion.Key.Split('_')[0];
-			
+			textLabel.transform.position = center;
+			textLabel.transform.GetChild(0).GetComponent<Text>().text = lesion.Key.Split('_')[0];
+			tl.Add(textLabel);
 		}
+		return tl;
 	}
 
 	private void SetColor(int groupNumber, bool chosen) {

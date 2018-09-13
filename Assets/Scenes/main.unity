@@ -1494,7 +1494,7 @@ Prefab:
       objectReference: {fileID: 107331323}
     - target: {fileID: 4111178373294604, guid: 844ab910b0d8f9744b85bf55e7ad4844, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1115339985791530, guid: 844ab910b0d8f9744b85bf55e7ad4844, type: 2}
       propertyPath: m_IsActive
@@ -1506,7 +1506,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1703549848149494, guid: 844ab910b0d8f9744b85bf55e7ad4844, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114369198599313412, guid: 844ab910b0d8f9744b85bf55e7ad4844,
         type: 2}
@@ -1972,6 +1972,36 @@ Prefab:
         type: 2}
       propertyPath: m_Material
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114657756977972014, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleGenomicsGroup1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114700557929846058, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleGenomicsGroup2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114444127118907324, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleGenomicsGroup3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114980265667750820, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleGenomicsGroup4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114688327357289398, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleGenomicsGroup5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114239222317325218, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleLabels
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 844ab910b0d8f9744b85bf55e7ad4844, type: 2}
