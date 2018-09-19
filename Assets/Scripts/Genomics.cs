@@ -83,6 +83,7 @@ public class Genomics : MonoBehaviour {
 				
 			}
 		}
+
 		SetColor(1, true);
 		SetColor(2, true);
 		SetColor(3, true);
