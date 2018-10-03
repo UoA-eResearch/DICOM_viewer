@@ -166,6 +166,7 @@ namespace HoloToolkit.Unity.SpatialMapping
 
             ToggleSpatialMesh();
             AttachWorldAnchor();
+            this.enabled = false;
         }
 
         private void AttachWorldAnchor()
