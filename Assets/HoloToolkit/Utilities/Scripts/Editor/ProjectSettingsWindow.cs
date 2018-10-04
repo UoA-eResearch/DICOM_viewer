@@ -16,6 +16,9 @@ namespace HoloToolkit.Unity
     /// </summary>
     public class ProjectSettingsWindow : AutoConfigureWindow<ProjectSettingsWindow.ProjectSetting>
     {
+        private const int SpatialMappingLayerId = 31;
+        private const string SpatialMappingLayerName = "Spatial Mapping";
+
         private const string SharingServiceURL = "https://raw.githubusercontent.com/Microsoft/MixedRealityToolkit-Unity/master/External/HoloToolkit/Sharing/Server/SharingService.exe";
 
         /// <summary>
@@ -60,17 +63,20 @@ namespace HoloToolkit.Unity
         /// </summary>
         private readonly InputManagerAxis[] obsoleteInputAxes = { };
 
+        private bool updateToolkitAxes;
+
         #region Nested Types
 
         public enum ProjectSetting
         {
-            BuildWsaUwp,
+            BuildWsaUwp = 0,
             WsaEnableXR,
             WsaUwpBuildToD3D,
             TargetOccludedDevices,
             SharingServices,
             UseInputManagerAxes,
             DotNetScriptingBackend,
+            SetDefaultSpatialMappingLayer
         }
 
         /// <summary>
@@ -78,7 +84,7 @@ namespace HoloToolkit.Unity
         /// </summary>
         private enum AxisType
         {
-            KeyOrMouseButton,
+            KeyOrMouseButton = 0,
             MouseMovement,
             JoystickAxis
         };
@@ -111,6 +117,8 @@ namespace HoloToolkit.Unity
 
         protected override void ApplySettings()
         {
+            SaveMenuSettings();
+
             // Apply individual settings
             if (Values[ProjectSetting.BuildWsaUwp])
             {
@@ -135,7 +143,7 @@ namespace HoloToolkit.Unity
 
         protected override void LoadSettings()
         {
-            for (int i = (int)ProjectSetting.BuildWsaUwp; i <= (int)ProjectSetting.DotNetScriptingBackend; i++)
+            for (int i = (int)ProjectSetting.BuildWsaUwp; i <= (int)ProjectSetting.SetDefaultSpatialMappingLayer; i++)
             {
                 switch ((ProjectSetting)i)
                 {
@@ -143,7 +151,8 @@ namespace HoloToolkit.Unity
                     case ProjectSetting.WsaEnableXR:
                     case ProjectSetting.WsaUwpBuildToD3D:
                     case ProjectSetting.DotNetScriptingBackend:
-                        Values[(ProjectSetting)i] = true;
+                    case ProjectSetting.SetDefaultSpatialMappingLayer:
+                        Values[(ProjectSetting)i] = EditorPrefsUtility.GetEditorPref(Names[(ProjectSetting)i], true);
                         break;
                     case ProjectSetting.TargetOccludedDevices:
                         Values[(ProjectSetting)i] = EditorPrefsUtility.GetEditorPref(Names[(ProjectSetting)i], false);
@@ -158,12 +167,10 @@ namespace HoloToolkit.Unity
                         throw new ArgumentOutOfRangeException();
                 }
             }
-
         }
 
         private void UpdateSettings(BuildTarget currentBuildTarget)
         {
-            EditorPrefsUtility.SetEditorPref(Names[ProjectSetting.SharingServices], Values[ProjectSetting.SharingServices]);
             if (Values[ProjectSetting.SharingServices])
             {
                 string sharingServiceDirectory = Directory.GetParent(Path.GetFullPath(Application.dataPath)).FullName + "\\External\\HoloToolkit\\Sharing\\Server";
@@ -225,11 +232,9 @@ namespace HoloToolkit.Unity
                 PlayerSettings.WSA.SetCapability(PlayerSettings.WSACapability.PrivateNetworkClientServer, false);
             }
 
-            bool useToolkitAxes = Values[ProjectSetting.UseInputManagerAxes];
-
-            if (useToolkitAxes != EditorPrefsUtility.GetEditorPref(Names[ProjectSetting.UseInputManagerAxes], false))
+            if (updateToolkitAxes)
             {
-                EditorPrefsUtility.SetEditorPref(Names[ProjectSetting.UseInputManagerAxes], useToolkitAxes);
+                bool useToolkitAxes = Values[ProjectSetting.UseInputManagerAxes];
 
                 // Grabs the actual asset file into a SerializedObject, so we can iterate through it and edit it.
                 inputManagerAsset = new SerializedObject(AssetDatabase.LoadAssetAtPath("ProjectSettings/InputManager.asset", typeof(UnityEngine.Object)));
@@ -344,12 +349,27 @@ namespace HoloToolkit.Unity
                 }
             }
 
-            EditorPrefsUtility.SetEditorPref(Names[ProjectSetting.TargetOccludedDevices], Values[ProjectSetting.TargetOccludedDevices]);
-
             PlayerSettings.SetScriptingBackend(BuildTargetGroup.WSA,
                 Values[ProjectSetting.DotNetScriptingBackend]
                     ? ScriptingImplementation.WinRTDotNET
                     : ScriptingImplementation.IL2CPP);
+
+            if (Values[ProjectSetting.SetDefaultSpatialMappingLayer])
+            {
+                if (SetSpatialMappingLayer())
+                {
+                    // Setting the Spatial Mapping layer implies the need for the Spatial Perception capability.
+                    PlayerSettings.WSA.SetCapability(PlayerSettings.WSACapability.SpatialPerception, true);
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Attention!",
+                        "Unable to set the Spatial Mapping layer.\n\n" +
+                        "This likely means that layer " + SpatialMappingLayerId.ToString() + " is already in use.\n\n" +
+                        "Please check your project's Tags && Layers settings in the Inspector.",
+                        "Ok");
+                }
+            }
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             Close();
@@ -411,6 +431,14 @@ namespace HoloToolkit.Unity
             Descriptions[ProjectSetting.DotNetScriptingBackend] =
                 "Recommended\n\n" +
                 "If you have the .NET unity module installed this will update the backend scripting profile, otherwise the scripting backend will be IL2CPP.";
+
+            Names[ProjectSetting.SetDefaultSpatialMappingLayer] = "Set Default Spatial Mapping Layer";
+            Descriptions[ProjectSetting.SetDefaultSpatialMappingLayer] =
+                "Recommended\n\n" +
+                "Sets the default Spatial Mapping physics layer.\n\n" +
+                "On HoloLens, this enables specifying the Spatial Mapping mesh for collision detection and raycasting.\n\n" +
+                "<color=#ffff00ff><b>Note:</b></color> Selecting \"Set Default Spatial Mapping Layer\" implies the project will be using Spatial Mapping. " +
+                "The Spatial Perception capability is automatically enabled for you.";
         }
 
         protected override void OnEnable()
@@ -537,6 +565,63 @@ namespace HoloToolkit.Unity
             for (int i = 0; i < axesProperty.arraySize; i++)
             {
                 axisNames.Add(axesProperty.GetArrayElementAtIndex(i).displayName);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to set or clear the Spatial Mapping physics layer.
+        /// </summary>
+        /// <returns>
+        /// True if the target layer as successfully changed.
+        /// </returns>
+        private bool SetSpatialMappingLayer()
+        {
+            UnityEngine.Object[] tagAssets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset");
+            if ((tagAssets == null) ||
+                (tagAssets.Length == 0))
+            {
+                return false;
+            }
+
+            SerializedObject tagsManager = new SerializedObject(tagAssets);
+            if (tagsManager == null)
+            {
+                return false;
+            }
+
+            SerializedProperty layers = tagsManager.FindProperty("layers");
+            if (layers == null)
+            {
+                return false;
+            }
+
+            SerializedProperty spatialMappingLayer = layers.GetArrayElementAtIndex(SpatialMappingLayerId);
+            if (spatialMappingLayer.stringValue == SpatialMappingLayerName)
+            {
+                // Spatial Mapping layer already set
+                return true;
+            }
+            else if (spatialMappingLayer.stringValue != string.Empty)
+            {
+                // Target layer in use and may be being used for something other than Spatial Mapping
+                return false;
+            }
+
+            // Set the layer name.
+            spatialMappingLayer.stringValue = SpatialMappingLayerName;
+            return tagsManager.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Saves the selected items into EditorPrefs.
+        /// </summary>
+        private void SaveMenuSettings()
+        {
+            updateToolkitAxes = Values[ProjectSetting.UseInputManagerAxes] != EditorPrefsUtility.GetEditorPref(Names[ProjectSetting.UseInputManagerAxes], false);
+
+            for (int i = (int)ProjectSetting.BuildWsaUwp; i <= (int)ProjectSetting.SetDefaultSpatialMappingLayer; i++)
+            {
+                EditorPrefsUtility.SetEditorPref(Names[(ProjectSetting)i], Values[(ProjectSetting)i]);
             }
         }
     }

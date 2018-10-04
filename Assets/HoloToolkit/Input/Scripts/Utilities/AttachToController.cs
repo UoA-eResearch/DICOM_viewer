@@ -2,6 +2,13 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+#if UNITY_WSA
+#if UNITY_2017_2_OR_NEWER
+using UnityEngine.XR.WSA.Input;
+#else
+using UnityEngine.VR.WSA.Input;
+#endif
+#endif
 
 namespace HoloToolkit.Unity.InputModule
 {
@@ -24,7 +31,7 @@ namespace HoloToolkit.Unity.InputModule
         [SerializeField]
         protected bool SetScaleOnAttach = false;
 
-        public bool IsAttached { get; private set; }
+        public bool IsAttached { get { return transform.parent == null; } }
 
         protected virtual void OnAttachToController() { }
         protected virtual void OnDetachFromController() { }
@@ -33,60 +40,34 @@ namespace HoloToolkit.Unity.InputModule
         {
             SetChildrenActive(false);
 
-#if UNITY_WSA && UNITY_2017_2_OR_NEWER
-            // Look if the controller has loaded.
-            if (MotionControllerVisualizer.Instance.TryGetControllerModel(Handedness, out ControllerInfo))
-            {
-                AddControllerTransform(ControllerInfo);
-            }
-            MotionControllerVisualizer.Instance.OnControllerModelLoaded += AddControllerTransform;
-            MotionControllerVisualizer.Instance.OnControllerModelUnloaded += RemoveControllerTransform;
-#endif 
+            base.OnEnable();
         }
 
-        protected override void AddControllerTransform(MotionControllerInfo newController)
+        protected override void OnControllerFound()
         {
-#if UNITY_WSA && UNITY_2017_2_OR_NEWER
-            if (!IsAttached && newController.Handedness == Handedness)
+            // Parent ourselves under the element and set our offsets
+            transform.parent = ElementTransform;
+            transform.localPosition = PositionOffset;
+            transform.localEulerAngles = RotationOffset;
+
+            if (SetScaleOnAttach)
             {
-                base.AddControllerTransform(newController);
-
-                SetChildrenActive(true);
-
-                // Parent ourselves under the element and set our offsets
-                transform.parent = ElementTransform;
-                transform.localPosition = PositionOffset;
-                transform.localEulerAngles = RotationOffset;
-
-                if (SetScaleOnAttach)
-                {
-                    transform.localScale = ScaleOffset;
-                }
-
-                // Announce that we're attached
-                OnAttachToController();
-
-                IsAttached = true;
+                transform.localScale = ScaleOffset;
             }
-#endif
+
+            SetChildrenActive(true);
+
+            // Announce that we're attached
+            OnAttachToController();
         }
 
-        protected override void RemoveControllerTransform(MotionControllerInfo oldController)
+        protected override void OnControllerLost()
         {
-#if UNITY_WSA && UNITY_2017_2_OR_NEWER
-            if (IsAttached && oldController.Handedness == Handedness)
-            {
-                base.RemoveControllerTransform(oldController);
+            OnDetachFromController();
 
-                OnDetachFromController();
+            SetChildrenActive(false);
 
-                transform.parent = null;
-
-                SetChildrenActive(false);
-
-                IsAttached = false;
-            }
-#endif
+            transform.parent = null;
         }
 
         private void SetChildrenActive(bool isActive)
@@ -98,6 +79,15 @@ namespace HoloToolkit.Unity.InputModule
                     child.gameObject.SetActive(isActive);
                 }
             }
+        }
+
+        protected void Reset()
+        {
+            // We want the default value of Handedness of Controller finders to be Unknown so it doesn't attach to random object.
+            // But we also want the Editor to start with a useful default, so we set a Left handedness on inspector reset.
+#if UNITY_WSA && UNITY_2017_2_OR_NEWER
+            Handedness = InteractionSourceHandedness.Left;
+#endif
         }
     }
 }

@@ -9,10 +9,10 @@ Material:
   m_Name: SampleOrange
   m_Shader: {fileID: 4800000, guid: d45c0efca53019e43891b0f610f8146e, type: 3}
   m_ShaderKeywords: _BORDER_LIGHT_USES_HOVER_COLOR _DIRECTIONAL_LIGHT _DISABLE_ALBEDO_MAP
-    _EMISSION _HOVER_LIGHT _REFRACTION _SPECULAR_HIGHLIGHTS _USEAMBIENT_ON _USEDIFFUSE_ON
+    _EMISSION _HOVER_LIGHT _REFLECTIONS _SPECULAR_HIGHLIGHTS _USEAMBIENT_ON _USEDIFFUSE_ON
     _USEMAINCOLOR_ON
   m_LightmapFlags: 1
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
   stringTagMap:
@@ -109,8 +109,8 @@ Material:
     - _NearPlaneFade: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Reflections: 0
-    - _Refraction: 1
+    - _Reflections: 1
+    - _Refraction: 0
     - _RefractiveIndex: 0
     - _RenderQueueOverride: -1
     - _RimLight: 0
