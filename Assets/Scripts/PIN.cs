@@ -7,7 +7,7 @@ public class PIN : MonoBehaviour {
 	public Text feedback;
 	private string currentEntered = "";
 	private string correctPin;
-	public GameObject root;
+	public GameObject next;
 
 	private void Start()
 	{
@@ -20,10 +20,10 @@ public class PIN : MonoBehaviour {
 			feedback.text = "pin.txt missing!";
 		}
 #if UNITY_EDITOR
-		root.transform.localScale = Vector3.one;
+		next.transform.localScale = Vector3.one;
 		gameObject.SetActive(false);
 #else
-		root.transform.localScale = Vector3.zero;
+		next.transform.localScale = Vector3.zero;
 		gameObject.SetActive(true);
 #endif
 	}
@@ -38,7 +38,7 @@ public class PIN : MonoBehaviour {
 			{
 				feedback.text = "Entered: ";
 				currentEntered = "";
-				root.transform.localScale = Vector3.one;
+				next.transform.localScale = Vector3.one;
 				gameObject.SetActive(false);
 			}
 			else
