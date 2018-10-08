@@ -17,46 +17,66 @@ public class Timeline : MonoBehaviour {
     public GameObject lesions_2016_09_01;
 
     public GameObject sliderLabel;
+	public GameObject backLabel;
+	public GameObject forwardLabel;
+
+	public GameObject buttonBack;
+	public GameObject buttonForward;
+
+	private int currentState = 5;
 
     // Use this for initialization
     void Start () {
-        sliderLabel.GetComponent<TextMesh>().text = "01.05.2007";
-    }
+		SliderChange(currentState);
+	}
 
-    public void SliderChange(float newValue)
+    public void SliderChange(int state)
     {
-        var date = Mathf.RoundToInt(newValue);
 
-        switch (date)
+        switch (state)
         {
             case 0:
                 tumours_2007_05_01.SetActive(true);
                 tumours_2015_02_11.SetActive(false);
 
-                sliderLabel.GetComponent<TextMesh>().text = "01.05.2007";
-                break;
+                sliderLabel.GetComponent<Text>().text = "01.05.2007";
+				backLabel.GetComponent<Text>().text = "";
+				forwardLabel.GetComponent<Text>().text = "11.02.2015";
+
+				buttonBack.SetActive(false);
+				break;
             case 1:
                 tumours_2007_05_01.SetActive(false);
                 tumours_2015_02_11.SetActive(true);
                 tumours_2015_04_28.SetActive(false);
 
-                sliderLabel.GetComponent<TextMesh>().text = "11.02.2015";
-                break;
+                sliderLabel.GetComponent<Text>().text = "11.02.2015";
+				backLabel.GetComponent<Text>().text = "01.05.2007";
+				forwardLabel.GetComponent<Text>().text = "28.04.2015";
+
+				buttonBack.SetActive(true);
+				break;
             case 2:
                 tumours_2015_02_11.SetActive(false);
                 tumours_2015_04_28.SetActive(true);
                 tumours_2015_08_03.SetActive(false);
 
-                sliderLabel.GetComponent<TextMesh>().text = "28.04.2015";
-                break;
+                sliderLabel.GetComponent<Text>().text = "28.04.2015";
+				backLabel.GetComponent<Text>().text = "11.02.2015";
+				forwardLabel.GetComponent<Text>().text = "03.08.2015";
+
+				break;
             case 3:
                 tumours_2015_04_28.SetActive(false);
                 tumours_2015_08_03.SetActive(true);
                 tumours_2016_03_31.SetActive(false);
 
                 lesions_2016_03_31.SetActive(false);
-                sliderLabel.GetComponent<TextMesh>().text = "03.08.2015";
-                break;
+                sliderLabel.GetComponent<Text>().text = "03.08.2015";
+				backLabel.GetComponent<Text>().text = "28.04.2015";
+				forwardLabel.GetComponent<Text>().text = "31.03.2016";
+
+				break;
             case 4:
                 tumours_2015_08_03.SetActive(false);
                 tumours_2016_03_31.SetActive(true);
@@ -65,8 +85,12 @@ public class Timeline : MonoBehaviour {
                 lesions_2016_03_31.SetActive(true);
                 lesions_2016_09_01.SetActive(false);
 
-                sliderLabel.GetComponent<TextMesh>().text = "31.03.2016";
-                break;
+                sliderLabel.GetComponent<Text>().text = "31.03.2016";
+				backLabel.GetComponent<Text>().text = "03.08.2015";
+				forwardLabel.GetComponent<Text>().text = "01.09.2016";
+
+				buttonForward.SetActive(true);
+				break;
             case 5:
                 tumours_2016_03_31.SetActive(false);
                 tumours_2016_09_01.SetActive(true);
@@ -74,10 +98,24 @@ public class Timeline : MonoBehaviour {
                 lesions_2016_03_31.SetActive(false);
                 lesions_2016_09_01.SetActive(true);
 
-                sliderLabel.GetComponent<TextMesh>().text = "01.09.2016";
-                break;
+                sliderLabel.GetComponent<Text>().text = "01.09.2016";
+				backLabel.GetComponent<Text>().text = "31.03.2016";
+				forwardLabel.GetComponent<Text>().text = "";
+
+				buttonForward.SetActive(false);
+				break;
             default: break;
         }
     }
+
+	public void ButtonBackEvent() {
+		currentState -= 1;
+		SliderChange(currentState);
+	}
+
+	public void ButtonForwardEvent() {
+		currentState += 1;
+		SliderChange(currentState);
+	}
 
 }
