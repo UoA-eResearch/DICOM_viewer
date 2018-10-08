@@ -336,6 +336,7 @@ public class LoadDICOM : MonoBehaviour
 
 		testQuad.SetActive(false);
 #if UNITY_EDITOR
+		return;
 		testQuad.SetActive(true);
 		testQuad.transform.position = new Vector3(0, 0, 2);
 		var series = GetSeriesById("1.3.12.2.1107.5.1.4.50714.30000016083120205201500011155");
@@ -592,7 +593,7 @@ public class LoadDICOM : MonoBehaviour
 		if (!focus)
 		{
 #if !UNITY_EDITOR
-			gameObject.SetActive(false);
+			transform.localScale = Vector3.zero;
 			pin.SetActive(true);
 #endif
 		}

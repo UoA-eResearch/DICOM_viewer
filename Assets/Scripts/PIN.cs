@@ -20,10 +20,10 @@ public class PIN : MonoBehaviour {
 			feedback.text = "pin.txt missing!";
 		}
 #if UNITY_EDITOR
-		root.SetActive(true);
+		root.transform.localScale = Vector3.one;
 		gameObject.SetActive(false);
 #else
-		root.SetActive(false);
+		root.transform.localScale = Vector3.zero;
 		gameObject.SetActive(true);
 #endif
 	}
@@ -38,7 +38,7 @@ public class PIN : MonoBehaviour {
 			{
 				feedback.text = "Entered: ";
 				currentEntered = "";
-				root.SetActive(true);
+				root.transform.localScale = Vector3.one;
 				gameObject.SetActive(false);
 			}
 			else
