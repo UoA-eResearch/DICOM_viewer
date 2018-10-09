@@ -11,7 +11,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
     /// Controls player behavior (local and remote).
     /// </summary>
     [NetworkSettings(sendInterval = 0.033f)]
-    public class PlayerController : NetworkBehaviour, IInputClickHandler, IManipulationHandler
+    public class PlayerController : NetworkBehaviour, IInputClickHandler
     {
         private static PlayerController _Instance = null;
         /// <summary>
@@ -334,8 +334,8 @@ namespace HoloToolkit.Unity.SharingWithUNET
         [Command]
         private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
         {
-            UNetSharedHologram ush = target.GetComponent<UNetSharedHologram>();
-            ush.CmdTransform(pos, rot);
+			target.transform.localPosition = pos;
+			target.transform.localRotation = rot;
         }
 
         /// <summary>
@@ -350,54 +350,6 @@ namespace HoloToolkit.Unity.SharingWithUNET
             {
                 CmdSendSharedTransform(target, pos, rot);
             }
-        }
-
-        [Command]
-        void CmdPickup(GameObject go, NetworkIdentity player)
-        {
-            var networkIdentity = go.GetComponent<NetworkIdentity>();
-            var otherOwner = networkIdentity.clientAuthorityOwner;
-            Debug.Log("got request to seize authority for " + go.name + " which is currently held by " + otherOwner);
-            if (otherOwner == player.connectionToClient)
-            {
-                return;
-            }
-            else
-            {
-                if (otherOwner != null)
-                {
-                    networkIdentity.RemoveClientAuthority(otherOwner);
-                }
-                networkIdentity.AssignClientAuthority(player.connectionToClient);
-            }
-        }
-
-        public void OnManipulationStarted(ManipulationEventData eventData)
-        {
-            if (isLocalPlayer && eventData.selectedObject != null)
-            {
-                var go = eventData.selectedObject;
-                if (go.GetComponent<NetworkIdentity>() == null)
-                {
-                    Debug.LogWarning("Player is moving " + go.name + " but it doesn't have a network identity");
-                }
-                else
-                {
-                    CmdPickup(eventData.selectedObject, gameObject.GetComponent<NetworkIdentity>());
-                }
-            }
-        }
-
-        public void OnManipulationUpdated(ManipulationEventData eventData)
-        {
-        }
-
-        public void OnManipulationCompleted(ManipulationEventData eventData)
-        {
-        }
-
-        public void OnManipulationCanceled(ManipulationEventData eventData)
-        {
         }
     }
 }

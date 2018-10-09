@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 100800428}
   - component: {fileID: 100800430}
   - component: {fileID: 100800429}
+  - component: {fileID: 100800427}
   m_Layer: 0
   m_Name: filebrowser
   m_TagString: Untagged
@@ -361,6 +362,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &100800427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100800426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f65f57189c429e4a83956680d1ca801, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &100800428
 Transform:
   m_ObjectHideFlags: 0
@@ -1141,8 +1153,8 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.1
+  m_TransformSyncMode: 0
+  m_SendInterval: 0
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -1239,7 +1251,7 @@ MonoBehaviour:
     i14: 0
     i15: 0
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &342791274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1397,6 +1409,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 432366990}
+--- !u!1 &553242689 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1776313713661136, guid: 844ab910b0d8f9744b85bf55e7ad4844,
+    type: 2}
+  m_PrefabInternal: {fileID: 79108047}
+--- !u!114 &553242693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 553242689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f65f57189c429e4a83956680d1ca801, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &600386389
 GameObject:
   m_ObjectHideFlags: 0
@@ -2809,7 +2837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hostTransform: {fileID: 0}
   boundingBoxPrefab: {fileID: 0}
-  manipulationMode: 2
+  manipulationMode: 7
   rotationConstraint: 0
   enableOneHandMovement: 1
 --- !u!65 &1526381782
@@ -2824,6 +2852,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 500, y: 80, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1526381783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1526381780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f65f57189c429e4a83956680d1ca801, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1526381784
 MonoBehaviour:
   m_ObjectHideFlags: 0
