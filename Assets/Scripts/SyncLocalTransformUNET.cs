@@ -16,7 +16,11 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		{
 			while (true)
 			{
-				if (isMoving && (transform.localPosition != lastPos || transform.localRotation != lastRot))
+				if (PlayerController.Instance == null)
+				{
+					Debug.LogError("Player instance not ready");
+				}
+				else if (isMoving && (transform.localPosition != lastPos || transform.localRotation != lastRot))
 				{
 					PlayerController.Instance.SendSharedTransform(gameObject, transform.localPosition, transform.localRotation);
 					lastPos = transform.localPosition;
@@ -26,18 +30,26 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			}
 		}
 
+		[ClientRpc(channel = Channels.DefaultUnreliable)]
+		public void RpcSetLocalTransform(Vector3 position, Quaternion rotation)
+		{
+			if (!isMoving)
+			{
+				transform.localPosition = position;
+				transform.localRotation = rotation;
+			}
+		}
+
 		public void Start()
 		{
 			lastPos = transform.localPosition;
 			lastRot = transform.localRotation;
-			if (!isServer)
-			{
-				StartCoroutine(SyncTransform());
-			}
+			StartCoroutine(SyncTransform());
 		}
 
 		public void OnManipulationStarted(ManipulationEventData eventData)
 		{
+			Debug.Log("moving " + eventData.selectedObject);
 			if (eventData.selectedObject == gameObject)
 			{
 				isMoving = true;

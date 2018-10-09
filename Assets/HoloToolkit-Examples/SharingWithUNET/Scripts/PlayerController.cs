@@ -331,12 +331,11 @@ namespace HoloToolkit.Unity.SharingWithUNET
         {
         }
 
-        [Command]
+        [Command(channel = Channels.DefaultUnreliable)]
         private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
         {
-			target.transform.localPosition = pos;
-			target.transform.localRotation = rot;
-        }
+			target.GetComponent<SyncLocalTransformUNET>().RpcSetLocalTransform(pos, rot);
+		}
 
         /// <summary>
         /// For sending transforms for holograms which do not frequently change.
