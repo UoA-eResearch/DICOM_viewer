@@ -11,13 +11,13 @@ public class Genomics : MonoBehaviour {
     public List<GameObject> lesions;
 	public List<GameObject> tumours;
 
-	public List<GameObject> groupLabels;
+	public List<GameObject> mutationLabels;
 	public GameObject labelPrefab;
 
 	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
 	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
 	private Dictionary<int, List<GameObject>> groups = new Dictionary<int, List<GameObject>>();
-	private List<Color32> groupColors = new List<Color32>() { new Color32(92, 255, 248, 133),  new Color32(233, 159, 0, 200), new Color32(0, 99, 169, 200) , new Color32(135, 0, 255, 200) , new Color32(0, 122, 16, 200) , new Color32(174, 0, 0, 200) };
+	private List<Color32> groupColors = new List<Color32>() { new Color32(233, 159, 0, 200), new Color32(0, 99, 169, 200) , new Color32(135, 0, 255, 200) , new Color32(0, 122, 16, 200) , new Color32(174, 0, 0, 200) };
 
 	private List<List<string>> csv;
 
@@ -72,9 +72,10 @@ public class Genomics : MonoBehaviour {
 				if (res == true && group >= 1)
 				{
 					SortGroups(colIndex, group);
-
-					Text groupText = groupLabels[group - 1].GetComponent<Text>();
+					
+					var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
 					var mutationName = csv[rowIndex][1].ToString();
+					Debug.Log(groupText);
 					if (!groupText.text.Contains(mutationName))
 					{
 						groupText.text = groupText.text + " " + mutationName;
@@ -85,11 +86,7 @@ public class Genomics : MonoBehaviour {
 		}
 
 		SetColor(1, true);
-		SetColor(2, true);
-		SetColor(3, true);
-		SetColor(4, true);
-		SetColor(5, true);
-
+		SetMutationLabels(1);
 		ToggleLabels(true);
 	}
 
@@ -128,29 +125,45 @@ public class Genomics : MonoBehaviour {
 		}
 	}
 
+	public void SetMutationLabels(int group) {
+		foreach (var label in mutationLabels) {
+			if (label.name.Contains(group.ToString()))
+			{
+				label.SetActive(true);
+			}
+			else {
+				label.SetActive(false);
+			}
+		}
+	}
+
 	public void ToggleGenomicsGroup1(bool toggle) {
 		SetColor(1, toggle);
+		SetMutationLabels(1);
 	}
 
 	public void ToggleGenomicsGroup2(bool toggle)
 	{
 		SetColor(2, toggle);
+		SetMutationLabels(2);
 	}
 
 	public void ToggleGenomicsGroup3(bool toggle)
 	{
 		SetColor(3, toggle);
+		SetMutationLabels(3);
 	}
 
 	public void ToggleGenomicsGroup4(bool toggle)
 	{
 		SetColor(4, toggle);
+		SetMutationLabels(4);
 	}
 
-	public void ToggleGenomicsGroup5(bool toggle)
-	{
-		SetColor(5, toggle);
-	}
+	//public void ToggleGenomicsGroup5(bool toggle)
+	//{
+	//	SetColor(5, toggle);
+	//}
 
 	public void ToggleLabels(bool toggle) {
 		if (toggle)
@@ -185,19 +198,22 @@ public class Genomics : MonoBehaviour {
 	}
 
 	private void SetColor(int groupNumber, bool chosen) {
+
+
 		
-		List<GameObject> lesions;
-		var boolVal = groups.TryGetValue(groupNumber, out lesions);
+		List<GameObject> lesionGroup;
+		var boolVal = groups.TryGetValue(groupNumber, out lesionGroup);
+
+		foreach (var lesion in lesions) {
+			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", groupColors[0]);
+		}
 
 		Color32 colorValue = new Color32();
 		if (chosen) {
-			colorValue = groupColors[groupNumber];
-		}
-		else {
-			colorValue = groupColors[0];
+			colorValue = groupColors[groupNumber - 1];
 		}
 		
-		foreach (var lesion in lesions) {
+		foreach (var lesion in lesionGroup) {
 			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
 		}
 	}
