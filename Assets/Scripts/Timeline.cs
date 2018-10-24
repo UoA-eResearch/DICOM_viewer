@@ -7,13 +7,11 @@ using UnityEngine.UI;
 public class Timeline : MonoBehaviour {
 
     public GameObject tumours_2007_05_01;
-    public GameObject tumours_2015_02_11;
     public GameObject tumours_2015_04_28;
     public GameObject tumours_2015_08_03;
     public GameObject tumours_2016_03_31;
     public GameObject tumours_2016_09_01;
 
-    public GameObject lesions_2016_03_31;
     public GameObject lesions_2016_09_01;
 
     public GameObject sliderLabel;
@@ -23,7 +21,7 @@ public class Timeline : MonoBehaviour {
 	public GameObject buttonBack;
 	public GameObject buttonForward;
 
-	private int currentState = 5;
+	private int currentState = 4;
 
     // Use this for initialization
     void Start () {
@@ -38,36 +36,26 @@ public class Timeline : MonoBehaviour {
         {
             case 0:
                 tumours_2007_05_01.SetActive(true);
-                tumours_2015_02_11.SetActive(false);
+				tumours_2015_04_28.SetActive(false);
 
-                sliderLabel.GetComponent<Text>().text = "01.05.2007";
+				sliderLabel.GetComponent<Text>().text = "01.05.2007";
 				backLabel.GetComponent<Text>().text = "";
-				forwardLabel.GetComponent<Text>().text = "11.02.2015";
+				forwardLabel.GetComponent<Text>().text = "28.04.2015";
 
 				buttonBack.SetActive(false);
 				break;
             case 1:
-                tumours_2007_05_01.SetActive(false);
-                tumours_2015_02_11.SetActive(true);
-                tumours_2015_04_28.SetActive(false);
+				tumours_2007_05_01.SetActive(false);
+				tumours_2015_04_28.SetActive(true);
+                tumours_2015_08_03.SetActive(false);
 
-                sliderLabel.GetComponent<Text>().text = "11.02.2015";
+                sliderLabel.GetComponent<Text>().text = "28.04.2015";
 				backLabel.GetComponent<Text>().text = "01.05.2007";
-				forwardLabel.GetComponent<Text>().text = "28.04.2015";
+				forwardLabel.GetComponent<Text>().text = "03.08.2015";
 
 				buttonBack.SetActive(true);
 				break;
             case 2:
-                tumours_2015_02_11.SetActive(false);
-                tumours_2015_04_28.SetActive(true);
-                tumours_2015_08_03.SetActive(false);
-
-                sliderLabel.GetComponent<Text>().text = "28.04.2015";
-				backLabel.GetComponent<Text>().text = "11.02.2015";
-				forwardLabel.GetComponent<Text>().text = "03.08.2015";
-
-				break;
-            case 3:
                 tumours_2015_04_28.SetActive(false);
                 tumours_2015_08_03.SetActive(true);
                 tumours_2016_03_31.SetActive(false);
@@ -77,7 +65,7 @@ public class Timeline : MonoBehaviour {
 				forwardLabel.GetComponent<Text>().text = "31.03.2016";
 
 				break;
-            case 4:
+            case 3:
                 tumours_2015_08_03.SetActive(false);
                 tumours_2016_03_31.SetActive(true);
                 tumours_2016_09_01.SetActive(false);
@@ -88,7 +76,7 @@ public class Timeline : MonoBehaviour {
 
 				buttonForward.SetActive(true);
 				break;
-            case 5:
+            case 4:
                 tumours_2016_03_31.SetActive(false);
                 tumours_2016_09_01.SetActive(true);
 

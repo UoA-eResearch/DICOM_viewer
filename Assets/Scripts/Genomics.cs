@@ -75,8 +75,7 @@ public class Genomics : MonoBehaviour {
 					
 					var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
 					var mutationName = csv[rowIndex][1].ToString();
-					Debug.Log(mutationName);
-					Debug.Log(groupText);
+					
 					if (!groupText.text.Contains(mutationName))
 					{
 						groupText.text = groupText.text + " " + mutationName;
@@ -186,7 +185,7 @@ public class Genomics : MonoBehaviour {
 		List<GameObject> tl = new List<GameObject>();
 
 		foreach (var lesion in lesionsNamed) {
-			Debug.Log(lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>());
+			
 			Vector3 center = lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.center;
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
 			

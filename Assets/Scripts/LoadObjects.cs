@@ -7,13 +7,11 @@ using UnityEngine;
 public class LoadObjects : MonoBehaviour {
     
     public GameObject tumours_2007_05_01;
-    public GameObject tumours_2015_02_11;
     public GameObject tumours_2015_04_28;
     public GameObject tumours_2015_08_03;
     public GameObject tumours_2016_03_31;
     public GameObject tumours_2016_09_01;
-
-    public GameObject lesions_2016_03_31;
+	
     public GameObject lesions_2016_09_01;
 
     public Material tumourMaterial;
@@ -25,10 +23,8 @@ public class LoadObjects : MonoBehaviour {
         loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Tumours/Tumours_2016_03_31/")), tumours_2016_03_31);
         loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Tumours/Tumours_2015_08_03/")), tumours_2015_08_03);
         loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Tumours/Tumours_2015_04_28/")), tumours_2015_04_28);
-        loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Tumours/Tumours_2015_02_11/")), tumours_2015_02_11);
         loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Tumours/Tumours_2007_05_01/")), tumours_2007_05_01);
         
-        //loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Lesions/Lesions_2016_03_31/")), lesions_2016_03_31);
         //loadObjects(Directory.GetFiles(@Path.Combine(Application.persistentDataPath, "Lesions/Lesions_2016_09_01/")), lesions_2016_09_01);
     }
 
