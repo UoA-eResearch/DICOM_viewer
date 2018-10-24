@@ -75,13 +75,13 @@ public class Genomics : MonoBehaviour {
 					
 					var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
 					var mutationName = csv[rowIndex][1].ToString();
+					Debug.Log(mutationName);
 					Debug.Log(groupText);
 					if (!groupText.text.Contains(mutationName))
 					{
 						groupText.text = groupText.text + " " + mutationName;
 					}
 				}
-				
 			}
 		}
 
@@ -179,7 +179,6 @@ public class Genomics : MonoBehaviour {
 				label.SetActive(false);
 			}
 		}
-
 	}
 
 	public List<GameObject> CreateLabels()
@@ -187,6 +186,7 @@ public class Genomics : MonoBehaviour {
 		List<GameObject> tl = new List<GameObject>();
 
 		foreach (var lesion in lesionsNamed) {
+			Debug.Log(lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>());
 			Vector3 center = lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.center;
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
 			
@@ -198,8 +198,6 @@ public class Genomics : MonoBehaviour {
 	}
 
 	private void SetColor(int groupNumber, bool chosen) {
-
-
 		
 		List<GameObject> lesionGroup;
 		var boolVal = groups.TryGetValue(groupNumber, out lesionGroup);
@@ -218,43 +216,6 @@ public class Genomics : MonoBehaviour {
 		}
 	}
 
-	// Update is called once per frame
-	void Update()
-	{ /*
-		foreach (var group in groups)
-		{
-			foreach (var ent in group.Value)
-			{
-				material = ent.transform.GetChild(0).GetComponent<Renderer>().material;
-				
-				Debug.Log(colourIndex);
-				if (colourIndex >= groupColors.Count - 1)
-				{
-					colourIndex = 0;
-				}
-
-				startColor = groupColors[colourIndex];
-				endColor = groupColors[colourIndex + 1];
-				colourIndex++;
-
-				var ratio = (Time.time - lastColorChangeTime) / FadeDuration;
-				ratio = Mathf.Clamp01(ratio);
-				material.color = Color.Lerp(startColor, endColor, ratio);
-
-
-				if (ratio == 10f)
-				{
-					lastColorChangeTime = Time.time;
-
-					// Switch colors
-					var temp = startColor;
-					startColor = endColor;
-					endColor = temp;
-				}
-			}
-		}
-		*/
-	}
 
 	private List<List<string>> readCSV()
 	{

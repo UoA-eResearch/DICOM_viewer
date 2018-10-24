@@ -28,6 +28,7 @@ public class Timeline : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		SliderChange(currentState);
+		SetLesionsOnOff(true);
 	}
 
     public void SliderChange(int state)
@@ -70,8 +71,7 @@ public class Timeline : MonoBehaviour {
                 tumours_2015_04_28.SetActive(false);
                 tumours_2015_08_03.SetActive(true);
                 tumours_2016_03_31.SetActive(false);
-
-                lesions_2016_03_31.SetActive(false);
+				
                 sliderLabel.GetComponent<Text>().text = "03.08.2015";
 				backLabel.GetComponent<Text>().text = "28.04.2015";
 				forwardLabel.GetComponent<Text>().text = "31.03.2016";
@@ -81,9 +81,6 @@ public class Timeline : MonoBehaviour {
                 tumours_2015_08_03.SetActive(false);
                 tumours_2016_03_31.SetActive(true);
                 tumours_2016_09_01.SetActive(false);
-
-                lesions_2016_03_31.SetActive(true);
-                lesions_2016_09_01.SetActive(false);
 
                 sliderLabel.GetComponent<Text>().text = "31.03.2016";
 				backLabel.GetComponent<Text>().text = "03.08.2015";
@@ -95,9 +92,6 @@ public class Timeline : MonoBehaviour {
                 tumours_2016_03_31.SetActive(false);
                 tumours_2016_09_01.SetActive(true);
 
-                lesions_2016_03_31.SetActive(false);
-                lesions_2016_09_01.SetActive(true);
-
                 sliderLabel.GetComponent<Text>().text = "01.09.2016";
 				backLabel.GetComponent<Text>().text = "31.03.2016";
 				forwardLabel.GetComponent<Text>().text = "";
@@ -107,6 +101,10 @@ public class Timeline : MonoBehaviour {
             default: break;
         }
     }
+
+	public void SetLesionsOnOff(bool state) {
+		lesions_2016_09_01.SetActive(state);
+	}
 
 	public void ButtonBackEvent() {
 		currentState -= 1;
