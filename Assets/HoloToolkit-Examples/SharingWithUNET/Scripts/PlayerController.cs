@@ -329,17 +329,13 @@ namespace HoloToolkit.Unity.SharingWithUNET
 
         public void OnInputClicked(InputClickedEventData eventData)
         {
-            if (isLocalPlayer)
-            {
-                CmdFire();
-            }
         }
 
-        [Command]
+        [Command(channel = Channels.DefaultUnreliable)]
         private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
         {
-            UNetSharedHologram ush = target.GetComponent<UNetSharedHologram>();
-            ush.CmdTransform(pos, rot);
+			target.transform.localPosition = pos;
+			target.transform.localRotation = rot;
         }
 
         /// <summary>

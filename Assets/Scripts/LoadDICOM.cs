@@ -299,7 +299,7 @@ public class LoadDICOM : MonoBehaviour
 			meshMarkers = Directory.GetFiles(meshMarkerPath, "*.*", SearchOption.AllDirectories);
 		}
 		var path = Unzip("DICOM");
-		//Unzip("Volumes", false);
+		Unzip("Volumes", false);
 		var offset = 0;
 		directoryMap = new Dictionary<GameObject, DicomDirectoryRecord>();
 		rootDirectoryMap = new Dictionary<DicomDirectoryRecord, string>();
@@ -592,7 +592,7 @@ public class LoadDICOM : MonoBehaviour
 		if (!focus)
 		{
 #if !UNITY_EDITOR
-			gameObject.SetActive(false);
+			transform.localScale = Vector3.zero;
 			pin.SetActive(true);
 #endif
 		}

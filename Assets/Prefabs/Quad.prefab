@@ -6521,6 +6521,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -6847,6 +6848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114218807131717730
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7093,6 +7096,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114291095929916168
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7317,6 +7322,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 10
   Centered: 0
@@ -7411,6 +7417,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -7451,6 +7458,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -7821,6 +7829,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -7861,6 +7870,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -8067,6 +8077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114485716949249838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8119,6 +8131,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -8288,6 +8301,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114545545545887078
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8915,11 +8930,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eb034688bcf84b4bb52b3a3310868c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HostTransform: {fileID: 0}
+  hostTransform: {fileID: 0}
   boundingBoxPrefab: {fileID: 0}
-  ManipulationMode: 4
-  ConstraintOnRotation: 0
-  OneHandMovement: 1
+  manipulationMode: 7
+  rotationConstraint: 0
+  enableOneHandMovement: 1
 --- !u!114 &114676601982596602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8931,6 +8946,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114687150809212986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9896,6 +9913,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114840298896778854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9964,6 +9983,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114857978568454718
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10060,6 +10081,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 5
   Centered: 0
@@ -10111,6 +10133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114876685427102814
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10169,6 +10193,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: HoloToolkit.Unity.UnityEventFloat, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  sliderValue: 0
   MinSliderValue: 0
   MaxSliderValue: 1
   Centered: 0
@@ -10184,6 +10209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivotAxis: 0
+  targetTransform: {fileID: 0}
 --- !u!114 &114884999206976692
 MonoBehaviour:
   m_ObjectHideFlags: 1
