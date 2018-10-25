@@ -576,7 +576,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: DICOMviewer
-  metroPackageVersion: 1.0.36.0
+  metroPackageVersion: 1.0.51.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
