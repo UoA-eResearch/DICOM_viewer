@@ -24,6 +24,9 @@ ExportedObj/
 *.pdb
 *.obj
 *.mtl
+#Merge Files
+*.orig
+*.orig.meta
 
 # Unity3D generated meta files
 *.pidb.meta
