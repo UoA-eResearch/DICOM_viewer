@@ -26,20 +26,29 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			}
 		}
 
+		[ClientRpc(channel = Channels.DefaultUnreliable)]
+		public void RpcSetLocalTransform(Vector3 position, Quaternion rotation)
+		{
+			if (!isMoving)
+			{
+				transform.localPosition = position;
+				transform.localRotation = rotation;
+			}
+		}
+
 		public void Start()
 		{
 			lastPos = transform.localPosition;
 			lastRot = transform.localRotation;
-			if (!isServer)
-			{
-				StartCoroutine(SyncTransform());
-			}
+			StartCoroutine(SyncTransform());
 		}
 
 		public void OnManipulationStarted(ManipulationEventData eventData)
 		{
-			if (eventData.selectedObject == gameObject)
+			Debug.Log("Startet manipulation of: " + eventData.selectedObject);
+			if (eventData.selectedObject.transform.IsChildOf(transform))
 			{
+				Debug.Log("moving");
 				isMoving = true;
 			}
 		}

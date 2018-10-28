@@ -334,6 +334,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
         [Command(channel = Channels.DefaultUnreliable)]
         private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
         {
+			target.GetComponent<SyncLocalTransformUNET>().RpcSetLocalTransform(pos, rot);
 			target.transform.localPosition = pos;
 			target.transform.localRotation = rot;
         }
