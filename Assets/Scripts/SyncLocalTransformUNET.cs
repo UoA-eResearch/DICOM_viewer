@@ -1,4 +1,5 @@
 ﻿using HoloToolkit.Unity.InputModule;
+using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +7,18 @@ using UnityEngine.Networking;
 
 namespace HoloToolkit.Unity.SharingWithUNET
 {
-	public class SyncLocalTransformUNET : NetworkBehaviour, IManipulationHandler
+	[RequireComponent(typeof(TwoHandManipulatable))]
+	public class SyncLocalTransformUNET : NetworkBehaviour
 	{
 		private Vector3 lastPos;
 		private Quaternion lastRot;
-		private bool isMoving = false;
+		private TwoHandManipulatable twoHandManipulatable;
 
 		IEnumerator SyncTransform()
 		{
 			while (true)
 			{
-				if (isMoving && (transform.localPosition != lastPos || transform.localRotation != lastRot))
+				if (twoHandManipulatable.currentState != ManipulationMode.None && (transform.localPosition != lastPos || transform.localRotation != lastRot))
 				{
 					PlayerController.Instance.SendSharedTransform(gameObject, transform.localPosition, transform.localRotation);
 					lastPos = transform.localPosition;
@@ -29,7 +31,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		[ClientRpc(channel = Channels.DefaultUnreliable)]
 		public void RpcSetLocalTransform(Vector3 position, Quaternion rotation)
 		{
-			if (!isMoving)
+			if (twoHandManipulatable.currentState == ManipulationMode.None)
 			{
 				transform.localPosition = position;
 				transform.localRotation = rotation;
@@ -40,31 +42,8 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		{
 			lastPos = transform.localPosition;
 			lastRot = transform.localRotation;
+			twoHandManipulatable = GetComponent<TwoHandManipulatable>();
 			StartCoroutine(SyncTransform());
-		}
-
-		public void OnManipulationStarted(ManipulationEventData eventData)
-		{
-			Debug.Log("Startet manipulation of: " + eventData.selectedObject);
-			if (eventData.selectedObject.transform.IsChildOf(transform))
-			{
-				Debug.Log("moving");
-				isMoving = true;
-			}
-		}
-
-		public void OnManipulationUpdated(ManipulationEventData eventData)
-		{
-		}
-
-		public void OnManipulationCompleted(ManipulationEventData eventData)
-		{
-			isMoving = false;
-		}
-
-		public void OnManipulationCanceled(ManipulationEventData eventData)
-		{
-			isMoving = false;
 		}
 	}
 }

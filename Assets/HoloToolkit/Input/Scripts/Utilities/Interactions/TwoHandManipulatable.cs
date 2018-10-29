@@ -75,7 +75,7 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
         #region Transform Info
 
         private BoundingBox boundingBoxInstance;
-        private ManipulationMode currentState;
+        public ManipulationMode currentState;
         private TwoHandMoveLogic moveLogic;
         private TwoHandScaleLogic scaleLogic;
         private TwoHandRotateLogic rotateLogic;
