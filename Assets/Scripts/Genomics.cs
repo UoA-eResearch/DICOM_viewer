@@ -17,7 +17,7 @@ public class Genomics : MonoBehaviour {
 	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
 	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
 	private Dictionary<int, List<GameObject>> groups = new Dictionary<int, List<GameObject>>();
-	private List<Color32> groupColors = new List<Color32>() { new Color32(233, 159, 0, 200), new Color32(0, 99, 169, 200) , new Color32(135, 0, 255, 200) , new Color32(0, 122, 16, 200) , new Color32(174, 0, 0, 200) };
+	private List<Color32> groupColors = new List<Color32>() { new Color32(237, 125, 49, 200), new Color32(214, 33, 33, 200) , new Color32(0, 176, 240, 200) , new Color32(0, 176, 80, 200) , new Color32(146, 208, 80, 200), new Color32(151, 81, 203, 200) };
 
 	private List<List<string>> csv;
 
@@ -91,9 +91,9 @@ public class Genomics : MonoBehaviour {
 
 
 	private void SortGroups(int colIndex, int group) {
-
+		
 		var lesionName = csv[1][colIndex].ToString();
-
+		
 		foreach (var lesion in lesionsNamed)
 		{
 			if (lesion.Key.Contains(lesionName))
@@ -159,10 +159,17 @@ public class Genomics : MonoBehaviour {
 		SetMutationLabels(4);
 	}
 
-	//public void ToggleGenomicsGroup5(bool toggle)
-	//{
-	//	SetColor(5, toggle);
-	//}
+	public void ToggleGenomicsGroup5(bool toggle)
+	{
+		SetColor(5, toggle);
+		SetMutationLabels(5);
+	}
+
+	public void ToggleGenomicsGroup6(bool toggle)
+	{
+		SetColor(6, toggle);
+		SetMutationLabels(6);
+	}
 
 	public void ToggleLabels(bool toggle) {
 		if (toggle)
@@ -199,8 +206,8 @@ public class Genomics : MonoBehaviour {
 	private void SetColor(int groupNumber, bool chosen) {
 		
 		List<GameObject> lesionGroup;
-		var boolVal = groups.TryGetValue(groupNumber, out lesionGroup);
-
+		bool hasLesions = groups.TryGetValue(groupNumber, out lesionGroup);
+		
 		foreach (var lesion in lesions) {
 			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", groupColors[0]);
 		}
@@ -209,7 +216,6 @@ public class Genomics : MonoBehaviour {
 		if (chosen) {
 			colorValue = groupColors[groupNumber - 1];
 		}
-		
 		foreach (var lesion in lesionGroup) {
 			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
 		}

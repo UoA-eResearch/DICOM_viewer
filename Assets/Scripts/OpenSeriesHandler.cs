@@ -122,6 +122,10 @@ public class OpenSeriesHandler : MonoBehaviour {
 
 	public void SliderChange(float newValue)
 	{
+		if (!gameObject.activeInHierarchy) {
+			return;
+		}
+
 		var slider = EventSystem.current.currentSelectedGameObject.name;
 		switch (slider)
 		{
