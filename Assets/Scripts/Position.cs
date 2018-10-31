@@ -21,7 +21,7 @@ public class Position : MonoBehaviour {
 		origScale = gameObject.transform.localScale;
 	}
 
-	public void Reset()
+	public void ResetPos()
 	{
 		gameObject.transform.localPosition = origPosition;
 		gameObject.transform.localRotation = origRotation;
@@ -34,6 +34,8 @@ public class Position : MonoBehaviour {
 		origPosition = gameObject.transform.localPosition;
 		origRotation = gameObject.transform.localRotation;
 		origScale = gameObject.transform.localScale;
+
+		gameObject.GetComponent<SyncLocalTransformUNET>().SetSavedPosition(origPosition, origRotation);
 	}
 
 	public void Lock() {
@@ -47,6 +49,11 @@ public class Position : MonoBehaviour {
 			skel.GetComponent<TwoHandManipulatable>().enabled = true;
 		}
 		
+	}
+
+	public void SetSavedTransform(Vector3 newPos, Quaternion newRot) {
+		origPosition = newPos;
+		origRotation = newRot;
 	}
 
 	// Update is called once per frame

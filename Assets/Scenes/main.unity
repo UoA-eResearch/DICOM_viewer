@@ -393,6 +393,7 @@ MonoBehaviour:
   manipulationMode: 7
   rotationConstraint: 0
   enableOneHandMovement: 1
+  currentState: 0
 --- !u!1 &156554902 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1115992825922372, guid: e62a822fb155f3e42abdd801652d92e8,
@@ -1742,6 +1743,11 @@ Prefab:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: 40c89670209dad548b3d03719b59ad78, type: 2}
+    - target: {fileID: 114149117440027246, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResetPos
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9fbd19dd6b540b44a4fd1837c138ddb, type: 2}
   m_IsPrefabParent: 0
@@ -3419,6 +3425,7 @@ MonoBehaviour:
   manipulationMode: 7
   rotationConstraint: 0
   enableOneHandMovement: 1
+  currentState: 0
 --- !u!65 &1526381782
 BoxCollider:
   m_ObjectHideFlags: 0
