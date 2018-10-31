@@ -1,4 +1,5 @@
 ﻿using HoloToolkit.Unity.InputModule.Utilities.Interactions;
+using HoloToolkit.Unity.SharingWithUNET;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class Position : MonoBehaviour {
 		gameObject.transform.localPosition = origPosition;
 		gameObject.transform.localRotation = origRotation;
 		gameObject.transform.localScale = origScale;
+		
+		gameObject.GetComponent<SyncLocalTransformUNET>().ResetTransform(origPosition, origRotation);
 	}
 
 	public void Save() {

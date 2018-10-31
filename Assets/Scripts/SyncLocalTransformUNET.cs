@@ -38,6 +38,12 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			}
 		}
 
+		public void ResetTransform(Vector3 newPos, Quaternion newRot) {
+			PlayerController.Instance.SendSharedTransform(gameObject, transform.localPosition, transform.localRotation);
+			lastPos = newPos;
+			lastRot = newRot;
+		}
+
 		public void Start()
 		{
 			lastPos = transform.localPosition;
