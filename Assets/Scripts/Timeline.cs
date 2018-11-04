@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using HoloToolkit.Unity.SharingWithUNET;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,16 +21,16 @@ public class Timeline : MonoBehaviour {
 
 	public GameObject buttonBack;
 	public GameObject buttonForward;
+	public GameObject toggleSamplingSitesButton;
 
 	private int currentState = 4;
 
-    // Use this for initialization
-    void Start () {
+	// Use this for initialization
+	void Start () {
 		SliderChange(currentState);
-		SetLesionsOnOff(true);
 	}
 
-    public void SliderChange(int state)
+	public void SliderChange(int state)
     {
 
         switch (state)
@@ -88,10 +89,12 @@ public class Timeline : MonoBehaviour {
 				break;
             default: break;
         }
-    }
+
+	}
 
 	public void SetLesionsOnOff(bool state) {
 		lesions_2016_09_01.SetActive(state);
+		gameObject.GetComponent<SyncTimelineUNET>().ToggleSamplingSites(state);
 	}
 
 	public void ButtonBackEvent() {

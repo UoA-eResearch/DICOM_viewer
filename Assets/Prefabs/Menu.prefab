@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 114861802573411126}
   - component: {fileID: 114514973340811670}
   - component: {fileID: 114766407523183148}
+  - component: {fileID: 114774440800413510}
+  - component: {fileID: 114589633085321022}
   m_Layer: 0
   m_Name: Menu
   m_TagString: Untagged
@@ -1677,7 +1679,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: Reset
+        m_MethodName: ResetPos
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2320,6 +2322,14 @@ MonoBehaviour:
   - {fileID: 1001284277078030}
   labelPrefab: {fileID: 1906526990252258, guid: 91d058124a9ae19438f53e15e7031c5c,
     type: 2}
+  groupButtons:
+  - {fileID: 1977403817479740}
+  - {fileID: 1898715126826218}
+  - {fileID: 1938356945179852}
+  - {fileID: 1773914544397820}
+  - {fileID: 1458945293573514}
+  - {fileID: 1798021630600606}
+  toggleLabelsButton: {fileID: 1831043135611848}
   FadeDuration: 10
   Color1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Color2: {r: 1, g: 1, b: 1, a: 1}
@@ -3127,6 +3137,17 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &114589633085321022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002204474054610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aeab5523dd5990469f6dcb88a786dff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114590828322217770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3508,6 +3529,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f65f57189c429e4a83956680d1ca801, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114774440800413510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002204474054610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9916243bce44ca74fb8747ae0f2c4d06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114786266265632560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3757,6 +3789,7 @@ MonoBehaviour:
   manipulationMode: 2
   rotationConstraint: 0
   enableOneHandMovement: 1
+  currentState: 0
 --- !u!114 &114865656907269528
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3883,6 +3916,7 @@ MonoBehaviour:
   forwardLabel: {fileID: 1674899207450932}
   buttonBack: {fileID: 1020031974890556}
   buttonForward: {fileID: 1330403873833708}
+  toggleSamplingSitesButton: {fileID: 1304981184621402}
 --- !u!114 &114919494521631318
 MonoBehaviour:
   m_ObjectHideFlags: 1

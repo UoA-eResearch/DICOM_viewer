@@ -17,7 +17,6 @@ public class Genomics : MonoBehaviour {
 
 	public List<GameObject> groupButtons;
 	public GameObject toggleLabelsButton;
-	public GameObject toggleSamplingSitesButton;
 
 	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
 	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
