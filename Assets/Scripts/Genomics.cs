@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using UnityEngine.UI;
+using HoloToolkit.Unity.SharingWithUNET;
 
 public class Genomics : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class Genomics : MonoBehaviour {
 
 	public List<GameObject> mutationLabels;
 	public GameObject labelPrefab;
+
+	public List<GameObject> groupButtons;
 
 	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
 	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
@@ -139,36 +142,52 @@ public class Genomics : MonoBehaviour {
 	public void ToggleGenomicsGroup1(bool toggle) {
 		SetColor(1, toggle);
 		SetMutationLabels(1);
+		
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(1, toggle);
 	}
 
 	public void ToggleGenomicsGroup2(bool toggle)
 	{
 		SetColor(2, toggle);
 		SetMutationLabels(2);
+
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(2, toggle);
 	}
 
 	public void ToggleGenomicsGroup3(bool toggle)
 	{
 		SetColor(3, toggle);
 		SetMutationLabels(3);
+
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(3, toggle);
 	}
 
 	public void ToggleGenomicsGroup4(bool toggle)
 	{
 		SetColor(4, toggle);
 		SetMutationLabels(4);
+
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(4, toggle);
 	}
 
 	public void ToggleGenomicsGroup5(bool toggle)
 	{
 		SetColor(5, toggle);
 		SetMutationLabels(5);
+
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(5, toggle);
 	}
 
 	public void ToggleGenomicsGroup6(bool toggle)
 	{
 		SetColor(6, toggle);
 		SetMutationLabels(6);
+
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(6, toggle);
+	}
+
+	public void SyncToggleGroup(int groupNumber, bool toggle) {
+		groupButtons[groupNumber-1].GetComponent<Toggle>().isOn = toggle;
 	}
 
 	public void ToggleLabels(bool toggle) {

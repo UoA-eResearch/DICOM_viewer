@@ -370,5 +370,20 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			target.GetComponent<SyncLocalTransformUNET>().RpcSetSavedTransform(newPos, newRot, newScale);
 		}
 
+		public void SendToggleGroup(GameObject target, int groupNumber, bool toggle)
+		{
+			if (isLocalPlayer)
+			{
+				CmdSendToggleGroup(target, groupNumber, toggle);
+			}
+		}
+
+		[Command(channel = Channels.DefaultUnreliable)]
+		private void CmdSendToggleGroup(GameObject target, int groupNumber, bool toggle)
+		{
+			target.GetComponent<SyncGenomicsUNET>().RpcToggleGroup(groupNumber, toggle);
+		}
+
+
 	}
 }
