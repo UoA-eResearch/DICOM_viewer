@@ -399,6 +399,11 @@ MonoBehaviour:
   rotationConstraint: 0
   enableOneHandMovement: 1
   currentState: 0
+--- !u!1 &105645376 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1831043135611848, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+    type: 2}
+  m_PrefabInternal: {fileID: 542894225}
 --- !u!1 &132232657 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1773914544397820, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
@@ -1793,6 +1798,16 @@ Prefab:
       propertyPath: groupButtons.Array.data[5]
       value: 
       objectReference: {fileID: 963552436}
+    - target: {fileID: 114319725816416004, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: toggleLabelsButton
+      value: 
+      objectReference: {fileID: 105645376}
+    - target: {fileID: 114319725816416004, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: toggleSamplingSitesButton
+      value: 
+      objectReference: {fileID: 1829672514}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9fbd19dd6b540b44a4fd1837c138ddb, type: 2}
   m_IsPrefabParent: 0
@@ -3934,6 +3949,11 @@ GameObject:
   m_PrefabParentObject: {fileID: 1581781942648546, guid: e62a822fb155f3e42abdd801652d92e8,
     type: 2}
   m_PrefabInternal: {fileID: 1514418904}
+--- !u!1 &1829672514 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1304981184621402, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+    type: 2}
+  m_PrefabInternal: {fileID: 542894225}
 --- !u!1001 &1861778150
 Prefab:
   m_ObjectHideFlags: 0

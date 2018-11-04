@@ -16,6 +16,8 @@ public class Genomics : MonoBehaviour {
 	public GameObject labelPrefab;
 
 	public List<GameObject> groupButtons;
+	public GameObject toggleLabelsButton;
+	public GameObject toggleSamplingSitesButton;
 
 	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
 	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
@@ -89,7 +91,6 @@ public class Genomics : MonoBehaviour {
 
 		SetColor(1, true);
 		SetMutationLabels(1);
-		ToggleLabels(true);
 	}
 
 
@@ -204,6 +205,11 @@ public class Genomics : MonoBehaviour {
 				label.SetActive(false);
 			}
 		}
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleLabels(toggle);
+	}
+
+	public void SyncToggleLabels(bool toggle) {
+		toggleLabelsButton.GetComponent<Toggle>().isOn = toggle;
 	}
 
 	public List<GameObject> CreateLabels()
