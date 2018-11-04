@@ -57,12 +57,12 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		[SyncVar]
         private Quaternion localRotation;
 
-        /// <summary>
-        /// Sets the localPosition and localRotation on clients.
-        /// </summary>
-        /// <param name="postion">the localPosition to set</param>
-        /// <param name="rotation">the localRotation to set</param>
-        [Command(channel = 1)]
+		/// <summary>
+		/// Sets the localPosition and localRotation on clients.
+		/// </summary>
+		/// <param name="postion">the localPosition to set</param>
+		/// <param name="rotation">the localRotation to set</param>
+		[Command(channel = 1)]
         public void CmdTransform(Vector3 postion, Quaternion rotation)
         {
             localPosition = postion;
@@ -338,34 +338,36 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		/// <param name="target">The shared hologram</param>
 		/// <param name="pos">position relative to the shared anchor</param>
 		/// <param name="rot">rotation relative to the shared anchor</param>
-		public void SendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
+		/// <param name="scale">scale relative to the shared anchor</param>
+		public void SendSharedTransform(GameObject target, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (isLocalPlayer)
             {
-                CmdSendSharedTransform(target, pos, rot);
+                CmdSendSharedTransform(target, pos, rot, scale);
             }
         }
 
 		[Command(channel = Channels.DefaultUnreliable)]
-		private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot)
+		private void CmdSendSharedTransform(GameObject target, Vector3 pos, Quaternion rot, Vector3 scale)
 		{
-			target.GetComponent<SyncLocalTransformUNET>().RpcSetLocalTransform(pos, rot);
+			target.GetComponent<SyncLocalTransformUNET>().RpcSetLocalTransform(pos, rot, scale);
 			target.transform.localPosition = pos;
 			target.transform.localRotation = rot;
+			target.transform.localScale = scale;
 		}
 
 
-		public void SendSharedSavedPosition(GameObject target, Vector3 newPos, Quaternion newRot)
+		public void SendSharedSavedPosition(GameObject target, Vector3 newPos, Quaternion newRot, Vector3 newScale)
 		{
 			if (isLocalPlayer) {
-				CmdSendSharedSavedPosition(target, newPos, newRot);
+				CmdSendSharedSavedPosition(target, newPos, newRot, newScale);
 			}
 		}
 
 		[Command(channel = Channels.DefaultUnreliable)]
-		private void CmdSendSharedSavedPosition(GameObject target, Vector3 newPos, Quaternion newRot)
+		private void CmdSendSharedSavedPosition(GameObject target, Vector3 newPos, Quaternion newRot, Vector3 newScale)
 		{
-			target.GetComponent<SyncLocalTransformUNET>().RpcSetSavedTransform(newPos, newRot);
+			target.GetComponent<SyncLocalTransformUNET>().RpcSetSavedTransform(newPos, newRot, newScale);
 		}
 
 	}

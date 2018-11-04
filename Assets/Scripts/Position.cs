@@ -27,7 +27,7 @@ public class Position : MonoBehaviour {
 		gameObject.transform.localRotation = origRotation;
 		gameObject.transform.localScale = origScale;
 		
-		gameObject.GetComponent<SyncLocalTransformUNET>().ResetTransform(origPosition, origRotation);
+		gameObject.GetComponent<SyncLocalTransformUNET>().ResetTransform(origPosition, origRotation, origScale);
 	}
 
 	public void Save() {
@@ -35,7 +35,7 @@ public class Position : MonoBehaviour {
 		origRotation = gameObject.transform.localRotation;
 		origScale = gameObject.transform.localScale;
 
-		gameObject.GetComponent<SyncLocalTransformUNET>().SetSavedPosition(origPosition, origRotation);
+		gameObject.GetComponent<SyncLocalTransformUNET>().SetSavedPosition(origPosition, origRotation, origScale);
 	}
 
 	public void Lock() {
@@ -51,9 +51,10 @@ public class Position : MonoBehaviour {
 		
 	}
 
-	public void SetSavedTransform(Vector3 newPos, Quaternion newRot) {
+	public void SetSavedTransform(Vector3 newPos, Quaternion newRot, Vector3 newScale) {
 		origPosition = newPos;
 		origRotation = newRot;
+		origScale = newScale;
 	}
 
 	// Update is called once per frame

@@ -27,19 +27,27 @@ namespace HoloToolkit.Unity.SharingWithUNET
         /// </summary>
         [SyncVar]
         private Quaternion localRotation;
+		
+		// <summary>
+		/// The scale relative to the shared world anchor.
+		/// </summary>
+		[SyncVar]
+		private Vector3 localScale;
 
-        /// <summary>
-        /// Sets the localPosition and localRotation on clients.
-        /// </summary>
-        /// <param name="postion">the localPosition to set</param>
-        /// <param name="rotation">the localRotation to set</param>
-        [Command]
-        public void CmdTransform(Vector3 postion, Quaternion rotation)
+		/// <summary>
+		/// Sets the localPosition and localRotation on clients.
+		/// </summary>
+		/// <param name="postion">the localPosition to set</param>
+		/// <param name="rotation">the localRotation to set</param>
+		/// <param name="scale">the localScale to set</param>
+		[Command]
+        public void CmdTransform(Vector3 postion, Quaternion rotation, Vector3 scale)
         {
             if (!isLocalPlayer)
             {
                 localPosition = postion;
                 localRotation = rotation;
+				localScale = scale;
             }
         }
 
@@ -64,6 +72,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
             {
                 localPosition = transform.localPosition;
                 localRotation = transform.localRotation;
+				localScale = transform.localScale;
             }
 
             layerMask = SpatialMappingManager.Instance.LayerMask;
@@ -84,6 +93,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 
                 transform.localPosition = localPosition;
                 transform.localRotation = localRotation;
+				transform.localScale = localScale;
             }
         }
 
@@ -124,9 +134,10 @@ namespace HoloToolkit.Unity.SharingWithUNET
                     // So we have to do both.
                     localPosition = transform.localPosition;
                     localRotation = transform.localRotation;
+					localScale = transform.localScale;
                     if (PlayerController.Instance != null)
                     {
-                        PlayerController.Instance.SendSharedTransform(gameObject, localPosition, localRotation);
+                        PlayerController.Instance.SendSharedTransform(gameObject, localPosition, localRotation, localScale);
                     }
                 }
 
