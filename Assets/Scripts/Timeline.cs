@@ -98,8 +98,13 @@ public class Timeline : MonoBehaviour {
 	}
 
 	public void SetLesionsOnOff(bool state) {
-		lesions_2016_09_01.SetActive(state);
 		gameObject.GetComponent<SyncTimelineUNET>().ToggleSamplingSites(state);
+	}
+
+	public void SyncSetLesionsOnOff(bool state)
+	{
+		lesions_2016_09_01.SetActive(state);
+		toggleSamplingSitesButton.GetComponent<Toggle>().isOn = state;
 	}
 
 	public void ButtonBackEvent() {

@@ -6,8 +6,10 @@ using System.Text;
 using System.Linq;
 using UnityEngine.UI;
 using HoloToolkit.Unity.SharingWithUNET;
+using UnityEngine.EventSystems;
 
-public class Genomics : MonoBehaviour {
+public class Genomics : MonoBehaviour
+{
 
     public List<GameObject> lesions;
 	public List<GameObject> tumours;
@@ -37,8 +39,6 @@ public class Genomics : MonoBehaviour {
 	private Material material;
 
 	private List<GameObject> textLabels;
-
-	public bool invokeSyncronization = true;
 
 	// Use this for initialization
 	void Start()
@@ -89,8 +89,7 @@ public class Genomics : MonoBehaviour {
 			}
 		}
 
-		SetColor(1, true);
-		SetMutationLabels(1);
+		groupButtons[0].GetComponent<Toggle>().isOn = true;
 	}
 
 
@@ -140,74 +139,18 @@ public class Genomics : MonoBehaviour {
 		}
 	}
 
-	public void ToggleGenomicsGroup1(bool toggle) {
-		SetColor(1, toggle);
-		SetMutationLabels(1);
-		
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(1, toggle);
+	public void ToggleGenomicsGroup(int groupNumber) {
+		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(groupNumber);
 	}
 
-	public void ToggleGenomicsGroup2(bool toggle)
-	{
-		SetColor(2, toggle);
-		SetMutationLabels(2);
-
-		invokeSyncronization = false;
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(2, toggle);
-	}
-
-	public void ToggleGenomicsGroup3(bool toggle)
-	{
-		SetColor(3, toggle);
-		SetMutationLabels(3);
-
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(3, toggle);
-	}
-
-	public void ToggleGenomicsGroup4(bool toggle)
-	{
-		SetColor(4, toggle);
-		SetMutationLabels(4);
-
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(4, toggle);
-	}
-
-	public void ToggleGenomicsGroup5(bool toggle)
-	{
-		SetColor(5, toggle);
-		SetMutationLabels(5);
-
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(5, toggle);
-	}
-
-	public void ToggleGenomicsGroup6(bool toggle)
-	{
-		SetColor(6, toggle);
-		SetMutationLabels(6);
-
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(6, toggle);
-	}
-
-	public void SyncToggleGroup(int groupNumber, bool toggle) {
-		SetColor(groupNumber, toggle);
+	public void SyncToggleGroup(int groupNumber) {
+		SetColor(groupNumber);
 		SetMutationLabels(groupNumber);
-		//groupButtons[groupNumber-1].GetComponent<Toggle>().isOn = toggle;
+		
+		groupButtons[groupNumber - 1].GetComponent<Toggle>().isOn = true;
 	}
 
 	public void ToggleLabels(bool toggle) {
-		if (toggle)
-		{
-			foreach (var label in textLabels)
-			{
-				label.SetActive(true);
-			}
-		}
-		else {
-			foreach (var label in textLabels)
-			{
-				label.SetActive(false);
-			}
-		}
 		gameObject.GetComponent<SyncGenomicsUNET>().ToggleLabels(toggle);
 	}
 
@@ -226,7 +169,7 @@ public class Genomics : MonoBehaviour {
 				label.SetActive(false);
 			}
 		}
-		//toggleLabelsButton.GetComponent<Toggle>().isOn = toggle;
+		toggleLabelsButton.GetComponent<Toggle>().isOn = toggle;
 	}
 
 	public List<GameObject> CreateLabels()
@@ -245,7 +188,7 @@ public class Genomics : MonoBehaviour {
 		return tl;
 	}
 
-	private void SetColor(int groupNumber, bool chosen) {
+	private void SetColor(int groupNumber) {
 		
 		List<GameObject> lesionGroup;
 		bool hasLesions = groups.TryGetValue(groupNumber, out lesionGroup);
@@ -255,9 +198,7 @@ public class Genomics : MonoBehaviour {
 		}
 
 		Color32 colorValue = new Color32();
-		if (chosen) {
-			colorValue = groupColors[groupNumber - 1];
-		}
+		colorValue = groupColors[groupNumber - 1];
 		foreach (var lesion in lesionGroup) {
 			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
 		}

@@ -22,7 +22,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		[ClientRpc(channel = Channels.DefaultUnreliable)]
 		public void RpcToggleSamplingSites(bool active)
 		{
-			GetComponent<Timeline>().toggleSamplingSitesButton.GetComponent<Toggle>().isOn = active;
+			GetComponent<Timeline>().SyncSetLesionsOnOff(active);
 		}
 
 

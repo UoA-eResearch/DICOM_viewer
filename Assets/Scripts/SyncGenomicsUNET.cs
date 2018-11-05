@@ -9,26 +9,25 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		private int lastGroup = 0;
 		private bool lastLabelState;
 
-		public void ToggleGroup(int groupNumber, bool toggle)
+		public void ToggleGroup(int groupNumber)
 		{
 			if (lastGroup != groupNumber) {
-				PlayerController.Instance.SendToggleGroup(gameObject, groupNumber, toggle);
+				PlayerController.Instance.SendToggleGroup(gameObject, groupNumber);
 				lastGroup = groupNumber;
 			}
 		}
 
 
 		[ClientRpc(channel = Channels.DefaultUnreliable)]
-		public void RpcToggleGroup(int groupNumber, bool toggle)
+		public void RpcToggleGroup(int groupNumber)
 		{
-			GetComponent<Genomics>().SyncToggleGroup(groupNumber, toggle);
+			GetComponent<Genomics>().SyncToggleGroup(groupNumber);
 			
 		}
 
 
 		public void ToggleLabels(bool toggle)
 		{
-			Debug.Log("toggle labels");
 			if (lastLabelState != toggle) {
 				PlayerController.Instance.SendToggleLabels(gameObject, toggle);
 				lastLabelState = toggle;
