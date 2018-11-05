@@ -28,6 +28,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 
 		public void ToggleLabels(bool toggle)
 		{
+			Debug.Log("toggle labels");
 			if (lastLabelState != toggle) {
 				PlayerController.Instance.SendToggleLabels(gameObject, toggle);
 				lastLabelState = toggle;

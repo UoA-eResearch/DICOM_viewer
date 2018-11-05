@@ -387,6 +387,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 
 		public void SendToggleLabels(GameObject target, bool toggle)
 		{
+			Debug.Log("Send toggle labels.");
 			if (isLocalPlayer)
 			{
 				CmdSendToggleLabels(target, toggle);

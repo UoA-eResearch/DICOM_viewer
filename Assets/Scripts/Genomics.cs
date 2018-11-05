@@ -38,6 +38,7 @@ public class Genomics : MonoBehaviour {
 
 	private List<GameObject> textLabels;
 
+	public bool invokeSyncronization = true;
 
 	// Use this for initialization
 	void Start()
@@ -151,6 +152,7 @@ public class Genomics : MonoBehaviour {
 		SetColor(2, toggle);
 		SetMutationLabels(2);
 
+		invokeSyncronization = false;
 		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(2, toggle);
 	}
 
@@ -187,7 +189,9 @@ public class Genomics : MonoBehaviour {
 	}
 
 	public void SyncToggleGroup(int groupNumber, bool toggle) {
-		groupButtons[groupNumber-1].GetComponent<Toggle>().isOn = toggle;
+		SetColor(groupNumber, toggle);
+		SetMutationLabels(groupNumber);
+		//groupButtons[groupNumber-1].GetComponent<Toggle>().isOn = toggle;
 	}
 
 	public void ToggleLabels(bool toggle) {
@@ -208,7 +212,21 @@ public class Genomics : MonoBehaviour {
 	}
 
 	public void SyncToggleLabels(bool toggle) {
-		toggleLabelsButton.GetComponent<Toggle>().isOn = toggle;
+		if (toggle)
+		{
+			foreach (var label in textLabels)
+			{
+				label.SetActive(true);
+			}
+		}
+		else
+		{
+			foreach (var label in textLabels)
+			{
+				label.SetActive(false);
+			}
+		}
+		//toggleLabelsButton.GetComponent<Toggle>().isOn = toggle;
 	}
 
 	public List<GameObject> CreateLabels()
