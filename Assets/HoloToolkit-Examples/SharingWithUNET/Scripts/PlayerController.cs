@@ -414,5 +414,20 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			target.GetComponent<SyncTimelineUNET>().RpcToggleSamplingSites(active);
 		}
 
+
+		public void SendTimeChangeEvent(GameObject target, int currentTime)
+		{
+			if (isLocalPlayer)
+			{
+				CmdSendTimeChangeEvent(target, currentTime);
+			}
+		}
+
+		[Command(channel = Channels.DefaultUnreliable)]
+		private void CmdSendTimeChangeEvent(GameObject target, int currentTime)
+		{
+			target.GetComponent<SyncTimelineUNET>().RpcTimeChangeEvent(currentTime);
+		}
+
 	}
 }

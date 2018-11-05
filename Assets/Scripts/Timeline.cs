@@ -92,6 +92,11 @@ public class Timeline : MonoBehaviour {
 
 	}
 
+	public void SyncTimeEvent(int currentTime) {
+		currentState = currentTime;
+		SliderChange(currentTime);
+	}
+
 	public void SetLesionsOnOff(bool state) {
 		lesions_2016_09_01.SetActive(state);
 		gameObject.GetComponent<SyncTimelineUNET>().ToggleSamplingSites(state);
@@ -100,11 +105,13 @@ public class Timeline : MonoBehaviour {
 	public void ButtonBackEvent() {
 		currentState -= 1;
 		SliderChange(currentState);
+		gameObject.GetComponent<SyncTimelineUNET>().TimeChangeEvent(currentState);
 	}
 
 	public void ButtonForwardEvent() {
 		currentState += 1;
 		SliderChange(currentState);
+		gameObject.GetComponent<SyncTimelineUNET>().TimeChangeEvent(currentState);
 	}
 
 }
