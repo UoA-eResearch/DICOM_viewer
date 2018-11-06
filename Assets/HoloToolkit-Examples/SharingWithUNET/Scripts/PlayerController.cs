@@ -370,6 +370,20 @@ namespace HoloToolkit.Unity.SharingWithUNET
 			target.GetComponent<SyncLocalTransformUNET>().RpcSetSavedTransform(newPos, newRot, newScale);
 		}
 
+		public void SendLockTransform(GameObject target, string lockState)
+		{
+			if (isLocalPlayer)
+			{
+				CmdSendLockTransform(target, lockState);
+			}
+		}
+
+		[Command(channel = Channels.DefaultUnreliable)]
+		private void CmdSendLockTransform(GameObject target, string lockState)
+		{
+			target.GetComponent<SyncLocalTransformUNET>().RpcSetLockTransform(lockState);
+		}
+
 		public void SendToggleGroup(GameObject target, int groupNumber)
 		{
 			if (isLocalPlayer)

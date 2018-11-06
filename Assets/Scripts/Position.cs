@@ -39,16 +39,7 @@ public class Position : MonoBehaviour {
 	}
 
 	public void Lock() {
-		if (lockText.GetComponent<Text>().text == "Lock")
-		{
-			lockText.GetComponent<Text>().text = "Unlock";
-			skel.GetComponent<TwoHandManipulatable>().enabled = false;
-		}
-		else {
-			lockText.GetComponent<Text>().text = "Lock";
-			skel.GetComponent<TwoHandManipulatable>().enabled = true;
-		}
-		
+		gameObject.GetComponent<SyncLocalTransformUNET>().LockTransform(lockText.GetComponent<Text>().text);
 	}
 
 	public void SetSavedTransform(Vector3 newPos, Quaternion newRot, Vector3 newScale) {

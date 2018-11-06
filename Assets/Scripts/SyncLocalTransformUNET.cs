@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 namespace HoloToolkit.Unity.SharingWithUNET
 {
@@ -58,6 +59,27 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		public void RpcSetSavedTransform(Vector3 position, Quaternion rotation, Vector3 scale)
 		{
 			GetComponent<Position>().SetSavedTransform(position, rotation, scale);
+		}
+
+		public void LockTransform(string lockState) {
+			PlayerController.Instance.SendLockTransform(gameObject, lockState);
+		}
+
+		[ClientRpc(channel = Channels.DefaultUnreliable)]
+		public void RpcSetLockTransform(string lockState)
+		{
+			Position posComponent = GetComponent<Position>();
+
+			if (lockState == "Lock")
+			{
+				posComponent.lockText.GetComponent<Text>().text = "Unlock";
+				posComponent.skel.GetComponent<TwoHandManipulatable>().enabled = false;
+			}
+			else
+			{
+				posComponent.lockText.GetComponent<Text>().text = "Lock";
+				posComponent.skel.GetComponent<TwoHandManipulatable>().enabled = true;
+			}
 		}
 
 		public void Start()
