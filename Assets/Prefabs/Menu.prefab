@@ -474,6 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224565266630956040}
   - component: {fileID: 114679442977894460}
+  - component: {fileID: 114531681646974962}
   m_Layer: 5
   m_Name: Toggle Sampling Sites
   m_TagString: Untagged
@@ -678,6 +679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224211015319313784}
   - component: {fileID: 114578089286731468}
+  - component: {fileID: 114528397600472240}
   m_Layer: 5
   m_Name: Group 5
   m_TagString: Untagged
@@ -999,6 +1001,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224094325717255240}
   - component: {fileID: 114760104492896886}
+  - component: {fileID: 114378793768778974}
   m_Layer: 5
   m_Name: Group 4
   m_TagString: Untagged
@@ -1015,6 +1018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224854872132874208}
   - component: {fileID: 114292925191387954}
+  - component: {fileID: 114492345526178092}
   m_Layer: 5
   m_Name: Group 6
   m_TagString: Untagged
@@ -1065,6 +1069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224158471326179508}
   - component: {fileID: 114309855197477822}
+  - component: {fileID: 114106321243444896}
   m_Layer: 5
   m_Name: Toggle Labels
   m_TagString: Untagged
@@ -1099,6 +1104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224930935965255358}
   - component: {fileID: 114381465732765572}
+  - component: {fileID: 114270359825958802}
   m_Layer: 5
   m_Name: Group 2
   m_TagString: Untagged
@@ -1150,6 +1156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224810826696011944}
   - component: {fileID: 114252064101241098}
+  - component: {fileID: 114096712754167186}
   m_Layer: 5
   m_Name: Group 3
   m_TagString: Untagged
@@ -1183,6 +1190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224527438476091310}
   - component: {fileID: 114865656907269528}
+  - component: {fileID: 114168586514737382}
   m_Layer: 5
   m_Name: Group 1
   m_TagString: Untagged
@@ -1315,7 +1323,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Trunk Mutations
+  m_Text: Trunk Mutations / All Shared Mutations
 --- !u!114 &114030206157512416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1471,6 +1479,17 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114096712754167186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1938356945179852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114098015635786208
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1498,6 +1517,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114106321243444896
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1831043135611848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a545b5f297a3d0f41b258636aaa54059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114107967193202968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1638,7 +1668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 1A
+  m_Text: Metastatic Lineage 1A / Green Clone Founder Mutation
 --- !u!114 &114149117440027246
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1691,6 +1721,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114168586514737382
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1977403817479740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114172081439552418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1879,18 +1920,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup3
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
@@ -1975,6 +2005,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114270359825958802
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1898715126826218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114290021317485882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2043,18 +2084,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup6
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
@@ -2126,18 +2156,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleLabels
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
@@ -2200,7 +2219,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 1B
+  m_Text: Metastatic Lineage 1B / Green Clone Mutations
 --- !u!114 &114317735790841116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2457,6 +2476,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pivotAxis: 0
   targetTransform: {fileID: 0}
+--- !u!114 &114378793768778974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1773914544397820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114381465732765572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2498,18 +2528,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup2
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
@@ -2803,6 +2822,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Sampling Sites
+--- !u!114 &114492345526178092
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1798021630600606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114504843217535748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2961,6 +2991,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 223368648016281988}
+--- !u!114 &114528397600472240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1458945293573514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509137dd67cbf084b97f990445915a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114531681646974962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1304981184621402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7a00326b9437c4bbc776e926faf02d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114534147381418534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3122,18 +3174,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup5
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
@@ -3312,7 +3353,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Pulmonary Lineage
+  m_Text: Pulmonary Lineage / No Additional Shared Mutations
 --- !u!114 &114678330877097250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3387,18 +3428,7 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114903317671502158}
-        m_MethodName: SetLesionsOnOff
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
@@ -3503,18 +3533,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup4
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
@@ -3772,7 +3791,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 2
+  m_Text: Metastatic Lineage 2 / Purple Clone Mutations
 --- !u!114 &114861802573411126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3831,18 +3850,7 @@ MonoBehaviour:
   m_Group: {fileID: 114346109430073440}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319725816416004}
-        m_MethodName: ToggleGenomicsGroup1
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
@@ -4568,7 +4576,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 126.39999, y: 3.900116}
-  m_SizeDelta: {x: 900, y: 120}
+  m_SizeDelta: {x: 900, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224047366543571962
 RectTransform:
@@ -5032,7 +5040,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 137, y: 6.5}
-  m_SizeDelta: {x: 1000, y: 120}
+  m_SizeDelta: {x: 1000, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224387293028963302
 RectTransform:
@@ -5388,7 +5396,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 126.39999, y: 5.8}
-  m_SizeDelta: {x: 900, y: 120}
+  m_SizeDelta: {x: 900, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224669230195665730
 RectTransform:
@@ -5772,7 +5780,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 128.5, y: 5.6}
-  m_SizeDelta: {x: 920, y: 120}
+  m_SizeDelta: {x: 920, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224929441638879634
 RectTransform:

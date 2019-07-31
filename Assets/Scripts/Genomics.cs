@@ -69,7 +69,7 @@ public class Genomics : MonoBehaviour
 		{
 			var dataRow = csv[rowIndex];
 
-			for (var colIndex = 5; colIndex < dataRow.Count-1; colIndex++)
+			for (var colIndex = 2; colIndex < dataRow.Count-1; colIndex++)
 			{
 				int group;
 				
@@ -79,7 +79,7 @@ public class Genomics : MonoBehaviour
 					SortGroups(colIndex, group);
 					
 					var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
-					var mutationName = csv[rowIndex][1].ToString();
+					var mutationName = csv[rowIndex][0].ToString();
 					
 					if (!groupText.text.Contains(mutationName))
 					{
@@ -207,7 +207,7 @@ public class Genomics : MonoBehaviour
 
 	private List<List<string>> readCSV()
 	{
-		string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics.csv");
+		string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics_July_2019.csv");
 
 		List<List<string>> CSV = new List<List<string>>();
 
