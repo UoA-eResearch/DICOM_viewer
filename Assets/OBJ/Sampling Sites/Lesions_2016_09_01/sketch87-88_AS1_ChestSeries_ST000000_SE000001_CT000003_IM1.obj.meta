@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 691187bbc87a534429a3692d954a014d
-timeCreated: 1536783294
-licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -21,7 +19,7 @@ ModelImporter:
     second: {fileID: 2100000, guid: bb70d8f37cff2bf42af1898b20531406, type: 2}
   materials:
     importMaterials: 1
-    materialName: 1
+    materialName: 0
     materialSearch: 1
     materialLocation: 0
   animations:

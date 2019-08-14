@@ -64,12 +64,11 @@ public class Genomics : MonoBehaviour
 		textLabels = CreateLabels();
 		
 		csv = readCSV();
-		
+
 		for(var rowIndex = 0; rowIndex <= csv.Count-1; rowIndex++)
 		{
 			var dataRow = csv[rowIndex];
-
-			for (var colIndex = 2; colIndex < dataRow.Count-1; colIndex++)
+			for (var colIndex = 2; colIndex <= dataRow.Count-1; colIndex++)
 			{
 				int group;
 				
@@ -99,8 +98,10 @@ public class Genomics : MonoBehaviour
 		
 		foreach (var lesion in lesionsNamed)
 		{
+
 			if (lesion.Key.Contains(lesionName))
 			{
+				
 				StringBuilder sb = new StringBuilder(lesion.Key);
 				var dicomFileName = sb.Remove(0, lesionName.ToCharArray().Length + 1).ToString();
 				
@@ -115,11 +116,13 @@ public class Genomics : MonoBehaviour
 						
 						if (cont == true) {
 							if (!list.Contains(lesion.Value)) {
+								Debug.Log("Add to existing group" + lesion.Value + " " + lesionName);
 								list.Add(lesion.Value);
 							}
 						}
 					}
 					else {
+						Debug.Log("Add to new group" + lesion.Value + " " + lesionName);
 						groups.Add(group, new List<GameObject>() { lesion.Value});
 					}
 				}
@@ -199,7 +202,9 @@ public class Genomics : MonoBehaviour
 
 		Color32 colorValue = new Color32();
 		colorValue = groupColors[groupNumber - 1];
+		
 		foreach (var lesion in lesionGroup) {
+			Debug.Log(lesion);
 			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
 		}
 	}
@@ -207,8 +212,8 @@ public class Genomics : MonoBehaviour
 
 	private List<List<string>> readCSV()
 	{
-		string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics_July_2019.csv");
-
+		string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics.csv");
+        Debug.Log(path);
 		List<List<string>> CSV = new List<List<string>>();
 
 		using (var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
@@ -216,6 +221,7 @@ public class Genomics : MonoBehaviour
 			using (StreamReader sr = new StreamReader(stream))
 			{
 				string[] headers = sr.ReadLine().Split(',');
+				
 				CSV.Add(headers.ToList());
 				while (!sr.EndOfStream)
 				{

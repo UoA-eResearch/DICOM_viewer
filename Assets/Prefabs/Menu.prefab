@@ -1323,7 +1323,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Trunk Mutations / All Shared Mutations
+  m_Text: Trunk Mutations
 --- !u!114 &114030206157512416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1668,7 +1668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 1A / Green Clone Founder Mutation
+  m_Text: Metastatic Lineage 1A
 --- !u!114 &114149117440027246
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2219,7 +2219,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 1B / Green Clone Mutations
+  m_Text: Metastatic Lineage 1B
 --- !u!114 &114317735790841116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2265,6 +2265,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lesions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -3353,7 +3359,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Pulmonary Lineage / No Additional Shared Mutations
+  m_Text: Pulmonary Lineage
 --- !u!114 &114678330877097250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3791,7 +3797,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Metastatic Lineage 2 / Purple Clone Mutations
+  m_Text: Metastatic Lineage 2
 --- !u!114 &114861802573411126
 MonoBehaviour:
   m_ObjectHideFlags: 1
