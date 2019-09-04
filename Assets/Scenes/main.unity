@@ -2334,6 +2334,14 @@ Prefab:
       propertyPath: m_DynamicOccludee
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1971985940895968, guid: e62a822fb155f3e42abdd801652d92e8, type: 2}
+      propertyPath: m_Name
+      value: sketch114_87s3_ChestSeries_ST000000_SE000001_CT000037_IM72
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602722719153378, guid: e62a822fb155f3e42abdd801652d92e8, type: 2}
+      propertyPath: m_Name
+      value: sketch116_90s2_ChestSeries_ST000000_SE000001_CT000076_IM94
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e62a822fb155f3e42abdd801652d92e8, type: 2}
   m_IsPrefabParent: 0
