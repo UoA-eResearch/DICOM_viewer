@@ -412,9 +412,25 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		{
 			target.GetComponent<SyncGenomicsUNET>().RpcToggleLabels(toggle);
 		}
-		
 
-		public void SendToggleSamplingSites(GameObject target, bool active)
+
+        public void SendToggleSequential(GameObject target, bool sequ)
+        {
+            if (isLocalPlayer)
+            {
+                CmdSendToggleSequential(target, sequ);
+            }
+        }
+
+        [Command(channel = Channels.DefaultUnreliable)]
+        private void CmdSendToggleSequential(GameObject target, bool sequ)
+        {
+            target.GetComponent<SyncGenomicsUNET>().RpcToggleSequential(sequ);
+        }
+
+
+
+        public void SendToggleSamplingSites(GameObject target, bool active)
 		{
 			if (isLocalPlayer)
 			{

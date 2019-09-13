@@ -20,14 +20,18 @@ public class Genomics : MonoBehaviour
 	public List<GameObject> groupButtons;
 	public GameObject toggleLabelsButton;
 
-	private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
-	private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
+    public GameObject toggleSequential;
+
+    private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
 	private Dictionary<int, List<GameObject>> groups = new Dictionary<int, List<GameObject>>();
-	private List<Color32> groupColors = new List<Color32>() { new Color32(237, 125, 49, 200), new Color32(214, 33, 33, 200) , new Color32(0, 176, 240, 200) , new Color32(0, 176, 80, 200) , new Color32(146, 208, 80, 200), new Color32(151, 81, 203, 200) };
+    private Dictionary<int, List<GameObject>> groupsSequential = new Dictionary<int, List<GameObject>>();
+    private List<Color32> groupColors = new List<Color32>() { new Color32(237, 125, 49, 200), new Color32(214, 33, 33, 200) , new Color32(0, 176, 240, 200) , new Color32(0, 176, 80, 200) , new Color32(146, 208, 80, 200), new Color32(151, 81, 203, 200) };
 
 	private List<List<string>> csv;
+    private List<List<string>> csvSequential;
 
-	public float FadeDuration = 10f;
+    public float FadeDuration = 10f;
 	public Color Color1 = Color.gray;
 	public Color Color2 = Color.white;
 
@@ -36,6 +40,8 @@ public class Genomics : MonoBehaviour
 	private Color endColor;
 	private float lastColorChangeTime;
 
+    private bool sequential = false;
+
 	private Material material;
 
 	private List<GameObject> textLabels;
@@ -43,7 +49,9 @@ public class Genomics : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		foreach (GameObject lesion in lesions)
+        toggleSequential.GetComponent<Toggle>().isOn = sequential;
+
+        foreach (GameObject lesion in lesions)
 		{
 			var split = lesion.name.Split('_');
 			string comb = string.Concat(split[split.Length - 6], "_", split[split.Length - 5], "_", split[split.Length - 4], "_", split[split.Length - 3], "_", split[split.Length - 2], "_", split[split.Length - 1]);
@@ -62,10 +70,12 @@ public class Genomics : MonoBehaviour
 		}
 
 		textLabels = CreateLabels();
-		
-		csv = readCSV();
 
-		for(var rowIndex = 0; rowIndex <= csv.Count-1; rowIndex++)
+
+        //read non sequential data from csv and put into groups respectivelycsv = readCSV();
+        csv = readCSV();
+
+        for (var rowIndex = 0; rowIndex <= csv.Count-1; rowIndex++)
 		{
 			var dataRow = csv[rowIndex];
 			for (var colIndex = 2; colIndex <= dataRow.Count-1; colIndex++)
@@ -75,7 +85,7 @@ public class Genomics : MonoBehaviour
 				bool res = int.TryParse(dataRow[colIndex].ToString(), out group);
 				if (res == true && group >= 1)
 				{
-					SortGroups(colIndex, group);
+					SortGroups(colIndex, group, csv, false);
 					
 					var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
 					var mutationName = csv[rowIndex][0].ToString();
@@ -88,47 +98,95 @@ public class Genomics : MonoBehaviour
 			}
 		}
 
-		groupButtons[0].GetComponent<Toggle>().isOn = true;
-	}
+        //read sequential data from csv and put into groups respectively
+        csvSequential = readSequentialCSV();
+
+        for (var rowIndex = 0; rowIndex <= csvSequential.Count - 1; rowIndex++)
+        {
+            var dataRow = csvSequential[rowIndex];
+            for (var colIndex = 2; colIndex <= dataRow.Count - 1; colIndex++)
+            {
+                int group;
+
+                bool res = int.TryParse(dataRow[colIndex].ToString(), out group);
+                if (res == true && group >= 1)
+                {
+                    SortGroups(colIndex, group, csvSequential, true);
+
+                    var groupText = mutationLabels[group - 1].transform.GetChild(0).GetComponent<Text>();
+                    var mutationName = csvSequential[rowIndex][0].ToString();
+
+                    if (!groupText.text.Contains(mutationName))
+                    {
+                        groupText.text = groupText.text + " " + mutationName;
+                    }
+                }
+            }
+        }
+
+        groupButtons[0].GetComponent<Toggle>().isOn = true;
+    }
 
 
-	private void SortGroups(int colIndex, int group) {
+	private void SortGroups(int colIndex, int group, List<List<string>> file, bool sequ) {
 		
-		var lesionName = csv[1][colIndex].ToString();
-		
+		var lesionName = file[1][colIndex].ToString();
+
 		foreach (var lesion in lesionsNamed)
 		{
-
 			if (lesion.Key.Contains(lesionName))
 			{
-				
 				StringBuilder sb = new StringBuilder(lesion.Key);
 				var dicomFileName = sb.Remove(0, lesionName.ToCharArray().Length + 1).ToString();
-				
+
 				if (tumoursNamed.ContainsKey(dicomFileName))
 				{
 					var tumour = tumoursNamed[dicomFileName.ToString()];
 
-					if (groups.ContainsKey(group))
-					{
-						List<GameObject> list;
-						bool cont = groups.TryGetValue(group, out list);
-						
-						if (cont == true) {
-							if (!list.Contains(lesion.Value)) {
-								Debug.Log("Add to existing group" + lesion.Value + " " + lesionName);
-								list.Add(lesion.Value);
-							}
-						}
-					}
-					else {
-						Debug.Log("Add to new group" + lesion.Value + " " + lesionName);
-						groups.Add(group, new List<GameObject>() { lesion.Value});
-					}
+                    if (!sequ)
+                    {
+                        if (groups.ContainsKey(group))
+                        {
+                            List<GameObject> list;
+                            bool cont = groups.TryGetValue(group, out list);
+
+                            if (cont == true)
+                            {
+                                if (!list.Contains(lesion.Value))
+                                {
+                                    list.Add(lesion.Value);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            groups.Add(group, new List<GameObject>() { lesion.Value });
+                        }
+                    }
+                    else {
+                        if (groupsSequential.ContainsKey(group))
+                        {
+                            List<GameObject> list;
+                            bool cont = groupsSequential.TryGetValue(group, out list);
+
+                            if (cont == true)
+                            {
+                                if (!list.Contains(lesion.Value))
+                                {
+                                    list.Add(lesion.Value);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            groupsSequential.Add(group, new List<GameObject>() { lesion.Value });
+                        }
+                    }
+                    
 				}
 			}
 		}
-	}
+    }
 
 	public void SetMutationLabels(int group) {
 		foreach (var label in mutationLabels) {
@@ -142,14 +200,33 @@ public class Genomics : MonoBehaviour
 		}
 	}
 
-	public void ToggleGenomicsGroup(int groupNumber) {
-		gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(groupNumber);
+
+    public void ToggleSequential(bool sequ)
+    {
+        gameObject.GetComponent<SyncGenomicsUNET>().ToggleSequential(sequ);
+    }
+
+    public void SyncToggleSequential(bool sequ)
+    {
+        sequential = sequ;
+        toggleSequential.GetComponent<Toggle>().isOn = sequ;
+
+        for (int number = 0; number < groupButtons.Count; number++)
+        {
+            if (groupButtons[number].GetComponent<Toggle>().isOn)
+            {
+                ToggleGenomicsGroup(number+1);
+            }
+        }
+    }
+
+    public void ToggleGenomicsGroup(int groupNumber) {
+        gameObject.GetComponent<SyncGenomicsUNET>().ToggleGroup(groupNumber);
 	}
 
 	public void SyncToggleGroup(int groupNumber) {
-		SetColor(groupNumber);
-		SetMutationLabels(groupNumber);
-		
+        SetColour(groupNumber);
+        SetMutationLabels(groupNumber);
 		groupButtons[groupNumber - 1].GetComponent<Toggle>().isOn = true;
 	}
 
@@ -179,7 +256,7 @@ public class Genomics : MonoBehaviour
 	{
 		List<GameObject> tl = new List<GameObject>();
 
-		foreach (var lesion in lesionsNamed) {
+        foreach (var lesion in lesionsNamed) {
 			
 			Vector3 center = lesion.Value.transform.GetChild(0).GetComponent<MeshRenderer>().bounds.center;
 			GameObject textLabel = Instantiate(labelPrefab, lesion.Value.transform, true);
@@ -191,29 +268,48 @@ public class Genomics : MonoBehaviour
 		return tl;
 	}
 
-	private void SetColor(int groupNumber) {
-		
-		List<GameObject> lesionGroup;
-		bool hasLesions = groups.TryGetValue(groupNumber, out lesionGroup);
-		
-		foreach (var lesion in lesions) {
-			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", groupColors[0]);
-		}
+	private void SetColour(int groupNumber) {
 
-		Color32 colorValue = new Color32();
-		colorValue = groupColors[groupNumber - 1];
-		
-		foreach (var lesion in lesionGroup) {
-			Debug.Log(lesion);
-			lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
-		}
+        Color32 colorValue = new Color32();
+        List<GameObject> lesionGroup;
+        bool hasLesions;
+
+        foreach (var lesion in lesions)
+        {
+            lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", groupColors[0]);
+        }
+
+        if (sequential)
+        {
+            for (int number = 1; number <= groupNumber; number++)
+            {
+                hasLesions = groupsSequential.TryGetValue(number, out lesionGroup);
+                if (!hasLesions) continue;
+                
+                colorValue = groupColors[number - 1];
+
+                foreach (var lesion in lesionGroup)
+                {
+                    lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
+                }
+            }
+        }
+        else {
+            hasLesions = groups.TryGetValue(groupNumber, out lesionGroup);
+
+            colorValue = groupColors[groupNumber - 1];
+
+            foreach (var lesion in lesionGroup)
+            {
+                lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
+            }
+        }
 	}
 
 
 	private List<List<string>> readCSV()
 	{
 		string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics.csv");
-        Debug.Log(path);
 		List<List<string>> CSV = new List<List<string>>();
 
 		using (var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
@@ -232,5 +328,27 @@ public class Genomics : MonoBehaviour
 		}
 		return CSV;
 	}
+
+    private List<List<string>> readSequentialCSV()
+    {
+        string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics_Sequential_Complete.csv");
+        List<List<string>> CSVSequential = new List<List<string>>();
+
+        using (var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
+        {
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                string[] headers = sr.ReadLine().Split(',');
+
+                CSVSequential.Add(headers.ToList());
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = sr.ReadLine().Split(',');
+                    CSVSequential.Add(rows.ToList());
+                }
+            }
+        }
+        return CSVSequential;
+    }
 
 }
