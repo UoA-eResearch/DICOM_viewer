@@ -6,6 +6,9 @@ namespace HoloToolkit.Unity.SharingWithUNET
 {
 	public class SyncGenomicsUNET : NetworkBehaviour
 	{
+		private bool lastLabelState;
+        private bool lastSequState;
+
 		public void ToggleGroup(int groupNumber)
 		{
             PlayerController.Instance.SendToggleGroup(gameObject, groupNumber);
@@ -16,6 +19,7 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		public void RpcToggleGroup(int groupNumber)
 		{
 			GetComponent<Genomics>().SyncToggleGroup(groupNumber);
+			
 		}
 
 
@@ -29,12 +33,16 @@ namespace HoloToolkit.Unity.SharingWithUNET
 		public void RpcToggleLabels(bool toggle)
 		{
 			GetComponent<Genomics>().SyncToggleLabels(toggle);
+
 		}
 
         public void ToggleSequential(bool sequ)
         {
+            if (lastSequState != sequ)
+            {
                 PlayerController.Instance.SendToggleSequential(gameObject, sequ);
                 lastSequState = sequ;
+            }
         }
 
 
@@ -44,11 +52,6 @@ namespace HoloToolkit.Unity.SharingWithUNET
             GetComponent<Genomics>().SyncToggleSequential(sequ);
 
         }
-
-
-        public void Start()
-		{
-			lastLabelState = GetComponent<Genomics>().toggleLabelsButton.GetComponent<Toggle>().isOn;
-		}
+        
 	}
 }
