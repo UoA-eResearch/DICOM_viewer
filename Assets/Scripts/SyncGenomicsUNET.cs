@@ -50,7 +50,6 @@ namespace HoloToolkit.Unity.SharingWithUNET
         public void RpcToggleSequential(bool sequ)
         {
             GetComponent<Genomics>().SyncToggleSequential(sequ);
-
         }
         
 	}

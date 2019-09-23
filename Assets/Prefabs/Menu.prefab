@@ -2435,6 +2435,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  additionalSequentialSamples:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   tumours:
@@ -2492,6 +2495,19 @@ MonoBehaviour:
   - {fileID: 1798021630600606}
   toggleLabelsButton: {fileID: 1777199222549080}
   toggleSequential: {fileID: 1831043135611848}
+  groupColors:
+  - serializedVersion: 2
+    rgba: 4278226431
+  - serializedVersion: 2
+    rgba: 4278190228
+  - serializedVersion: 2
+    rgba: 4291926272
+  - serializedVersion: 2
+    rgba: 4281361923
+  - serializedVersion: 2
+    rgba: 4278252673
+  - serializedVersion: 2
+    rgba: 4289937538
   FadeDuration: 10
   Color1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Color2: {r: 1, g: 1, b: 1, a: 1}

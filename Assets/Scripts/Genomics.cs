@@ -7,12 +7,17 @@ using System.Linq;
 using UnityEngine.UI;
 using HoloToolkit.Unity.SharingWithUNET;
 using UnityEngine.EventSystems;
+using System;
+using System.Timers;
+using System.Threading.Tasks;
+using System.Threading;
 
 public class Genomics : MonoBehaviour
 {
 
     public List<GameObject> lesions;
-	public List<GameObject> tumours;
+    public List<GameObject> additionalSequentialSamples;
+    public List<GameObject> tumours;
 
 	public List<GameObject> mutationLabels;
 	public GameObject labelPrefab;
@@ -21,14 +26,17 @@ public class Genomics : MonoBehaviour
 	public GameObject toggleLabelsButton;
 
     public GameObject toggleSequential;
+    
+    public List<Color32> groupColors;
 
     private Dictionary<string, GameObject> lesionsNamed = new Dictionary<string, GameObject>();
     private Dictionary<string, GameObject> tumoursNamed = new Dictionary<string, GameObject>();
 	private Dictionary<int, List<GameObject>> groups = new Dictionary<int, List<GameObject>>();
     private Dictionary<int, List<GameObject>> groupsSequential = new Dictionary<int, List<GameObject>>();
-    private List<Color32> groupColors = new List<Color32>() { new Color32(237, 125, 49, 200), new Color32(214, 33, 33, 200) , new Color32(0, 176, 240, 200) , new Color32(0, 176, 80, 200) , new Color32(146, 208, 80, 200), new Color32(151, 81, 203, 200) };
+    //private List<Color32> groupColors = new List<Color32>() { new Color32(237, 125, 49, 200), new Color32(214, 33, 33, 200) , new Color32(0, 176, 240, 200) , new Color32(0, 176, 80, 200) , new Color32(146, 208, 80, 200), new Color32(151, 81, 203, 200) };
+    //private List<Color32> groupColors = new List<Color32>() { new Color32(255, 141, 0, 255), new Color32(148, 0, 0, 255), new Color32(0, 153, 209, 255), new Color32(3, 102, 48, 255), new Color32(129, 244, 0, 255), new Color32(130, 64, 179, 255) };
 
-	private List<List<string>> csv;
+    private List<List<string>> csv;
     private List<List<string>> csvSequential;
 
     public float FadeDuration = 10f;
@@ -46,8 +54,10 @@ public class Genomics : MonoBehaviour
 
 	private List<GameObject> textLabels;
 
-	// Use this for initialization
-	void Start()
+    Task task;
+
+    // Use this for initialization
+    void Start()
 	{
         toggleSequential.GetComponent<Toggle>().isOn = sequential;
 
@@ -72,7 +82,7 @@ public class Genomics : MonoBehaviour
 		textLabels = CreateLabels();
 
 
-        //read non sequential data from csv and put into groups respectivelycsv = readCSV();
+        //read non sequential data from csv and put into groups respectively
         csv = readCSV();
 
         for (var rowIndex = 0; rowIndex <= csv.Count-1; rowIndex++)
@@ -125,6 +135,12 @@ public class Genomics : MonoBehaviour
         }
 
         groupButtons[0].GetComponent<Toggle>().isOn = true;
+
+        foreach (var sample in additionalSequentialSamples)
+        {
+            sample.SetActive(false);
+        }
+
     }
 
 
@@ -301,10 +317,37 @@ public class Genomics : MonoBehaviour
 
             foreach (var lesion in lesionGroup)
             {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 v = new Vector3(i * 2.0F, 0, 0);
+                   GameObject ob = Instantiate(lesion);
+                    ob.transform.parent = lesion.transform.parent;
+                    ob.transform.localPosition = v;
+                    ob.transform.localRotation = new Quaternion(0, 0, 0, 0);
+                    ob.transform.localScale = new Vector3(0, 0, 0);
+
+                }
                 lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
             }
         }
-	}
+
+        if (groupNumber == 6 && sequential == true)
+        {
+            foreach (var sample in additionalSequentialSamples)
+            {
+                sample.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (var sample in additionalSequentialSamples)
+            {
+                sample.SetActive(false);
+            }
+        }
+
+
+    }
 
 
 	private List<List<string>> readCSV()
@@ -331,7 +374,7 @@ public class Genomics : MonoBehaviour
 
     private List<List<string>> readSequentialCSV()
     {
-        string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics_Sequential_Complete.csv");
+        string path = @Path.Combine(Application.persistentDataPath, "Genomics/Genomics_Sept.csv");
         List<List<string>> CSVSequential = new List<List<string>>();
 
         using (var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
@@ -350,5 +393,6 @@ public class Genomics : MonoBehaviour
         }
         return CSVSequential;
     }
+
 
 }
