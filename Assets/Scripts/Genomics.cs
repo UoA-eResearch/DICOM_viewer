@@ -6,11 +6,6 @@ using System.Text;
 using System.Linq;
 using UnityEngine.UI;
 using HoloToolkit.Unity.SharingWithUNET;
-using UnityEngine.EventSystems;
-using System;
-using System.Timers;
-using System.Threading.Tasks;
-using System.Threading;
 
 public class Genomics : MonoBehaviour
 {
@@ -53,8 +48,6 @@ public class Genomics : MonoBehaviour
 	private Material material;
 
 	private List<GameObject> textLabels;
-
-    Task task;
 
     // Use this for initialization
     void Start()
@@ -134,13 +127,12 @@ public class Genomics : MonoBehaviour
             }
         }
 
-        groupButtons[0].GetComponent<Toggle>().isOn = true;
-
         foreach (var sample in additionalSequentialSamples)
         {
             sample.SetActive(false);
         }
 
+        groupButtons[5].GetComponent<Toggle>().isOn = true;
     }
 
 
@@ -317,16 +309,6 @@ public class Genomics : MonoBehaviour
 
             foreach (var lesion in lesionGroup)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    Vector3 v = new Vector3(i * 2.0F, 0, 0);
-                   GameObject ob = Instantiate(lesion);
-                    ob.transform.parent = lesion.transform.parent;
-                    ob.transform.localPosition = v;
-                    ob.transform.localRotation = new Quaternion(0, 0, 0, 0);
-                    ob.transform.localScale = new Vector3(0, 0, 0);
-
-                }
                 lesion.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("_Color", colorValue);
             }
         }

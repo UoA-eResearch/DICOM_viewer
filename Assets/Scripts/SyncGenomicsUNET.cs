@@ -25,7 +25,11 @@ namespace HoloToolkit.Unity.SharingWithUNET
 
 		public void ToggleLabels(bool toggle)
 		{
-            PlayerController.Instance.SendToggleLabels(gameObject, toggle);
+            if (lastLabelState != toggle)
+            {
+                PlayerController.Instance.SendToggleLabels(gameObject, toggle);
+                lastLabelState = toggle;
+            }
         }
 
 
@@ -51,6 +55,11 @@ namespace HoloToolkit.Unity.SharingWithUNET
         {
             GetComponent<Genomics>().SyncToggleSequential(sequ);
         }
-        
-	}
+
+        public void Start()
+        {
+            lastLabelState = GetComponent<Genomics>().toggleLabelsButton.GetComponent<Toggle>().isOn;
+        }
+
+    }
 }

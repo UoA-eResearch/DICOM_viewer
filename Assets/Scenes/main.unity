@@ -1388,56 +1388,26 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2034023617}
-    - target: {fileID: 114471696007294584, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2034023617}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: tumours_2007_05_01
-      value: 
-      objectReference: {fileID: 1188234247}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: tumours_2015_04_28
-      value: 
-      objectReference: {fileID: 1168812907}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: tumours_2015_08_03
-      value: 
-      objectReference: {fileID: 379143419}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: tumours_2016_03_31
-      value: 
-      objectReference: {fileID: 954992647}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: tumours_2016_09_01
-      value: 
-      objectReference: {fileID: 235723619}
-    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: lesions_2016_09_01
-      value: 
-      objectReference: {fileID: 1343724177}
-    - target: {fileID: 114321219182249886, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
-        type: 2}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 2100000, guid: 40c89670209dad548b3d03719b59ad78, type: 2}
     - target: {fileID: 114149117440027246, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2034023617}
+    - target: {fileID: 114321219182249886, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 40c89670209dad548b3d03719b59ad78, type: 2}
     - target: {fileID: 114966820609771900, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
         type: 2}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: 40c89670209dad548b3d03719b59ad78, type: 2}
+    - target: {fileID: 114471696007294584, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2034023617}
     - target: {fileID: 114319725816416004, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
         type: 2}
       propertyPath: lesions.Array.data[0]
@@ -1793,6 +1763,41 @@ Prefab:
       propertyPath: tumours.Array.data[35]
       value: 
       objectReference: {fileID: 1992366219}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: tumours_2007_05_01
+      value: 
+      objectReference: {fileID: 1188234247}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: tumours_2015_04_28
+      value: 
+      objectReference: {fileID: 1168812907}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: tumours_2015_08_03
+      value: 
+      objectReference: {fileID: 379143419}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: tumours_2016_03_31
+      value: 
+      objectReference: {fileID: 954992647}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: tumours_2016_09_01
+      value: 
+      objectReference: {fileID: 235723619}
+    - target: {fileID: 114903317671502158, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: lesions_2016_09_01
+      value: 
+      objectReference: {fileID: 1343724177}
+    - target: {fileID: 114292925191387954, guid: d9fbd19dd6b540b44a4fd1837c138ddb,
+        type: 2}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9fbd19dd6b540b44a4fd1837c138ddb, type: 2}
   m_IsPrefabParent: 0
